@@ -11,6 +11,7 @@ import userReducer from "./store/user/user.reducer";
 import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
 import "regenerator-runtime/runtime";
+import rootSaga from "./store/rootSaga";
 
 const rootReducer = combineReducers({ user: userReducer });
 
@@ -20,10 +21,6 @@ const store = createStore(
   rootReducer,
   composeWithDevTools(applyMiddleware(sagaMiddleware))
 );
-
-function* rootSaga() {
-  //tbd
-}
 
 sagaMiddleware.run(rootSaga);
 

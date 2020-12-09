@@ -1,6 +1,11 @@
-const initialState: any = {};
+import { ActionWithPayload, UserLoginInformation } from "../store";
 
-const userReducer = (state = initialState, action: any) => {
+const initialState: UserLoginInformation = { accessToken: "" };
+
+const userReducer = (
+  state = initialState,
+  action: ActionWithPayload<unknown>
+) => {
   switch (action.type) {
     default:
       return state;
