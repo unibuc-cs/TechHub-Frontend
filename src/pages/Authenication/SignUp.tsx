@@ -47,22 +47,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const SignIn = () => {
+const SignUp = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
 
   const [email, setEmail] = useState<string>("");
+  const [username, setUsername] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
 
   const onEmailChangedHandler = (e: any) => {
     setEmail(e.target.value);
+  };
+
+  const onUsernameChangedHandler = (e: any) => {
+    setUsername(e.target.value);
   };
 
   const onPasswordChangedHandler = (e: any) => {
     setPassword(e.target.value);
   };
 
-  const onSignInPressedHandler = () => {
+  const onConfirmPasswordChangedHandler = (e: any) => {
+    setConfirmPassword(e.target.value);
+  };
+
+  const onSignUpPressedHandler = () => {
     dispatch(getUserInformation(email, password));
   };
 
@@ -76,7 +86,7 @@ const SignIn = () => {
             <LockOutlinedIcon />
           </Avatar>
           <Typography component="h1" variant="h5">
-            Sign in
+            Sign up
           </Typography>
           <form className={classes.form}>
             <TextField
@@ -96,10 +106,34 @@ const SignIn = () => {
               margin="normal"
               required
               fullWidth
+              id="username"
+              label="Username"
+              name="username"
+              autoComplete="username"
+              autoFocus
+              onChange={(e) => onUsernameChangedHandler(e)}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
               name="password"
               label="Password"
               type="password"
               id="password"
+              autoComplete="current-password"
+              onChange={(e) => onPasswordChangedHandler(e)}
+            />
+            <TextField
+              variant="outlined"
+              margin="normal"
+              required
+              fullWidth
+              name="confirm password"
+              label="Confirm Password"
+              type="confirm password"
+              id="confirm password"
               autoComplete="current-password"
               onChange={(e) => onPasswordChangedHandler(e)}
             />
@@ -108,14 +142,14 @@ const SignIn = () => {
               variant="contained"
               color="primary"
               className={classes.submit}
-              onClick={onSignInPressedHandler}
+              onClick={onSignUpPressedHandler}
             >
-              Sign In
+              Sign Up
             </Button>
             <Grid container>
               <Grid item>
-                <Link to="/sign-up" style={{ textDecoration: "none" }}>
-                  Don't have an account? Sign Up
+                <Link to="/" style={{ textDecoration: "none" }}>
+                  Already have an account? Sign in
                 </Link>
               </Grid>
             </Grid>
@@ -126,4 +160,4 @@ const SignIn = () => {
   );
 };
 
-export default SignIn;
+export default SignUp;
