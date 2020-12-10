@@ -2,6 +2,7 @@ import { ActionWithPayload } from "../store";
 import {
   LOGIN_GET_USER_INFO,
   REGISTER_SEND_INFORMATION,
+  SET_USER_ACCESS_TOKEN,
 } from "./user.constants";
 
 export const getUserInformation = (
@@ -17,8 +18,8 @@ export const getUserInformation = (
 
 export const sendRegisterInformation = (
   email: string,
-  password: string,
-  username: string
+  username: string,
+  password: string
 ): ActionWithPayload<{
   email: string;
   password: string;
@@ -29,5 +30,14 @@ export const sendRegisterInformation = (
     email,
     username,
     password,
+  },
+});
+
+export const setUserAccessToken = (
+  accessToken: string
+): ActionWithPayload<{ accessToken: string }> => ({
+  type: SET_USER_ACCESS_TOKEN,
+  payload: {
+    accessToken,
   },
 });

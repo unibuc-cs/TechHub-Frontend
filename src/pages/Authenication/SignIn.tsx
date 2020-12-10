@@ -12,6 +12,8 @@ import { makeStyles } from "@material-ui/core/styles";
 import { useDispatch } from "react-redux";
 import { getUserInformation } from "../../store/user/user.actions";
 
+import { useHistory } from "react-router-dom";
+
 import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
@@ -50,6 +52,7 @@ const useStyles = makeStyles((theme) => ({
 const SignIn = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
@@ -64,6 +67,7 @@ const SignIn = () => {
 
   const onSignInPressedHandler = () => {
     dispatch(getUserInformation(email, password));
+    history.push("/homescreen");
   };
 
   return (
