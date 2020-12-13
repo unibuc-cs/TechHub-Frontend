@@ -1,12 +1,31 @@
-import { takeEvery } from "redux-saga/effects";
+import { takeEvery, put } from "redux-saga/effects";
 import { ActionWithPayload } from "../store";
 import {
   LOGIN_GET_USER_INFO,
   REGISTER_SEND_INFORMATION,
 } from "./user.constants";
+import { setUserDidRegister, setUserAccessToken } from "./user.actions";
 
-function* sendUserLoginInformation() {
-  yield console.log("ok");
+function* sendUserLoginInformation(
+  action: ActionWithPayload<{ email: string; password: string }>
+) {
+  try {
+    const data = {
+      email: action.payload.email,
+      password: action.payload.password,
+    };
+    const accessToken: string = yield fetch("http://127.0.0.1:8080/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }).then((res) => res.json());
+    yield put(setUserAccessToken(accessToken));
+  } catch (e) {
+    alert("Username or password are incorrent");
+    console.warn(e);
+  }
 }
 
 function* sendUserRegisterInformation(
@@ -32,6 +51,7 @@ function* sendUserRegisterInformation(
       },
       body: JSON.stringify(data),
     });
+    yield put(setUserDidRegister());
   } catch (e) {
     console.warn(e);
   }

@@ -5,13 +5,16 @@ const GuardedRoute: React.FC<any> = ({
   component: Component,
   auth,
   ...rest
-}) => (
-  <Route
-    {...rest}
-    render={(props) =>
-      auth === true ? <Component {...props} /> : <Redirect to="/" />
-    }
-  />
-);
+}) => {
+  console.log("auth: ", auth);
+  return (
+    <Route
+      {...rest}
+      render={(props) =>
+        auth === true ? <Component {...props} /> : <Redirect to="/" />
+      }
+    />
+  );
+};
 
 export default GuardedRoute;

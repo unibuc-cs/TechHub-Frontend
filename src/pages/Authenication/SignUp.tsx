@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 /* eslint-disable no-control-regex */
 import React, { useEffect, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
@@ -10,10 +11,11 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { sendRegisterInformation } from "../../store/user/user.actions";
+import { didRegisterSelector } from "../../store/user/user.selector";
 
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,6 +56,9 @@ const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[a-zA-Z]).{6,}$/;
 const SignUp = () => {
   const classes = useStyles();
   const dispatch = useDispatch();
+  const history = useHistory();
+
+  const userDidRegister = useSelector(didRegisterSelector);
 
   const [email, setEmail] = useState<string>("");
   const [username, setUsername] = useState<string>("");
@@ -72,6 +77,12 @@ const SignUp = () => {
     false
   );
   const [signUpIsDisabled, setSignUpIsDisabled] = useState<boolean>(true);
+
+  useEffect(() => {
+    if (userDidRegister) {
+      history.push("/");
+    }
+  }, [userDidRegister]);
 
   const onEmailChangedHandler = (e: any) => {
     setEmail(e.target.value);

@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import CssBaseline from "@material-ui/core/CssBaseline";
@@ -9,12 +10,12 @@ import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { getUserInformation } from "../../store/user/user.actions";
 
-import { useHistory } from "react-router-dom";
+import { useHistory, Link } from "react-router-dom";
 
-import { Link } from "react-router-dom";
+import { accessTokenSelector } from "../../store/user/user.selector";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -54,8 +55,11 @@ const SignIn = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const accessToken = useSelector(accessTokenSelector);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
+
+  const [buttonIsDisabled, setButtonIsDisabled] = useState<boolean>(true);
 
   const onEmailChangedHandler = (e: any) => {
     setEmail(e.target.value);
@@ -67,8 +71,21 @@ const SignIn = () => {
 
   const onSignInPressedHandler = () => {
     dispatch(getUserInformation(email, password));
-    history.push("/homescreen");
   };
+
+  useEffect(() => {
+    if (email.length > 0 && password.length > 0) {
+      setButtonIsDisabled(false);
+    } else {
+      setButtonIsDisabled(true);
+    }
+  }, [email, password]);
+
+  useEffect(() => {
+    if (accessToken) {
+      history.push("/homescreen");
+    }
+  }, [accessToken]);
 
   return (
     <Grid container component="main" className={classes.root}>
@@ -113,6 +130,7 @@ const SignIn = () => {
               color="primary"
               className={classes.submit}
               onClick={onSignInPressedHandler}
+              disabled={buttonIsDisabled}
             >
               Sign In
             </Button>

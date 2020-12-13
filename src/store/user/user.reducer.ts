@@ -1,7 +1,10 @@
 import { ActionWithPayload, UserLoginInformation } from "../store";
-import { SET_USER_ACCESS_TOKEN } from "./user.constants";
+import { SET_USER_ACCESS_TOKEN, USER_DID_REGISTER } from "./user.constants";
 
-const initialState: UserLoginInformation = { accessToken: "" };
+const initialState: UserLoginInformation = {
+  accessToken: { accessToken: "" },
+  didRegister: false,
+};
 
 const userReducer = (
   state = initialState,
@@ -11,8 +14,16 @@ const userReducer = (
     case SET_USER_ACCESS_TOKEN:
       return {
         ...state,
-        accessToken: (action as ActionWithPayload<{ accessToken: string }>)
-          .payload.accessToken,
+        accessToken: {
+          ...state,
+          accessToken: (action as ActionWithPayload<{ accessToken: string }>)
+            .payload.accessToken,
+        },
+      };
+    case USER_DID_REGISTER:
+      return {
+        ...state,
+        didRegister: true,
       };
     default:
       return state;

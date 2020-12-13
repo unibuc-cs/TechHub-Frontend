@@ -1,8 +1,10 @@
+import { Action } from "redux";
 import { ActionWithPayload } from "../store";
 import {
   LOGIN_GET_USER_INFO,
   REGISTER_SEND_INFORMATION,
   SET_USER_ACCESS_TOKEN,
+  USER_DID_REGISTER,
 } from "./user.constants";
 
 export const getUserInformation = (
@@ -40,4 +42,8 @@ export const setUserAccessToken = (
   payload: {
     accessToken,
   },
+});
+
+export const setUserDidRegister = (): Action => ({
+  type: USER_DID_REGISTER,
 });
