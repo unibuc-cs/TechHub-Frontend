@@ -14,16 +14,17 @@ function* sendUserLoginInformation(
       email: action.payload.email,
       password: action.payload.password,
     };
-    const accessToken: string = yield fetch("http://127.0.0.1:8080/login", {
+    const accessToken = yield fetch("http://127.0.0.1:8080/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
     }).then((res) => res.json());
-    yield put(setUserAccessToken(accessToken));
+    const newToken = accessToken.accessToken.split("access token is:  ");
+    yield put(setUserAccessToken(newToken[0]));
   } catch (e) {
-    alert("Username or password are incorrent");
+    alert("Username or password are incorrect");
     console.warn(e);
   }
 }

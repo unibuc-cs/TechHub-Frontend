@@ -4,7 +4,7 @@ export type ActionWithPayload<TPayload> = {
 };
 
 export interface UserLoginInformation {
-  accessToken: { accessToken: string };
+  accessToken: string;
   didRegister: boolean;
 }
 
