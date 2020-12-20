@@ -4,10 +4,19 @@ export type ActionWithPayload<TPayload> = {
 };
 
 export interface UserLoginInformation {
-  accessToken: { accessToken: string };
+  accessToken: string;
   didRegister: boolean;
+}
+
+export interface CategoriesInformation {
+  categories: CategoryCard[];
 }
 
 export interface Store {
   user: UserLoginInformation;
+  categories: CategoriesInformation;
+}
+
+export interface CategoryCard {
+  title: string;
 }

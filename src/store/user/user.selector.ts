@@ -5,7 +5,7 @@ export const userInformationSelector = (state: Store) => state.user;
 
 export const accessTokenSelector = createSelector(
   userInformationSelector,
-  (user) => user.accessToken.accessToken
+  (user) => user.accessToken
 );
 
 export const didRegisterSelector = createSelector(
