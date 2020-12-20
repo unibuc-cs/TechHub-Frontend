@@ -8,6 +8,15 @@ export interface UserLoginInformation {
   didRegister: boolean;
 }
 
+export interface CategoriesInformation {
+  categories: CategoryCard[];
+}
+
 export interface Store {
   user: UserLoginInformation;
+  categories: CategoriesInformation;
+}
+
+export interface CategoryCard {
+  title: string;
 }
