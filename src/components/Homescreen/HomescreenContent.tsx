@@ -12,7 +12,10 @@ import HomescreenItemsList from "./HomescreenItemsList";
 import { categoriesSelector } from "../../store/categories/categories.selector";
 import { accessTokenSelector } from "../../store/user/user.selector";
 import { getCategories } from "../../store/categories/categories.actions";
+import { getThreadsByCategory } from "../../store/threads/threads.actions";
 import { useDispatch, useSelector } from "react-redux";
+import { useLocation } from "react-router-dom";
+import { threadsSelector } from "../../store/threads/threads.selector";
 
 const Container = styled.div`
   width: 100%;
@@ -42,22 +45,35 @@ const Title = styled.p`
   font-size: 2.7em;
 `;
 
-const HomescreenContent = () => {
+const HomescreenContent: React.FC<{ type: string }> = ({ type }) => {
   const dispatch = useDispatch();
 
   const accessToken = useSelector(accessTokenSelector);
   const categories = useSelector(categoriesSelector);
+  const threads = useSelector(threadsSelector);
+
+  const location = useLocation();
 
   useEffect(() => {
     if (accessToken) {
-      dispatch(getCategories(accessToken));
+      if (type === "categories") {
+        dispatch(getCategories(accessToken));
+      } else {
+        dispatch(
+          getThreadsByCategory(accessToken, (location.state as any).category)
+        );
+      }
     }
-  }, [accessToken]);
+  }, [accessToken, type]);
 
   return (
     <Container>
       <TitleContainer>
-        <Title>Categories</Title>
+        <Title>
+          {type === "categories"
+            ? "Categories"
+            : `${(location.state as any).category}`}
+        </Title>
       </TitleContainer>
       <ContentContainer>
         <SearchBarContainer>
@@ -77,7 +93,10 @@ const HomescreenContent = () => {
           </FormControl>
         </SearchBarContainer>
         {categories.length > 0 ? (
-          <HomescreenItemsList items={categories} />
+          <HomescreenItemsList
+            items={type === "categories" ? categories : threads}
+            type={type}
+          />
         ) : (
           <h1>Loading...</h1>
         )}
