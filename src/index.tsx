@@ -9,6 +9,7 @@ import { Provider, connect } from "react-redux";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import userReducer from "./store/user/user.reducer";
 import categoriesReducer from "./store/categories/categories.reducer";
+import threadsReducer from "./store/threads/threads.reducer";
 import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
 import "regenerator-runtime/runtime";
@@ -17,6 +18,7 @@ import rootSaga from "./store/rootSaga";
 const rootReducer = combineReducers({
   user: userReducer,
   categories: categoriesReducer,
+  threads: threadsReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();

@@ -23,7 +23,10 @@ const Homescreen = () => {
       </MenuContainer>
       <Switch>
         <Route exact path={path}>
-          <HomescreenContent />
+          <HomescreenContent type="categories" />
+        </Route>
+        <Route exact path={`${path}/:category`}>
+          <HomescreenContent type="threads" />
         </Route>
       </Switch>
     </Container>
