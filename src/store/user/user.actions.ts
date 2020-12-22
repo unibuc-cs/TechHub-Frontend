@@ -5,6 +5,7 @@ import {
   REGISTER_SEND_INFORMATION,
   SET_USER_ACCESS_TOKEN,
   USER_DID_REGISTER,
+  SAVE_USER_EMAIL,
 } from "./user.constants";
 
 export const getUserInformation = (
@@ -46,4 +47,13 @@ export const setUserAccessToken = (
 
 export const setUserDidRegister = (): Action => ({
   type: USER_DID_REGISTER,
+});
+
+export const setUserEmail = (
+  email: string
+): ActionWithPayload<{ email: string }> => ({
+  type: SAVE_USER_EMAIL,
+  payload: {
+    email,
+  },
 });

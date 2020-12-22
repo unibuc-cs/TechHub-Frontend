@@ -6,6 +6,7 @@ export type ActionWithPayload<TPayload> = {
 export interface UserLoginInformation {
   accessToken: string;
   didRegister: boolean;
+  currentUserEmail: string;
 }
 
 export interface CategoriesInformation {
@@ -21,14 +22,31 @@ export interface ThreadInformation {
   dateCreated: string;
 }
 
+export interface PostInformation {
+  id: string;
+  userEmail: string;
+  threadId: string;
+  postNumber: number;
+  text: string;
+  dateCreated: string;
+  hasTrophy: boolean;
+  upvotes: string[];
+  downvotes: string[];
+}
+
 export interface ThreadStateInformation {
-  threads: Thread[];
+  threads: ThreadInformation[];
+}
+
+export interface PostStateInformation {
+  posts: PostInformation[];
 }
 
 export interface Store {
   user: UserLoginInformation;
   categories: CategoriesInformation;
   threads: ThreadStateInformation;
+  posts: PostStateInformation;
 }
 
 export interface CategoryCard {

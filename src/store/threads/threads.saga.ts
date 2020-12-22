@@ -14,7 +14,6 @@ function* getAllThreads(action: ActionWithPayload<{ accessToken: string }>) {
         },
       }
     ).then((res) => res.json());
-    console.log(threads);
     // yield put(setCategories(categoriesInfo));
   } catch (e) {
     console.warn(e);
@@ -34,7 +33,6 @@ function* getThreadsByCategory(
         },
       }
     ).then((res) => res.json());
-    console.log(threads);
     yield put(setThreads(threads));
   } catch (e) {
     console.warn(e);
