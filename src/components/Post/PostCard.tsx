@@ -1,4 +1,5 @@
-import React from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { PostInformation } from "../../store/store";
 import NavigationIcon from "@material-ui/icons/Navigation";
@@ -97,21 +98,76 @@ const months = [
   "Dec",
 ];
 
-const PostCard: React.FC<{ postInfo: PostInformation }> = ({ postInfo }) => {
+const PostCard: React.FC<{
+  postInfo: PostInformation;
+  onAddUpvote: (post: PostInformation) => void;
+  onRemoveUpvote: (post: PostInformation) => void;
+  onAddDownvote: (post: PostInformation) => void;
+  onRemoveDownvote: (post: PostInformation) => void;
+  currentEmail: string;
+}> = ({
+  postInfo,
+  onAddUpvote,
+  currentEmail,
+  onRemoveUpvote,
+  onAddDownvote,
+  onRemoveDownvote,
+}) => {
+  const [upvoteArrowColor, setUpvoteArrowColor] = useState<
+    "inherit" | "primary"
+  >("inherit");
+
+  const [downvoteArrowColor, setDownvoteArrowColor] = useState<
+    "inherit" | "secondary"
+  >("inherit");
+
+  useEffect(() => {
+    if (postInfo.upvotes.includes(currentEmail)) {
+      setUpvoteArrowColor("primary");
+    }
+    if (postInfo.downvotes.includes(currentEmail)) {
+      setDownvoteArrowColor("secondary");
+    }
+  }, []);
+
+  const onUpvoteClicked = () => {
+    if (!postInfo.upvotes.includes(currentEmail)) {
+      setUpvoteArrowColor("primary");
+      setDownvoteArrowColor("inherit");
+      onRemoveDownvote(postInfo);
+      onAddUpvote(postInfo);
+    } else {
+      setUpvoteArrowColor("inherit");
+      onRemoveUpvote(postInfo);
+    }
+  };
+
+  const onDownvoteClicked = () => {
+    if (!postInfo.downvotes.includes(currentEmail)) {
+      setDownvoteArrowColor("secondary");
+      setUpvoteArrowColor("inherit");
+      onRemoveUpvote(postInfo);
+      onAddDownvote(postInfo);
+    } else {
+      setDownvoteArrowColor("inherit");
+      onRemoveDownvote(postInfo);
+    }
+  };
+
   return (
     <Container>
       <TopContainer>
         <TopLeftContainer>
-          <UpArrowContainer>
-            <NavigationIcon fontSize="large" />
+          <UpArrowContainer onClick={onUpvoteClicked}>
+            <NavigationIcon fontSize="large" color={upvoteArrowColor} />
           </UpArrowContainer>
           <VotesCountContainer>
             <VotesCount>
               {postInfo.upvotes.length - postInfo.downvotes.length}
             </VotesCount>
           </VotesCountContainer>
-          <DownArrowContainer>
-            <NavigationIcon fontSize="large" />
+          <DownArrowContainer onClick={onDownvoteClicked}>
+            <NavigationIcon fontSize="large" color={downvoteArrowColor} />
           </DownArrowContainer>
         </TopLeftContainer>
         <TopRightContainer>

@@ -2,7 +2,14 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { getPostsByThread, createNewPost } from "../store/posts/posts.actions";
+import {
+  getPostsByThread,
+  createNewPost,
+  addUpvote,
+  removeUpvote,
+  addDownvote,
+  removeDownvote,
+} from "../store/posts/posts.actions";
 import { postsSelector } from "../store/posts/posts.selector";
 import styled from "styled-components";
 import {
@@ -116,6 +123,33 @@ const PostsList = () => {
         newPostText
       )
     );
+    refreshAfterNewPost();
+  };
+
+  const onAddUpvote = (post: PostInformation) => {
+    dispatch(addUpvote(accessToken, currentEmail, post));
+  };
+
+  const onRemoveUpvote = (post: PostInformation) => {
+    dispatch(removeUpvote(accessToken, currentEmail, post));
+  };
+
+  const onAddDownvote = (post: PostInformation) => {
+    dispatch(addDownvote(accessToken, currentEmail, post));
+  };
+
+  const onRemoveDownvote = (post: PostInformation) => {
+    dispatch(removeDownvote(accessToken, currentEmail, post));
+  };
+
+  const refreshAfterNewPost = () => {
+    setNewPostText("");
+    dispatch(
+      getPostsByThread(
+        accessToken,
+        (location.state as any).threadInformation.id
+      )
+    );
   };
 
   useEffect(() => {
@@ -125,7 +159,7 @@ const PostsList = () => {
         (location.state as any).threadInformation.id
       )
     );
-  }, [posts]);
+  }, [posts.length]);
 
   return (
     <Container>
@@ -159,7 +193,15 @@ const PostsList = () => {
       <PostsListsContainer>
         {posts.length > 0 ? (
           posts.map((post: PostInformation) => (
-            <PostCard postInfo={post} key={post.id} />
+            <PostCard
+              postInfo={post}
+              key={post.id}
+              currentEmail={currentEmail}
+              onAddUpvote={onAddUpvote}
+              onRemoveUpvote={onRemoveUpvote}
+              onAddDownvote={onAddDownvote}
+              onRemoveDownvote={onRemoveDownvote}
+            />
           ))
         ) : (
           <h1>There are no posts yet.</h1>
@@ -173,6 +215,7 @@ const PostsList = () => {
           color="secondary"
           style={{ width: "50%" }}
           onChange={onNewPostTextChangedHandler}
+          value={newPostText}
         />
         <ButtonContainer>
           <Button

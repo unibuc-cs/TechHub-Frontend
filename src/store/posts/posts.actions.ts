@@ -3,6 +3,10 @@ import {
   GET_POSTS_BY_THREAD,
   SET_POSTS,
   ADD_POST,
+  ADD_UPVOTE,
+  REMOVE_UPVOTE,
+  ADD_DOWNVOTE,
+  REMOVE_DOWNVOTE,
 } from "./posts.constants";
 import { ActionWithPayload, PostInformation } from "../store";
 
@@ -52,5 +56,73 @@ export const addPost = (
   type: ADD_POST,
   payload: {
     newPost,
+  },
+});
+
+export const addUpvote = (
+  accessToken: string,
+  currentEmail: string,
+  post: PostInformation
+): ActionWithPayload<{
+  accessToken: string;
+  currentEmail: string;
+  post: PostInformation;
+}> => ({
+  type: ADD_UPVOTE,
+  payload: {
+    accessToken,
+    currentEmail,
+    post,
+  },
+});
+
+export const removeUpvote = (
+  accessToken: string,
+  currentEmail: string,
+  post: PostInformation
+): ActionWithPayload<{
+  accessToken: string;
+  currentEmail: string;
+  post: PostInformation;
+}> => ({
+  type: REMOVE_UPVOTE,
+  payload: {
+    accessToken,
+    currentEmail,
+    post,
+  },
+});
+
+export const addDownvote = (
+  accessToken: string,
+  currentEmail: string,
+  post: PostInformation
+): ActionWithPayload<{
+  accessToken: string;
+  currentEmail: string;
+  post: PostInformation;
+}> => ({
+  type: ADD_DOWNVOTE,
+  payload: {
+    accessToken,
+    currentEmail,
+    post,
+  },
+});
+
+export const removeDownvote = (
+  accessToken: string,
+  currentEmail: string,
+  post: PostInformation
+): ActionWithPayload<{
+  accessToken: string;
+  currentEmail: string;
+  post: PostInformation;
+}> => ({
+  type: REMOVE_DOWNVOTE,
+  payload: {
+    accessToken,
+    currentEmail,
+    post,
   },
 });
