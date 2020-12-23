@@ -3,6 +3,7 @@ import {
   GET_ALL_THREADS,
   GET_THREADS_BY_CATEGORY,
   SET_THREADS,
+  ADD_THREAD,
 } from "./threads.constants";
 
 export const getAllThreads = (
@@ -31,5 +32,19 @@ export const setThreads = (
   type: SET_THREADS,
   payload: {
     threads,
+  },
+});
+
+export const addThread = (
+  accessToken: string,
+  newThread: ThreadInformation
+): ActionWithPayload<{
+  accessToken: string;
+  newThread: ThreadInformation;
+}> => ({
+  type: ADD_THREAD,
+  payload: {
+    accessToken,
+    newThread,
   },
 });

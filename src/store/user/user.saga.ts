@@ -4,7 +4,11 @@ import {
   LOGIN_GET_USER_INFO,
   REGISTER_SEND_INFORMATION,
 } from "./user.constants";
-import { setUserDidRegister, setUserAccessToken } from "./user.actions";
+import {
+  setUserDidRegister,
+  setUserAccessToken,
+  setUserEmail,
+} from "./user.actions";
 
 function* sendUserLoginInformation(
   action: ActionWithPayload<{ email: string; password: string }>
@@ -23,6 +27,7 @@ function* sendUserLoginInformation(
     }).then((res) => res.json());
     const newToken = accessToken.accessToken.split("access token is:  ");
     yield put(setUserAccessToken(newToken[0]));
+    yield put(setUserEmail(action.payload.email));
   } catch (e) {
     alert("Username or password are incorrect");
     console.warn(e);
@@ -41,11 +46,11 @@ function* sendUserRegisterInformation(
       email: action.payload.email,
       username: action.payload.username,
       password: action.payload.password,
-      type: "",
+      type: "REGULAR_USER",
       profilePicture: "",
       accountStatus: "",
     };
-    yield fetch("http://127.0.0.1:8080/createUser", {
+    yield fetch("http://127.0.0.1:8080/user", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

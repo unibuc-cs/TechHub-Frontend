@@ -1,6 +1,10 @@
 import { takeEvery, put } from "redux-saga/effects";
 import { ActionWithPayload, ThreadInformation } from "../store";
-import { GET_ALL_THREADS, GET_THREADS_BY_CATEGORY } from "./threads.constants";
+import {
+  ADD_THREAD,
+  GET_ALL_THREADS,
+  GET_THREADS_BY_CATEGORY,
+} from "./threads.constants";
 import { setThreads } from "./threads.actions";
 
 function* getAllThreads(action: ActionWithPayload<{ accessToken: string }>) {
@@ -14,8 +18,33 @@ function* getAllThreads(action: ActionWithPayload<{ accessToken: string }>) {
         },
       }
     ).then((res) => res.json());
-    console.log(threads);
     // yield put(setCategories(categoriesInfo));
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+function* addNewThread(
+  action: ActionWithPayload<{
+    accessToken: string;
+    newThread: ThreadInformation;
+  }>
+) {
+  try {
+    const data = {
+      ownerEmail: action.payload.newThread.ownerEmail,
+      title: action.payload.newThread.title,
+      category: action.payload.newThread.category,
+      text: action.payload.newThread.text,
+    };
+    yield fetch("http://127.0.0.1:8080/thread", {
+      method: "POST",
+      headers: {
+        Authorization: action.payload.accessToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    });
   } catch (e) {
     console.warn(e);
   }
@@ -34,7 +63,6 @@ function* getThreadsByCategory(
         },
       }
     ).then((res) => res.json());
-    console.log(threads);
     yield put(setThreads(threads));
   } catch (e) {
     console.warn(e);
@@ -44,4 +72,5 @@ function* getThreadsByCategory(
 export default function* threadsSaga() {
   yield takeEvery(GET_ALL_THREADS, getAllThreads);
   yield takeEvery(GET_THREADS_BY_CATEGORY, getThreadsByCategory);
+  yield takeEvery(ADD_THREAD, addNewThread);
 }

@@ -22,7 +22,8 @@ const useStyles = makeStyles((theme) => ({
     height: "100vh",
   },
   image: {
-    backgroundImage: "url(https://source.unsplash.com/random)",
+    backgroundImage:
+      "url(https://hginsights.com/wp-content/uploads/Technology-trends-for-the-future-of-work-in-2020.jpg)",
     backgroundRepeat: "no-repeat",
     backgroundColor:
       theme.palette.type === "light"

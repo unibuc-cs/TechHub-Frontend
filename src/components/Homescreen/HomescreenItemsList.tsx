@@ -7,6 +7,18 @@ const Container = styled.div`
   width: 100%;
   height: 49vh;
   overflow-y: scroll;
+  ::-webkit-scrollbar {
+    width: 1em;
+    background-color: #edf5e1;
+  }
+
+  ::-webkit-scrollbar-track {
+    background-color: #edf5e1;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background-color: #231f20;
+  }
 `;
 
 const HomescreenItemsList: React.FC<{
@@ -24,8 +36,7 @@ const HomescreenItemsList: React.FC<{
         title={item.title}
         key={item.title}
         type={type}
-        ownerEmail={item.ownerEmail}
-        dateCreated={item.dateCreated}
+        threadInformation={item}
       />
     ));
   }

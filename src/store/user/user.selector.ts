@@ -12,3 +12,8 @@ export const didRegisterSelector = createSelector(
   userInformationSelector,
   (user) => user.didRegister
 );
+
+export const currentEmailSelector = createSelector(
+  userInformationSelector,
+  (user) => user.currentUserEmail
+);

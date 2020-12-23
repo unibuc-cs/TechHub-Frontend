@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useHistory, useRouteMatch } from "react-router-dom";
+import { ThreadInformation } from "../../store/store";
 
 const Container = styled.div`
   width: 100%;
@@ -70,9 +71,8 @@ const months = [
 const HomescreenItemCard: React.FC<{
   title: string;
   type: string;
-  ownerEmail?: string;
-  dateCreated?: string;
-}> = ({ title, type, ownerEmail, dateCreated }) => {
+  threadInformation?: ThreadInformation;
+}> = ({ title, type, threadInformation }) => {
   const history = useHistory();
   const { url } = useRouteMatch();
 
@@ -81,6 +81,11 @@ const HomescreenItemCard: React.FC<{
       history.push({
         pathname: `${url}/${title.toLowerCase()}`,
         state: { category: title },
+      });
+    } else {
+      history.push({
+        pathname: `/homescreen/thread/${threadInformation?.id}`,
+        state: { threadInformation },
       });
     }
   };
@@ -94,13 +99,15 @@ const HomescreenItemCard: React.FC<{
           <>
             <ThreadLeftSideContainer>
               <CardTitle topMargin>{title}</CardTitle>
-              <OwnerTitle>{`By ${ownerEmail}`}</OwnerTitle>
+              <OwnerTitle>{`By ${threadInformation?.ownerEmail}`}</OwnerTitle>
             </ThreadLeftSideContainer>
             <ThreadRightSideContainer>
               <DateTitle>
-                {dateCreated
-                  ? `On ${new Date(dateCreated).getDate()} ${
-                      months[new Date(dateCreated).getMonth()]
+                {threadInformation?.dateCreated
+                  ? `On ${new Date(threadInformation?.dateCreated).getDate()} ${
+                      months[
+                        new Date(threadInformation?.dateCreated).getMonth()
+                      ]
                     }`
                   : null}
               </DateTitle>
