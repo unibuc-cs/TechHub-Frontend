@@ -27,7 +27,9 @@ function* sendUserLoginInformation(
     }).then((res) => res.json());
     const newToken = accessToken.accessToken.split("access token is:  ");
     yield put(setUserAccessToken(newToken[0]));
+    yield localStorage.setItem("accessToken", newToken[0]);
     yield put(setUserEmail(action.payload.email));
+    yield localStorage.setItem("email", action.payload.email);
   } catch (e) {
     alert("Username or password are incorrect");
     console.warn(e);
