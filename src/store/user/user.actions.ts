@@ -6,6 +6,7 @@ import {
   SET_USER_ACCESS_TOKEN,
   USER_DID_REGISTER,
   SAVE_USER_EMAIL,
+  USER_LOGOUT,
 } from "./user.constants";
 
 export const getUserInformation = (
@@ -56,4 +57,8 @@ export const setUserEmail = (
   payload: {
     email,
   },
+});
+
+export const logoutUser = (): Action => ({
+  type: USER_LOGOUT,
 });

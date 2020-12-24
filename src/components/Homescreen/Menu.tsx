@@ -7,8 +7,13 @@ import IconButton from "@material-ui/core/IconButton";
 import AttachMoneyOutlinedIcon from "@material-ui/icons/AttachMoneyOutlined";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import Button from "@material-ui/core/Button";
+import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+
+import { logoutUser } from "../../store/user/user.actions";
 
 import styled from "styled-components";
+import { useDispatch } from "react-redux";
+import { useHistory } from "react-router-dom";
 
 const Image = styled.img`
   width: 100px;
@@ -90,6 +95,15 @@ const useStyles = makeStyles((theme) => ({
 
 const Menu = () => {
   const classes = useStyles();
+  const dispatch = useDispatch();
+  const history = useHistory();
+
+  const onLogoutButtonClickedHandler = () => {
+    dispatch(logoutUser());
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("email");
+    history.push("/");
+  };
 
   return (
     <div className={classes.root}>
@@ -113,6 +127,15 @@ const Menu = () => {
                 startIcon={<AttachMoneyOutlinedIcon />}
               >
                 Discounts
+              </Button>
+              <Button
+                variant="contained"
+                style={{ backgroundColor: "#edf5e1" }}
+                className={classes.button}
+                startIcon={<ExitToAppIcon />}
+                onClick={onLogoutButtonClickedHandler}
+              >
+                Logout
               </Button>
               <IconButton color="inherit">
                 <AccountCircle />

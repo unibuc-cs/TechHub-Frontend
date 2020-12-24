@@ -3,6 +3,7 @@ import {
   SET_USER_ACCESS_TOKEN,
   USER_DID_REGISTER,
   SAVE_USER_EMAIL,
+  USER_LOGOUT,
 } from "./user.constants";
 
 const initialState: UserLoginInformation = {
@@ -32,6 +33,13 @@ const userReducer = (
         ...state,
         currentUserEmail: (action as ActionWithPayload<{ email: string }>)
           .payload.email,
+      };
+    case USER_LOGOUT:
+      return {
+        ...state,
+        accessToken: "",
+        currentUserEmail: "",
+        didRegister: false,
       };
     default:
       return state;

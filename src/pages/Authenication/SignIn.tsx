@@ -11,7 +11,11 @@ import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { useDispatch, useSelector } from "react-redux";
-import { getUserInformation } from "../../store/user/user.actions";
+import {
+  getUserInformation,
+  setUserAccessToken,
+  setUserEmail,
+} from "../../store/user/user.actions";
 
 import { useHistory, Link } from "react-router-dom";
 
@@ -73,6 +77,13 @@ const SignIn = () => {
   const onSignInPressedHandler = () => {
     dispatch(getUserInformation(email, password));
   };
+
+  useEffect(() => {
+    if (localStorage.getItem("accessToken") && localStorage.getItem("email")) {
+      dispatch(setUserAccessToken(localStorage.getItem("accessToken")!));
+      dispatch(setUserEmail(localStorage.getItem("email")!));
+    }
+  }, []);
 
   useEffect(() => {
     if (email.length > 0 && password.length > 0) {
