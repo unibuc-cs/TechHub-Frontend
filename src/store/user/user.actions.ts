@@ -23,17 +23,20 @@ export const getUserInformation = (
 export const sendRegisterInformation = (
   email: string,
   username: string,
-  password: string
+  password: string,
+  userType: string
 ): ActionWithPayload<{
   email: string;
   password: string;
   username: string;
+  userType: string;
 }> => ({
   type: REGISTER_SEND_INFORMATION,
   payload: {
     email,
     username,
     password,
+    userType,
   },
 });
 

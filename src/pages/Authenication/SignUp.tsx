@@ -9,6 +9,10 @@ import Paper from "@material-ui/core/Paper";
 import Grid from "@material-ui/core/Grid";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 import Typography from "@material-ui/core/Typography";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import MenuItem from "@material-ui/core/MenuItem";
+import InputLabel from "@material-ui/core/InputLabel";
 import { makeStyles } from "@material-ui/core/styles";
 
 import { useDispatch, useSelector } from "react-redux";
@@ -49,6 +53,10 @@ const useStyles = makeStyles((theme) => ({
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
+  formControl: {
+    margin: theme.spacing(1),
+    minWidth: 120,
+  },
 }));
 
 const emailRegex = /(?:[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9]))\.){3}(?:(2(5[0-5]|[0-4][0-9])|1[0-9][0-9]|[1-9]?[0-9])|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])/;
@@ -79,6 +87,8 @@ const SignUp = () => {
   );
   const [signUpIsDisabled, setSignUpIsDisabled] = useState<boolean>(true);
 
+  const [userType, setUserType] = useState<string>("REGULAR_USER");
+
   useEffect(() => {
     if (userDidRegister) {
       history.push("/");
@@ -103,6 +113,10 @@ const SignUp = () => {
   const onConfirmPasswordChangedHandler = (e: any) => {
     setConfirmPassword(e.target.value);
     setConfirmPasswordTouched(true);
+  };
+
+  const onUserTypeChangedHandler = (e: any) => {
+    setUserType(e.target.value);
   };
 
   useEffect(() => {
@@ -170,7 +184,7 @@ const SignUp = () => {
   ]);
 
   const onSignUpPressedHandler = () => {
-    dispatch(sendRegisterInformation(email, username, password));
+    dispatch(sendRegisterInformation(email, username, password, userType));
   };
 
   return (
@@ -241,6 +255,22 @@ const SignUp = () => {
               error={confirmPasswordError !== ""}
               helperText={confirmPasswordError}
             />
+            <FormControl
+              variant="outlined"
+              className={classes.formControl}
+              fullWidth
+              style={{ marginLeft: "0" }}
+            >
+              <InputLabel>Type</InputLabel>
+              <Select
+                value={userType}
+                onChange={onUserTypeChangedHandler}
+                label="Age"
+              >
+                <MenuItem value={"REGULAR_USER"}>Regular User</MenuItem>
+                <MenuItem value={"MERCHANT"}>Merchant</MenuItem>
+              </Select>
+            </FormControl>
             <Button
               fullWidth
               variant="contained"
