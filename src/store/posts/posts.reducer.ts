@@ -10,6 +10,8 @@ import {
   REMOVE_UPVOTE,
   ADD_DOWNVOTE,
   REMOVE_DOWNVOTE,
+  EDIT_POST,
+  DELETE_POST,
 } from "./posts.constants";
 
 const initialState: PostStateInformation = {
@@ -151,6 +153,43 @@ const postsReducer = (
             return post;
           }
         }),
+      };
+    case EDIT_POST:
+      return {
+        ...state,
+        posts: state.posts.map((post: PostInformation) => {
+          if (
+            post.id ===
+            (action as ActionWithPayload<{
+              accessToken: string;
+              newText: string;
+              postId: string;
+            }>).payload.postId
+          ) {
+            return {
+              ...post,
+              text: (action as ActionWithPayload<{
+                accessToken: string;
+                newText: string;
+                postId: string;
+              }>).payload.newText,
+            };
+          } else {
+            return post;
+          }
+        }),
+      };
+    case DELETE_POST:
+      return {
+        ...state,
+        posts: state.posts.filter(
+          (post: PostInformation) =>
+            post.id !==
+            (action as ActionWithPayload<{
+              accessToken: string;
+              postId: string;
+            }>).payload.postId
+        ),
       };
     default:
       return state;

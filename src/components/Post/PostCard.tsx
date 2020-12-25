@@ -3,6 +3,12 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { PostInformation } from "../../store/store";
 import NavigationIcon from "@material-ui/icons/Navigation";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+import Tooltip from "@material-ui/core/Tooltip";
+import EditPostDialog from "../UI/EditPostDialog";
+import DeletePostConfirmDialog from "../UI/DeletePostConfirmDialog";
 
 const Container = styled.div`
   width: 90%;
@@ -78,6 +84,13 @@ const BottomContainer = styled.div`
   padding: 4px;
 `;
 
+const PostEditRemoveButtonsContainer = styled.div`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+`;
+
 const PostAuthorText = styled.p`
   font-size: 1.1em;
   font-style: italic;
@@ -104,6 +117,8 @@ const PostCard: React.FC<{
   onRemoveUpvote: (post: PostInformation) => void;
   onAddDownvote: (post: PostInformation) => void;
   onRemoveDownvote: (post: PostInformation) => void;
+  onEditPost: (newText: string, postId: string) => void;
+  onDeletePost: (postId: string) => void;
   currentEmail: string;
 }> = ({
   postInfo,
@@ -112,6 +127,8 @@ const PostCard: React.FC<{
   onRemoveUpvote,
   onAddDownvote,
   onRemoveDownvote,
+  onEditPost,
+  onDeletePost,
 }) => {
   const [upvoteArrowColor, setUpvoteArrowColor] = useState<
     "inherit" | "primary"
@@ -120,6 +137,9 @@ const PostCard: React.FC<{
   const [downvoteArrowColor, setDownvoteArrowColor] = useState<
     "inherit" | "secondary"
   >("inherit");
+
+  const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (postInfo.upvotes.includes(currentEmail)) {
@@ -175,6 +195,20 @@ const PostCard: React.FC<{
         </TopRightContainer>
       </TopContainer>
       <BottomContainer>
+        {postInfo.userEmail === currentEmail ? (
+          <PostEditRemoveButtonsContainer>
+            <Tooltip arrow title="Edit your post">
+              <IconButton onClick={() => setEditModalIsOpen(true)}>
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip arrow title="Delete your post">
+              <IconButton onClick={() => setDeleteModalIsOpen(true)}>
+                <DeleteIcon color="secondary" />
+              </IconButton>
+            </Tooltip>
+          </PostEditRemoveButtonsContainer>
+        ) : null}
         <PostAuthorText>{`By ${postInfo.userEmail} on ${new Date(
           postInfo.dateCreated
         ).getDate()} ${
@@ -183,6 +217,19 @@ const PostCard: React.FC<{
           postInfo.dateCreated
         ).getMinutes()}`}</PostAuthorText>
       </BottomContainer>
+      <EditPostDialog
+        open={editModalIsOpen}
+        currentPostText={postInfo.text}
+        onClose={() => setEditModalIsOpen(false)}
+        onEditPost={onEditPost}
+        postId={postInfo.id}
+      />
+      <DeletePostConfirmDialog
+        open={deleteModalIsOpen}
+        onClose={() => setDeleteModalIsOpen(false)}
+        onDeletePost={onDeletePost}
+        postId={postInfo.id}
+      />
     </Container>
   );
 };
