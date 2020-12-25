@@ -41,6 +41,7 @@ function* sendUserRegisterInformation(
     email: string;
     password: string;
     username: string;
+    userType: string;
   }>
 ) {
   try {
@@ -48,7 +49,7 @@ function* sendUserRegisterInformation(
       email: action.payload.email,
       username: action.payload.username,
       password: action.payload.password,
-      type: "REGULAR_USER",
+      type: action.payload.userType,
       profilePicture: "",
       accountStatus: "",
     };
