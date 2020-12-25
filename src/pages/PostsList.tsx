@@ -9,6 +9,8 @@ import {
   removeUpvote,
   addDownvote,
   removeDownvote,
+  editPost,
+  deletePost,
 } from "../store/posts/posts.actions";
 import { postsSelector } from "../store/posts/posts.selector";
 import styled from "styled-components";
@@ -142,6 +144,14 @@ const PostsList = () => {
     dispatch(removeDownvote(accessToken, currentEmail, post));
   };
 
+  const onEditPost = (newText: string, postId: string) => {
+    dispatch(editPost(accessToken, newText, postId));
+  };
+
+  const onDeletePost = (postId: string) => {
+    dispatch(deletePost(accessToken, postId));
+  };
+
   const refreshAfterNewPost = () => {
     setNewPostText("");
     dispatch(
@@ -201,6 +211,8 @@ const PostsList = () => {
               onRemoveUpvote={onRemoveUpvote}
               onAddDownvote={onAddDownvote}
               onRemoveDownvote={onRemoveDownvote}
+              onEditPost={onEditPost}
+              onDeletePost={onDeletePost}
             />
           ))
         ) : (

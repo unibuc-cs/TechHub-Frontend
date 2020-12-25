@@ -7,6 +7,8 @@ import {
   REMOVE_UPVOTE,
   ADD_DOWNVOTE,
   REMOVE_DOWNVOTE,
+  EDIT_POST,
+  DELETE_POST,
 } from "./posts.constants";
 import { ActionWithPayload, PostInformation } from "../store";
 
@@ -124,5 +126,33 @@ export const removeDownvote = (
     accessToken,
     currentEmail,
     post,
+  },
+});
+
+export const editPost = (
+  accessToken: string,
+  newText: string,
+  postId: string
+): ActionWithPayload<{
+  accessToken: string;
+  newText: string;
+  postId: string;
+}> => ({
+  type: EDIT_POST,
+  payload: {
+    accessToken,
+    newText,
+    postId,
+  },
+});
+
+export const deletePost = (
+  accessToken: string,
+  postId: string
+): ActionWithPayload<{ accessToken: string; postId: string }> => ({
+  type: DELETE_POST,
+  payload: {
+    accessToken,
+    postId,
   },
 });

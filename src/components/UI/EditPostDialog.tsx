@@ -6,7 +6,6 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import { ThreadInformation } from "../../store/store";
 
 const TextfieldContainer = styled.div`
   margin: 16px 0;
@@ -15,54 +14,32 @@ const TextfieldContainer = styled.div`
 const EditPostDialog: React.FC<{
   open: boolean;
   onClose: () => void;
-  currentEmail: string;
-  onAddThread: (newThread: ThreadInformation) => void;
-  accessToken: string;
-}> = ({ open, onClose, category, currentEmail, onAddThread, accessToken }) => {
-  const [threadTitle, setThreadTitle] = useState<string>("");
-  const [threadText, setThreadText] = useState<string>("");
+  onEditPost: (newText: string, postId: string) => void;
+  currentPostText: string;
+  postId: string;
+}> = ({ open, onClose, onEditPost, currentPostText, postId }) => {
+  const [postText, setPostText] = useState<string>(currentPostText);
 
-  const onThreadTitleChangedHandler = (e: any) => {
-    setThreadTitle(e.target.value);
-  };
-
-  const onThreadTextChangedHandler = (e: any) => {
-    setThreadText(e.target.value);
+  const onPostTextChangedHandler = (e: any) => {
+    setPostText(e.target.value);
   };
 
   const addThread = () => {
-    const newThread: ThreadInformation = {
-      category,
-      dateCreated: new Date().toString(),
-      id: "",
-      ownerEmail: currentEmail,
-      text: threadText,
-      title: threadTitle,
-    };
-    onAddThread(newThread);
+    onEditPost(postText, postId);
     onClose();
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Add New Thread</DialogTitle>
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
+      <DialogTitle>Edit Post</DialogTitle>
       <DialogContent>
         <TextfieldContainer>
           <TextField
             variant="outlined"
-            label="Thread Title"
-            placeholder="Add Thread Title"
-            onChange={onThreadTitleChangedHandler}
-            fullWidth
-          />
-        </TextfieldContainer>
-        <TextfieldContainer>
-          <TextField
-            variant="outlined"
-            label="Thread Text"
-            placeholder="Add Thread Text"
-            onChange={onThreadTextChangedHandler}
-            multiline
+            label="Text"
+            placeholder="Edit the post..."
+            onChange={onPostTextChangedHandler}
+            value={postText}
             fullWidth
           />
         </TextfieldContainer>
@@ -71,12 +48,8 @@ const EditPostDialog: React.FC<{
         <Button onClick={onClose} color="secondary">
           Cancel
         </Button>
-        <Button
-          onClick={addThread}
-          color="secondary"
-          disabled={threadTitle.length === 0 || threadText.length === 0}
-        >
-          Add
+        <Button onClick={addThread} color="secondary">
+          Edit
         </Button>
       </DialogActions>
     </Dialog>

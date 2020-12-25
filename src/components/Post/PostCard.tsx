@@ -7,6 +7,8 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
 import Tooltip from "@material-ui/core/Tooltip";
+import EditPostDialog from "../UI/EditPostDialog";
+import DeletePostConfirmDialog from "../UI/DeletePostConfirmDialog";
 
 const Container = styled.div`
   width: 90%;
@@ -115,6 +117,8 @@ const PostCard: React.FC<{
   onRemoveUpvote: (post: PostInformation) => void;
   onAddDownvote: (post: PostInformation) => void;
   onRemoveDownvote: (post: PostInformation) => void;
+  onEditPost: (newText: string, postId: string) => void;
+  onDeletePost: (postId: string) => void;
   currentEmail: string;
 }> = ({
   postInfo,
@@ -123,6 +127,8 @@ const PostCard: React.FC<{
   onRemoveUpvote,
   onAddDownvote,
   onRemoveDownvote,
+  onEditPost,
+  onDeletePost,
 }) => {
   const [upvoteArrowColor, setUpvoteArrowColor] = useState<
     "inherit" | "primary"
@@ -131,6 +137,9 @@ const PostCard: React.FC<{
   const [downvoteArrowColor, setDownvoteArrowColor] = useState<
     "inherit" | "secondary"
   >("inherit");
+
+  const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
+  const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
 
   useEffect(() => {
     if (postInfo.upvotes.includes(currentEmail)) {
@@ -189,12 +198,12 @@ const PostCard: React.FC<{
         {postInfo.userEmail === currentEmail ? (
           <PostEditRemoveButtonsContainer>
             <Tooltip arrow title="Edit your post">
-              <IconButton>
+              <IconButton onClick={() => setEditModalIsOpen(true)}>
                 <EditIcon />
               </IconButton>
             </Tooltip>
             <Tooltip arrow title="Delete your post">
-              <IconButton>
+              <IconButton onClick={() => setDeleteModalIsOpen(true)}>
                 <DeleteIcon color="secondary" />
               </IconButton>
             </Tooltip>
@@ -208,6 +217,19 @@ const PostCard: React.FC<{
           postInfo.dateCreated
         ).getMinutes()}`}</PostAuthorText>
       </BottomContainer>
+      <EditPostDialog
+        open={editModalIsOpen}
+        currentPostText={postInfo.text}
+        onClose={() => setEditModalIsOpen(false)}
+        onEditPost={onEditPost}
+        postId={postInfo.id}
+      />
+      <DeletePostConfirmDialog
+        open={deleteModalIsOpen}
+        onClose={() => setDeleteModalIsOpen(false)}
+        onDeletePost={onDeletePost}
+        postId={postInfo.id}
+      />
     </Container>
   );
 };

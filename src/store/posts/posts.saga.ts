@@ -7,6 +7,8 @@ import {
   REMOVE_UPVOTE,
   ADD_DOWNVOTE,
   REMOVE_DOWNVOTE,
+  EDIT_POST,
+  DELETE_POST,
 } from "./posts.constants";
 import { setPosts, addPost } from "./posts.actions";
 
@@ -189,6 +191,51 @@ function* removeDownvote(
   }
 }
 
+function* editPost(
+  action: ActionWithPayload<{
+    accessToken: string;
+    newText: string;
+    postId: string;
+  }>
+) {
+  try {
+    const data = {
+      text: action.payload.newText,
+    };
+    yield fetch(`http://127.0.0.1:8080/post/${action.payload.postId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: action.payload.accessToken,
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify(data),
+    });
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+function* deletePost(
+  action: ActionWithPayload<{
+    accessToken: string;
+    postId: string;
+  }>
+) {
+  try {
+    yield fetch(`http://127.0.0.1:8080/post/${action.payload.postId}`, {
+      method: "DELETE",
+      headers: {
+        Authorization: action.payload.accessToken,
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+    });
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
 export default function* postsSaga() {
   yield takeEvery(GET_POSTS_BY_THREAD, getPostsByThread);
   yield takeEvery(CREATE_POST, addNewPost);
@@ -196,4 +243,6 @@ export default function* postsSaga() {
   yield takeEvery(REMOVE_UPVOTE, removeUpvote);
   yield takeEvery(ADD_DOWNVOTE, addDownvote);
   yield takeEvery(REMOVE_DOWNVOTE, removeDownvote);
+  yield takeEvery(EDIT_POST, editPost);
+  yield takeEvery(DELETE_POST, deletePost);
 }
