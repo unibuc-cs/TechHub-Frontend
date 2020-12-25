@@ -3,6 +3,10 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { PostInformation } from "../../store/store";
 import NavigationIcon from "@material-ui/icons/Navigation";
+import IconButton from "@material-ui/core/IconButton";
+import DeleteIcon from "@material-ui/icons/Delete";
+import EditIcon from "@material-ui/icons/Edit";
+import Tooltip from "@material-ui/core/Tooltip";
 
 const Container = styled.div`
   width: 90%;
@@ -76,6 +80,13 @@ const BottomContainer = styled.div`
   justify-content: flex-end;
   align-items: center;
   padding: 4px;
+`;
+
+const PostEditRemoveButtonsContainer = styled.div`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
 `;
 
 const PostAuthorText = styled.p`
@@ -175,6 +186,20 @@ const PostCard: React.FC<{
         </TopRightContainer>
       </TopContainer>
       <BottomContainer>
+        {postInfo.userEmail === currentEmail ? (
+          <PostEditRemoveButtonsContainer>
+            <Tooltip arrow title="Edit your post">
+              <IconButton>
+                <EditIcon />
+              </IconButton>
+            </Tooltip>
+            <Tooltip arrow title="Delete your post">
+              <IconButton>
+                <DeleteIcon color="secondary" />
+              </IconButton>
+            </Tooltip>
+          </PostEditRemoveButtonsContainer>
+        ) : null}
         <PostAuthorText>{`By ${postInfo.userEmail} on ${new Date(
           postInfo.dateCreated
         ).getDate()} ${

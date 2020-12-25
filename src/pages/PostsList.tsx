@@ -159,7 +159,7 @@ const PostsList = () => {
         (location.state as any).threadInformation.id
       )
     );
-  }, [posts.length]);
+  }, []);
 
   return (
     <Container>

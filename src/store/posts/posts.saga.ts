@@ -65,7 +65,7 @@ function* addNewPost(
       threadId: action.payload.threadId,
       userEmail: action.payload.userEmail,
     };
-    put(addPost(newPost));
+    yield put(addPost(newPost));
   } catch (e) {
     console.warn(e);
   }
