@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import AppBar from "@material-ui/core/AppBar";
 import Toolbar from "@material-ui/core/Toolbar";
 import { fade, makeStyles } from "@material-ui/core/styles";
@@ -8,6 +8,7 @@ import AttachMoneyOutlinedIcon from "@material-ui/icons/AttachMoneyOutlined";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import Button from "@material-ui/core/Button";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import ProfileModal from "../UI/ProfileModal";
 
 import { logoutUser } from "../../store/user/user.actions";
 
@@ -98,6 +99,8 @@ const Menu = () => {
   const dispatch = useDispatch();
   const history = useHistory();
 
+  const [profileModalIsOpen, setProfileModalIsOpen] = useState<boolean>(false);
+
   const onLogoutButtonClickedHandler = () => {
     dispatch(logoutUser());
     localStorage.removeItem("accessToken");
@@ -137,13 +140,20 @@ const Menu = () => {
               >
                 Logout
               </Button>
-              <IconButton color="inherit">
+              <IconButton
+                color="inherit"
+                onClick={() => setProfileModalIsOpen(true)}
+              >
                 <AccountCircle />
               </IconButton>
             </RightSideContainer>
           </ToolbarContainer>
         </Toolbar>
       </AppBar>
+      <ProfileModal
+        open={profileModalIsOpen}
+        onClose={() => setProfileModalIsOpen(false)}
+      />
     </div>
   );
 };

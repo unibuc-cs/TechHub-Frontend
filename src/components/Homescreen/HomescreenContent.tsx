@@ -83,7 +83,6 @@ const HomescreenContent: React.FC<{ type: string }> = ({ type }) => {
   );
 
   useEffect(() => {
-    console.log(threads.length);
     if (accessToken) {
       if (type === "categories") {
         dispatch(getCategories(accessToken));

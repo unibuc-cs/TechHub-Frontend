@@ -34,6 +34,22 @@ export interface PostInformation {
   downvotes: string[];
 }
 
+export interface UserDetails {
+  email: string;
+  password: string;
+  username: string;
+  type: string;
+  profilePicture: string;
+  accountStatus: string;
+  totalPoints: number;
+  currentPoints: number;
+  vipStatus: boolean;
+}
+
+export interface UserDetailsStateInformation {
+  details: UserDetails;
+}
+
 export interface ThreadStateInformation {
   threads: ThreadInformation[];
 }
@@ -47,6 +63,7 @@ export interface Store {
   categories: CategoriesInformation;
   threads: ThreadStateInformation;
   posts: PostStateInformation;
+  userDetails: UserDetailsStateInformation;
 }
 
 export interface CategoryCard {
