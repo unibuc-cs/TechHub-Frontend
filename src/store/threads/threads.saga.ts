@@ -4,6 +4,7 @@ import {
   ADD_THREAD,
   GET_ALL_THREADS,
   GET_THREADS_BY_CATEGORY,
+  SEARCH_THREADS,
 } from "./threads.constants";
 import { setThreads } from "./threads.actions";
 
@@ -69,8 +70,35 @@ function* getThreadsByCategory(
   }
 }
 
+function* searchThreads(
+  action: ActionWithPayload<{
+    accessToken: string;
+    searchInput: string;
+    category: string;
+  }>
+) {
+  try {
+    const threads: ThreadInformation[] = yield fetch(
+      `http://127.0.0.1:8080/thread/title/${action.payload.searchInput}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: action.payload.accessToken,
+        },
+      }
+    ).then((res) => res.json());
+    const filteredThreads = threads.filter(
+      (thread: ThreadInformation) => thread.category === action.payload.category
+    );
+    yield put(setThreads(filteredThreads));
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
 export default function* threadsSaga() {
   yield takeEvery(GET_ALL_THREADS, getAllThreads);
   yield takeEvery(GET_THREADS_BY_CATEGORY, getThreadsByCategory);
   yield takeEvery(ADD_THREAD, addNewThread);
+  yield takeEvery(SEARCH_THREADS, searchThreads);
 }
