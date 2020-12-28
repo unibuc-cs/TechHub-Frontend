@@ -25,7 +25,13 @@ const AwardTrophyDialog: React.FC<{
         <Button onClick={onClose} color="primary">
           Cancel
         </Button>
-        <Button onClick={() => onAwardPost(postId)} color="secondary">
+        <Button
+          onClick={() => {
+            onAwardPost(postId);
+            onClose();
+          }}
+          color="secondary"
+        >
           Award
         </Button>
       </DialogActions>
