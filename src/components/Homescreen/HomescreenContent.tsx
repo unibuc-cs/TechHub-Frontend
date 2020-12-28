@@ -18,6 +18,7 @@ import { getCategories } from "../../store/categories/categories.actions";
 import {
   addThread,
   getThreadsByCategory,
+  searchThreads,
 } from "../../store/threads/threads.actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -81,9 +82,9 @@ const HomescreenContent: React.FC<{ type: string }> = ({ type }) => {
   const [addThreadDialogIsOpen, setAddThreadDialogIsOpen] = useState<boolean>(
     false
   );
+  const [searchInput, setSearchInput] = useState<string>("");
 
   useEffect(() => {
-    console.log(threads.length);
     if (accessToken) {
       if (type === "categories") {
         dispatch(getCategories(accessToken));
@@ -93,10 +94,32 @@ const HomescreenContent: React.FC<{ type: string }> = ({ type }) => {
         );
       }
     }
-  }, [accessToken, type, threads.length]);
+  }, [accessToken, type]);
+
+  useEffect(() => {
+    if (type === "threads") {
+      if (searchInput === "") {
+        dispatch(
+          getThreadsByCategory(accessToken, (location.state as any).category)
+        );
+      } else {
+        dispatch(
+          searchThreads(
+            accessToken,
+            searchInput,
+            (location.state as any).category
+          )
+        );
+      }
+    }
+  }, [searchInput]);
 
   const onAddThreadHandler = (newThread: ThreadInformation) => {
     dispatch(addThread(accessToken, newThread));
+  };
+
+  const onSearchInputChangedHandler = (e: any) => {
+    setSearchInput(e.target.value);
   };
 
   return (
@@ -109,22 +132,24 @@ const HomescreenContent: React.FC<{ type: string }> = ({ type }) => {
         </Title>
       </TitleContainer>
       <ContentContainer>
-        <SearchBarContainer>
-          <FormControl fullWidth variant="outlined">
-            <InputLabel color="secondary">Search</InputLabel>
-            <OutlinedInput
-              color="secondary"
-              onChange={() => {}}
-              startAdornment={
-                <InputAdornment position="start">
-                  <SearchIcon />
-                </InputAdornment>
-              }
-              labelWidth={60}
-              placeholder="Search..."
-            />
-          </FormControl>
-        </SearchBarContainer>
+        {type === "threads" ? (
+          <SearchBarContainer>
+            <FormControl fullWidth variant="outlined">
+              <InputLabel color="secondary">Search</InputLabel>
+              <OutlinedInput
+                color="secondary"
+                onChange={onSearchInputChangedHandler}
+                startAdornment={
+                  <InputAdornment position="start">
+                    <SearchIcon />
+                  </InputAdornment>
+                }
+                labelWidth={60}
+                placeholder="Search..."
+              />
+            </FormControl>
+          </SearchBarContainer>
+        ) : null}
         {type === "threads" ? (
           <ButtonContainer>
             <Button
