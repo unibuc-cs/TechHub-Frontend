@@ -39,6 +39,7 @@ const AddThreadDialog: React.FC<{
       ownerEmail: currentEmail,
       text: threadText,
       title: threadTitle,
+      hasTrophy: false,
     };
     onAddThread(newThread);
     onClose();

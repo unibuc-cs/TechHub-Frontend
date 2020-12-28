@@ -9,6 +9,7 @@ import {
   REMOVE_DOWNVOTE,
   EDIT_POST,
   DELETE_POST,
+  AWARD_TROPHY,
 } from "./posts.constants";
 import { setPosts, addPost } from "./posts.actions";
 
@@ -236,6 +237,30 @@ function* deletePost(
   }
 }
 
+function* awardTrophy(
+  action: ActionWithPayload<{
+    accessToken: string;
+    postId: string;
+  }>
+) {
+  try {
+    const data = {
+      hasTrophy: true,
+    };
+    yield fetch(`http://127.0.0.1:8080/post/${action.payload.postId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: action.payload.accessToken,
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify(data),
+    });
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
 export default function* postsSaga() {
   yield takeEvery(GET_POSTS_BY_THREAD, getPostsByThread);
   yield takeEvery(CREATE_POST, addNewPost);
@@ -245,4 +270,5 @@ export default function* postsSaga() {
   yield takeEvery(REMOVE_DOWNVOTE, removeDownvote);
   yield takeEvery(EDIT_POST, editPost);
   yield takeEvery(DELETE_POST, deletePost);
+  yield takeEvery(AWARD_TROPHY, awardTrophy);
 }

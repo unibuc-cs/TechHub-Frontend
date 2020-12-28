@@ -12,6 +12,7 @@ import {
   REMOVE_DOWNVOTE,
   EDIT_POST,
   DELETE_POST,
+  AWARD_TROPHY,
 } from "./posts.constants";
 
 const initialState: PostStateInformation = {
@@ -190,6 +191,26 @@ const postsReducer = (
               postId: string;
             }>).payload.postId
         ),
+      };
+    case AWARD_TROPHY:
+      return {
+        ...state,
+        posts: state.posts.map((post: PostInformation) => {
+          if (
+            post.id ===
+            (action as ActionWithPayload<{
+              accessToken: string;
+              postId: string;
+            }>).payload.postId
+          ) {
+            return {
+              ...post,
+              hasTrophy: true,
+            };
+          } else {
+            return post;
+          }
+        }),
       };
     default:
       return state;

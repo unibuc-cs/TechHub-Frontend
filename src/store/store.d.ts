@@ -20,6 +20,7 @@ export interface ThreadInformation {
   category: string;
   text: string;
   dateCreated: string;
+  hasTrophy: boolean;
 }
 
 export interface PostInformation {

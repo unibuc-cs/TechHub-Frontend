@@ -11,6 +11,7 @@ import {
   removeDownvote,
   editPost,
   deletePost,
+  awardTrophy,
 } from "../store/posts/posts.actions";
 import { postsSelector } from "../store/posts/posts.selector";
 import styled from "styled-components";
@@ -152,6 +153,10 @@ const PostsList = () => {
     dispatch(deletePost(accessToken, postId));
   };
 
+  const onAwardTrophy = (postId: string) => {
+    dispatch(awardTrophy(accessToken, postId));
+  };
+
   const refreshAfterNewPost = () => {
     setNewPostText("");
     dispatch(
@@ -213,6 +218,13 @@ const PostsList = () => {
               onRemoveDownvote={onRemoveDownvote}
               onEditPost={onEditPost}
               onDeletePost={onDeletePost}
+              threadHasTrophy={
+                (location.state as any).threadInformation.hasTrophy
+              }
+              threadOwnerEmail={
+                (location.state as any).threadInformation.ownerEmail
+              }
+              onAwardTrophy={onAwardTrophy}
             />
           ))
         ) : (
