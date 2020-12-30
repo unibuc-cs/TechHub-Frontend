@@ -6,6 +6,7 @@ import { Switch, Route, useRouteMatch } from "react-router-dom";
 
 import HomescreenContent from "../components/Homescreen/HomescreenContent";
 import PostsList from "./PostsList";
+import Leaderboard from "./Leaderboard";
 
 const Container = styled.div`
   width: 100vw;
@@ -37,6 +38,9 @@ const Homescreen = () => {
         <Menu />
       </MenuContainer>
       <Switch>
+        <Route exact path={`${path}/leaderboard`}>
+          <Leaderboard />
+        </Route>
         <Route exact path={path}>
           <HomescreenContent type="categories" />
         </Route>
