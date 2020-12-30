@@ -9,6 +9,19 @@ export interface UserLoginInformation {
   currentUserEmail: string;
 }
 
+export interface UserDetails {
+  email: string;
+  password: string;
+  username: string;
+  type: string;
+  profilePicture: string;
+  accountStatus: string;
+  totalPoints: number;
+  currentPoints: number;
+  vipStatus: boolean;
+  trophies: number;
+}
+
 export interface CategoriesInformation {
   categories: CategoryCard[];
 }
@@ -42,11 +55,16 @@ export interface PostStateInformation {
   posts: PostInformation[];
 }
 
+export interface LeaderboardStateInformation {
+  topUsers: UserDetails[];
+}
+
 export interface Store {
   user: UserLoginInformation;
   categories: CategoriesInformation;
   threads: ThreadStateInformation;
   posts: PostStateInformation;
+  leaderboard: LeaderboardStateInformation;
 }
 
 export interface CategoryCard {
