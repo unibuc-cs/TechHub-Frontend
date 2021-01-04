@@ -4,6 +4,7 @@ import {
   GET_THREADS_BY_CATEGORY,
   SET_THREADS,
   ADD_THREAD,
+  SEARCH_THREADS,
 } from "./threads.constants";
 
 export const getAllThreads = (
@@ -46,5 +47,22 @@ export const addThread = (
   payload: {
     accessToken,
     newThread,
+  },
+});
+
+export const searchThreads = (
+  accessToken: string,
+  searchInput: string,
+  category: string
+): ActionWithPayload<{
+  accessToken: string;
+  searchInput: string;
+  category: string;
+}> => ({
+  type: SEARCH_THREADS,
+  payload: {
+    accessToken,
+    searchInput,
+    category,
   },
 });

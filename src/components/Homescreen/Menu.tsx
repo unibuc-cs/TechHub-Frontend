@@ -19,6 +19,10 @@ import { useHistory } from "react-router-dom";
 const Image = styled.img`
   width: 100px;
   height: 100px;
+
+  :hover {
+    cursor: pointer;
+  }
 `;
 
 const ToolbarContainer = styled.div`
@@ -113,13 +117,17 @@ const Menu = () => {
       <AppBar position="static" style={{ backgroundColor: "#231f20" }}>
         <Toolbar>
           <ToolbarContainer>
-            <Image src="https://i.pinimg.com/474x/0b/cb/57/0bcb579e4b62ca4f7293080be30fa4e7.jpg" />
+            <Image
+              src="https://i.pinimg.com/474x/0b/cb/57/0bcb579e4b62ca4f7293080be30fa4e7.jpg"
+              onClick={() => history.push("/homescreen")}
+            />
             <RightSideContainer>
               <Button
                 variant="contained"
                 style={{ backgroundColor: "#edf5e1" }}
                 className={classes.button}
                 startIcon={<EqualizerIcon />}
+                onClick={() => history.push("/homescreen/leaderboard")}
               >
                 Leaderboard
               </Button>

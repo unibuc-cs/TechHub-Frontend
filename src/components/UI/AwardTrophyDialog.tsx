@@ -6,18 +6,19 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button/Button";
 
-const DeletePostConfirmDialog: React.FC<{
+const AwardTrophyDialog: React.FC<{
   open: boolean;
   onClose: () => void;
   postId: string;
-  onDeletePost: (postId: string) => void;
-}> = ({ postId, onDeletePost, open, onClose }) => {
+  onAwardPost: (postId: string) => void;
+}> = ({ postId, onAwardPost, open, onClose }) => {
   return (
     <Dialog open={open} onClose={onClose}>
-      <DialogTitle>Delete Post</DialogTitle>
+      <DialogTitle>Confirm Award</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Are you sure you want to delete the post?
+          Are you sure you want to award a trophy to this post? You cannot
+          change your decision later.
         </DialogContentText>
       </DialogContent>
       <DialogActions>
@@ -26,16 +27,16 @@ const DeletePostConfirmDialog: React.FC<{
         </Button>
         <Button
           onClick={() => {
-            onDeletePost(postId);
+            onAwardPost(postId);
             onClose();
           }}
           color="secondary"
         >
-          Delete
+          Award
         </Button>
       </DialogActions>
     </Dialog>
   );
 };
 
-export default DeletePostConfirmDialog;
+export default AwardTrophyDialog;

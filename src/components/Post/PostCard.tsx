@@ -9,6 +9,9 @@ import EditIcon from "@material-ui/icons/Edit";
 import Tooltip from "@material-ui/core/Tooltip";
 import EditPostDialog from "../UI/EditPostDialog";
 import DeletePostConfirmDialog from "../UI/DeletePostConfirmDialog";
+import Button from "@material-ui/core/Button/Button";
+import trophy from "../../assets/trophy.png";
+import AwardTrophyDialog from "../UI/AwardTrophyDialog";
 
 const Container = styled.div`
   width: 90%;
@@ -77,7 +80,7 @@ const VotesCount = styled.p`
 
 const BottomContainer = styled.div`
   width: 100%;
-  height: 40px;
+  height: auto;
   display: flex;
   justify-content: flex-end;
   align-items: center;
@@ -94,6 +97,12 @@ const PostEditRemoveButtonsContainer = styled.div`
 const PostAuthorText = styled.p`
   font-size: 1.1em;
   font-style: italic;
+`;
+
+const TrophyImage = styled.img`
+  width: 125px;
+  height: 100px;
+  margin-right: 8px;
 `;
 
 const months = [
@@ -119,7 +128,10 @@ const PostCard: React.FC<{
   onRemoveDownvote: (post: PostInformation) => void;
   onEditPost: (newText: string, postId: string) => void;
   onDeletePost: (postId: string) => void;
+  onAwardTrophy: (postId: string) => void;
   currentEmail: string;
+  threadHasTrophy: boolean;
+  threadOwnerEmail: string;
 }> = ({
   postInfo,
   onAddUpvote,
@@ -129,6 +141,9 @@ const PostCard: React.FC<{
   onRemoveDownvote,
   onEditPost,
   onDeletePost,
+  onAwardTrophy,
+  threadHasTrophy,
+  threadOwnerEmail,
 }) => {
   const [upvoteArrowColor, setUpvoteArrowColor] = useState<
     "inherit" | "primary"
@@ -140,6 +155,9 @@ const PostCard: React.FC<{
 
   const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
+  const [awardTrophyModalIsOpen, setAwardTrophyModalIsOpen] = useState<boolean>(
+    false
+  );
 
   useEffect(() => {
     if (postInfo.upvotes.includes(currentEmail)) {
@@ -195,6 +213,9 @@ const PostCard: React.FC<{
         </TopRightContainer>
       </TopContainer>
       <BottomContainer>
+        {postInfo.hasTrophy ? (
+          <TrophyImage src={trophy} alt="Cannot load image" />
+        ) : null}
         {postInfo.userEmail === currentEmail ? (
           <PostEditRemoveButtonsContainer>
             <Tooltip arrow title="Edit your post">
@@ -208,6 +229,22 @@ const PostCard: React.FC<{
               </IconButton>
             </Tooltip>
           </PostEditRemoveButtonsContainer>
+        ) : null}
+        {postInfo.userEmail !== currentEmail &&
+        !threadHasTrophy &&
+        threadOwnerEmail === currentEmail ? (
+          <Button
+            variant="contained"
+            style={{
+              backgroundColor: "#228B22",
+              color: "white",
+              marginRight: "4px",
+            }}
+            onClick={() => setAwardTrophyModalIsOpen(true)}
+            size="small"
+          >
+            Award Trophy
+          </Button>
         ) : null}
         <PostAuthorText>{`By ${postInfo.userEmail} on ${new Date(
           postInfo.dateCreated
@@ -228,6 +265,12 @@ const PostCard: React.FC<{
         open={deleteModalIsOpen}
         onClose={() => setDeleteModalIsOpen(false)}
         onDeletePost={onDeletePost}
+        postId={postInfo.id}
+      />
+      <AwardTrophyDialog
+        open={awardTrophyModalIsOpen}
+        onClose={() => setAwardTrophyModalIsOpen(false)}
+        onAwardPost={onAwardTrophy}
         postId={postInfo.id}
       />
     </Container>

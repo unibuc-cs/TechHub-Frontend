@@ -12,6 +12,7 @@ import categoriesReducer from "./store/categories/categories.reducer";
 import threadsReducer from "./store/threads/threads.reducer";
 import postsReducer from "./store/posts/posts.reducer";
 import userDetailsReducer from "./store/userDetails/userDetails.reducer";
+import leaderboardReducer from "./store/leaderboard/leaderboard.reducer";
 import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
 import "regenerator-runtime/runtime";
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   threads: threadsReducer,
   posts: postsReducer,
   userDetails: userDetailsReducer,
+  leaderboard: leaderboardReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();

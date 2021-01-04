@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { ThreadInformation } from "../../store/store";
+import trophy from "../../assets/trophy.png";
 
 const Container = styled.div`
   width: 100%;
@@ -39,7 +40,7 @@ const ThreadLeftSideContainer = styled.div`
 const ThreadRightSideContainer = styled.div`
   width: 20%;
   display: flex;
-  justify-content: center;
+  justify-content: flex-end;
   align-items: center;
 `;
 
@@ -51,6 +52,12 @@ const OwnerTitle = styled.p`
 const DateTitle = styled.p`
   font-size: 1em;
   font-weight: bold;
+`;
+
+const TrophyImage = styled.img`
+  width: 66px;
+  height: 50px;
+  margin-right: 8px;
 `;
 
 const months = [
@@ -102,6 +109,9 @@ const HomescreenItemCard: React.FC<{
               <OwnerTitle>{`By ${threadInformation?.ownerEmail}`}</OwnerTitle>
             </ThreadLeftSideContainer>
             <ThreadRightSideContainer>
+              {threadInformation?.hasTrophy ? (
+                <TrophyImage src={trophy} alt="Cannot load image" />
+              ) : null}
               <DateTitle>
                 {threadInformation?.dateCreated
                   ? `On ${new Date(threadInformation?.dateCreated).getDate()} ${

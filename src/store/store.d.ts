@@ -20,6 +20,7 @@ export interface ThreadInformation {
   category: string;
   text: string;
   dateCreated: string;
+  hasTrophy: boolean;
 }
 
 export interface PostInformation {
@@ -59,12 +60,17 @@ export interface PostStateInformation {
   posts: PostInformation[];
 }
 
+export interface LeaderboardStateInformation {
+  topUsers: UserDetails[];
+}
+
 export interface Store {
   user: UserLoginInformation;
   categories: CategoriesInformation;
   threads: ThreadStateInformation;
   posts: PostStateInformation;
   userDetails: UserDetailsStateInformation;
+  leaderboard: LeaderboardStateInformation;
 }
 
 export interface CategoryCard {
