@@ -9,6 +9,7 @@ import {
   REMOVE_DOWNVOTE,
   EDIT_POST,
   DELETE_POST,
+  AWARD_TROPHY,
 } from "./posts.constants";
 import { ActionWithPayload, PostInformation } from "../store";
 
@@ -151,6 +152,17 @@ export const deletePost = (
   postId: string
 ): ActionWithPayload<{ accessToken: string; postId: string }> => ({
   type: DELETE_POST,
+  payload: {
+    accessToken,
+    postId,
+  },
+});
+
+export const awardTrophy = (
+  accessToken: string,
+  postId: string
+): ActionWithPayload<{ accessToken: string; postId: string }> => ({
+  type: AWARD_TROPHY,
   payload: {
     accessToken,
     postId,
