@@ -44,6 +44,7 @@ export interface UserDetails {
   totalPoints: number;
   currentPoints: number;
   vipStatus: boolean;
+  trophies: number;
 }
 
 export interface UserDetailsStateInformation {

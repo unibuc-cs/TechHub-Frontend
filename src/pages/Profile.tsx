@@ -1,9 +1,20 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { UserDetails } from "../store/store";
 import { makeStyles } from "@material-ui/core/styles";
 import Button from "@material-ui/core/Button";
 import Paper from "@material-ui/core/Paper";
+import { useDispatch, useSelector } from "react-redux";
+import { userDetailsSelector } from "../store/userDetails/userDetails.selector";
+import {
+  getUserDetailsByEmail,
+  changeProfilePicture,
+} from "../store/userDetails/userDetails.actions";
+import {
+  accessTokenSelector,
+  currentEmailSelector,
+} from "../store/user/user.selector";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -67,25 +78,24 @@ const AchievementArea = styled.div`
   align-items: center;
 `;
 
-const fakeProfile: UserDetails = {
-  accountStatus: "",
-  currentPoints: 1000,
-  email: "codrut@email.ro",
-  password: "",
-  profilePicture:
-    "https://t4.ftcdn.net/jpg/03/46/93/61/360_F_346936114_RaxE6OQogebgAWTalE1myseY1Hbb5qPM.jpg",
-  totalPoints: 1100,
-  type: "REGULAR_USER",
-  username: "codrut",
-  vipStatus: false,
-};
-
 const Profile = () => {
   const classes = useStyles();
-  const [profilePicture, setProfilePicture] = useState<string>(
-    fakeProfile.profilePicture
-  );
+  const [profilePicture, setProfilePicture] = useState<string>("");
   const [profileWasChanged, setProfileWasChanged] = useState<boolean>(false);
+
+  const dispatch = useDispatch();
+
+  const currentUserDetails: UserDetails = useSelector(userDetailsSelector);
+  const accessToken = useSelector(accessTokenSelector);
+  const currentUserEmail = useSelector(currentEmailSelector);
+
+  useEffect(() => {
+    dispatch(getUserDetailsByEmail(accessToken, currentUserEmail));
+  }, []);
+
+  useEffect(() => {
+    setProfilePicture(currentUserDetails.profilePicture);
+  }, [currentUserDetails]);
 
   const onImageChangedHandler = (e: any) => {
     const reader = new FileReader();
@@ -96,6 +106,12 @@ const Profile = () => {
     };
     reader.readAsDataURL(e.target.files[0]);
     setProfileWasChanged(true);
+  };
+
+  const onChangeImageButtonClicked = () => {
+    dispatch(
+      changeProfilePicture(accessToken, currentUserEmail, profilePicture)
+    );
   };
 
   return (
@@ -128,6 +144,7 @@ const Profile = () => {
               color="secondary"
               size="small"
               style={{ marginTop: "4px" }}
+              onClick={onChangeImageButtonClicked}
             >
               Save Changes
             </Button>
@@ -135,10 +152,10 @@ const Profile = () => {
         </ProfilePictureContainer>
         <BasicInformationContainer>
           <Text>
-            <b>Email: </b> {fakeProfile.email}
+            <b>Email: </b> {currentUserDetails.email}
           </Text>
           <Text>
-            <b>Username: </b> {fakeProfile.username}
+            <b>Username: </b> {currentUserDetails.username}
           </Text>
         </BasicInformationContainer>
       </TopContainer>
@@ -148,7 +165,7 @@ const Profile = () => {
             <Text>
               <b>TROPHIES</b>
             </Text>
-            <Text>15</Text>
+            <Text>{currentUserDetails.trophies}</Text>
           </AchievementArea>
         </Paper>
         <Paper elevation={3} style={{ width: "100%", marginTop: "8px" }}>
@@ -156,7 +173,7 @@ const Profile = () => {
             <Text>
               <b>TOTAL POINTS</b>
             </Text>
-            <Text>{fakeProfile.totalPoints}</Text>
+            <Text>{currentUserDetails.totalPoints}</Text>
           </AchievementArea>
         </Paper>
         <Paper elevation={3} style={{ width: "100%", marginTop: "8px" }}>
@@ -164,7 +181,7 @@ const Profile = () => {
             <Text>
               <b>CURRENT POINTS</b>
             </Text>
-            <Text>{fakeProfile.currentPoints}</Text>
+            <Text>{currentUserDetails.currentPoints}</Text>
           </AchievementArea>
         </Paper>
         <Button

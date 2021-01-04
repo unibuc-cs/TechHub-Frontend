@@ -3,7 +3,10 @@ import {
   UserDetailsStateInformation,
   UserDetails,
 } from "../store";
-import { SET_USER_DETAILS } from "./userDetails.constants";
+import {
+  SET_USER_DETAILS,
+  CHANGE_PROFILE_PICTURE,
+} from "./userDetails.constants";
 
 const initialState: UserDetailsStateInformation = {
   details: {
@@ -16,6 +19,7 @@ const initialState: UserDetailsStateInformation = {
     type: "",
     username: "",
     vipStatus: false,
+    trophies: 0,
   },
 };
 
@@ -29,6 +33,18 @@ const userDetailsReducer = (
         ...state,
         details: (action as ActionWithPayload<{ details: UserDetails }>).payload
           .details,
+      };
+    case CHANGE_PROFILE_PICTURE:
+      return {
+        ...state,
+        details: {
+          ...state.details,
+          profilePicture: (action as ActionWithPayload<{
+            accessToken: string;
+            email: string;
+            newImage: string;
+          }>).payload.newImage,
+        },
       };
     default:
       return state;
