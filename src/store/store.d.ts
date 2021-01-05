@@ -9,19 +9,6 @@ export interface UserLoginInformation {
   currentUserEmail: string;
 }
 
-export interface UserDetails {
-  email: string;
-  password: string;
-  username: string;
-  type: string;
-  profilePicture: string;
-  accountStatus: string;
-  totalPoints: number;
-  currentPoints: number;
-  vipStatus: boolean;
-  trophies: number;
-}
-
 export interface CategoriesInformation {
   categories: CategoryCard[];
 }
@@ -48,6 +35,23 @@ export interface PostInformation {
   downvotes: string[];
 }
 
+export interface UserDetails {
+  email: string;
+  password: string;
+  username: string;
+  type: string;
+  profilePicture: string;
+  accountStatus: string;
+  totalPoints: number;
+  currentPoints: number;
+  vipStatus: boolean;
+  trophies: number;
+}
+
+export interface UserDetailsStateInformation {
+  details: UserDetails;
+}
+
 export interface ThreadStateInformation {
   threads: ThreadInformation[];
 }
@@ -65,6 +69,7 @@ export interface Store {
   categories: CategoriesInformation;
   threads: ThreadStateInformation;
   posts: PostStateInformation;
+  userDetails: UserDetailsStateInformation;
   leaderboard: LeaderboardStateInformation;
 }
 

@@ -50,7 +50,8 @@ function* sendUserRegisterInformation(
       username: action.payload.username,
       password: action.payload.password,
       type: action.payload.userType,
-      profilePicture: "",
+      profilePicture:
+        "https://t4.ftcdn.net/jpg/03/46/93/61/360_F_346936114_RaxE6OQogebgAWTalE1myseY1Hbb5qPM.jpg",
       accountStatus: "",
     };
     yield fetch("http://127.0.0.1:8080/user", {
