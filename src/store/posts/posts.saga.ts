@@ -82,23 +82,17 @@ function* addUpvote(
   }>
 ) {
   try {
-    const newUpvotes = [
-      ...action.payload.post.upvotes,
-      action.payload.currentEmail,
-    ];
-    const data = {
-      upvotes: newUpvotes,
-    };
-    yield console.log(JSON.stringify(data));
-    yield fetch(`http://127.0.0.1:8080/post/${action.payload.post.id}`, {
-      method: "PUT",
-      headers: {
-        Authorization: action.payload.accessToken,
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(data),
-    });
+    yield fetch(
+      `http://127.0.0.1:8080/post/${action.payload.post.id}/upvote/${action.payload.currentEmail}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: action.payload.accessToken,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
+    );
   } catch (e) {
     console.warn(e);
   }
@@ -112,22 +106,17 @@ function* removeUpvote(
   }>
 ) {
   try {
-    const newUpvotes = action.payload.post.upvotes.filter(
-      (email: string) => email !== action.payload.currentEmail
+    yield fetch(
+      `http://127.0.0.1:8080/post/${action.payload.post.id}/removeUpvote/${action.payload.currentEmail}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: action.payload.accessToken,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
     );
-    const data = {
-      upvotes: newUpvotes,
-    };
-    yield console.log(JSON.stringify(data));
-    yield fetch(`http://127.0.0.1:8080/post/${action.payload.post.id}`, {
-      method: "PUT",
-      headers: {
-        Authorization: action.payload.accessToken,
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(data),
-    });
   } catch (e) {
     console.warn(e);
   }
@@ -141,23 +130,17 @@ function* addDownvote(
   }>
 ) {
   try {
-    const newDownvotes = [
-      ...action.payload.post.downvotes,
-      action.payload.currentEmail,
-    ];
-    const data = {
-      downvotes: newDownvotes,
-    };
-    yield console.log(JSON.stringify(data));
-    yield fetch(`http://127.0.0.1:8080/post/${action.payload.post.id}`, {
-      method: "PUT",
-      headers: {
-        Authorization: action.payload.accessToken,
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(data),
-    });
+    yield fetch(
+      `http://127.0.0.1:8080/post/${action.payload.post.id}/downvote/${action.payload.currentEmail}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: action.payload.accessToken,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
+    );
   } catch (e) {
     console.warn(e);
   }
@@ -171,22 +154,17 @@ function* removeDownvote(
   }>
 ) {
   try {
-    const newDownvotes = action.payload.post.downvotes.filter(
-      (email: string) => email !== action.payload.currentEmail
+    yield fetch(
+      `http://127.0.0.1:8080/post/${action.payload.post.id}/downvote/${action.payload.currentEmail}`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: action.payload.accessToken,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
     );
-    const data = {
-      downvotes: newDownvotes,
-    };
-    yield console.log(JSON.stringify(data));
-    yield fetch(`http://127.0.0.1:8080/post/${action.payload.post.id}`, {
-      method: "PUT",
-      headers: {
-        Authorization: action.payload.accessToken,
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(data),
-    });
   } catch (e) {
     console.warn(e);
   }
