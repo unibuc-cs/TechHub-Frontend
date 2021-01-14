@@ -1,6 +1,7 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import Paper from "@material-ui/core/Paper";
 
 import { userDetailsSelector } from "../store/userDetails/userDetails.selector";
 import {
@@ -30,6 +31,19 @@ const Title = styled.p`
 
 const AddDiscountButtonContainer = styled.div`
   padding: 8px 0;
+`;
+
+const CurrentPointsContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+`;
+
+const Text = styled.p`
+  font-size: 1.2em;
 `;
 
 const Discounts = () => {
@@ -83,7 +97,16 @@ const Discounts = () => {
             Add Discount
           </Button>
         </AddDiscountButtonContainer>
-      ) : null}
+      ) : (
+        <Paper elevation={3} style={{ width: "15%" }}>
+          <CurrentPointsContainer>
+            <Text>
+              <b>Your points</b>
+            </Text>
+            <Text>{userDetails.currentPoints}</Text>
+          </CurrentPointsContainer>
+        </Paper>
+      )}
       {discounts.length > 0 ? (
         <DiscountsList
           discounts={discounts}

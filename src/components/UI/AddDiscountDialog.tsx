@@ -106,15 +106,10 @@ const AddDiscountDialog: React.FC<{
               component="span"
               size="small"
             >
-              Upload
+              Upload Images
             </Button>
           </label>
         </TextfieldContainer>
-        {pictures.length > 0 ? (
-          <p>Uploaded {pictures.length} images </p>
-        ) : (
-          <p>No image selected</p>
-        )}
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">

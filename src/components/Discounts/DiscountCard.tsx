@@ -7,6 +7,7 @@ import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button/Button";
 import Tooltip from "@material-ui/core/Tooltip";
+import DeleteDiscountConfirmDialog from "../UI/DeleteDiscountConfirmDialog";
 
 const Container = styled.div`
   width: 100%;
@@ -102,6 +103,10 @@ const DiscountCard: React.FC<{
   onDeleteDiscount: (id: string) => void;
 }> = ({ discount, currentEmail, userType, onDeleteDiscount }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+  const [
+    deleteDiscountDialogIsVisible,
+    setDeleteDiscountDialogIsVisible,
+  ] = useState<boolean>(false);
 
   const increaseImageIndex = () => {
     if (currentImageIndex < discount.pictures.length - 1) {
@@ -159,7 +164,9 @@ const DiscountCard: React.FC<{
           {userType === "MERCHANT" ? (
             currentEmail === discount.sellerEmail ? (
               <Tooltip arrow title="Delete your discount">
-                <IconButton onClick={() => onDeleteDiscount(discount.id)}>
+                <IconButton
+                  onClick={() => setDeleteDiscountDialogIsVisible(true)}
+                >
                   <DeleteIcon color="secondary" />
                 </IconButton>
               </Tooltip>
@@ -180,6 +187,12 @@ const DiscountCard: React.FC<{
           )}
         </LowerRightContainer>
       </RightSideContainer>
+      <DeleteDiscountConfirmDialog
+        open={deleteDiscountDialogIsVisible}
+        onClose={() => setDeleteDiscountDialogIsVisible(false)}
+        discountId={discount.id}
+        onDeleteDiscount={onDeleteDiscount}
+      />
     </Container>
   );
 };
