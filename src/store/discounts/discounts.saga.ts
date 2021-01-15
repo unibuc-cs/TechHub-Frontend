@@ -5,11 +5,7 @@ import {
   ADD_DISCOUNT,
   DELETE_DISCOUNT,
 } from "./discounts.constants";
-import {
-  setDiscounts,
-  setNewDiscount,
-  deleteDiscount,
-} from "./discounts.actions";
+import { setDiscounts, setNewDiscount } from "./discounts.actions";
 
 function* getAllDiscounts(action: ActionWithPayload<{ accessToken: string }>) {
   try {

@@ -14,6 +14,7 @@ import postsReducer from "./store/posts/posts.reducer";
 import userDetailsReducer from "./store/userDetails/userDetails.reducer";
 import leaderboardReducer from "./store/leaderboard/leaderboard.reducer";
 import discountsReducer from "./store/discounts/discounts.reducer";
+import purchasedDiscountsReducer from "./store/purchasedDiscounts/purchasedDiscounts.reducer";
 import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
 import "regenerator-runtime/runtime";
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   userDetails: userDetailsReducer,
   leaderboard: leaderboardReducer,
   discounts: discountsReducer,
+  purchasedDiscounts: purchasedDiscountsReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();
