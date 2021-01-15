@@ -48,6 +48,19 @@ export interface UserDetails {
   trophies: number;
 }
 
+export interface Discount {
+  id: string;
+  sellerEmail: string;
+  title: string;
+  description: string;
+  pictures: string[];
+  pointsCost: number;
+}
+
+export interface DiscountsStateInformation {
+  discounts: Discount[];
+}
+
 export interface UserDetailsStateInformation {
   details: UserDetails;
 }
@@ -71,6 +84,7 @@ export interface Store {
   posts: PostStateInformation;
   userDetails: UserDetailsStateInformation;
   leaderboard: LeaderboardStateInformation;
+  discounts: DiscountsStateInformation;
 }
 
 export interface CategoryCard {

@@ -136,6 +136,7 @@ const Menu = () => {
                 style={{ backgroundColor: "#edf5e1" }}
                 className={classes.button}
                 startIcon={<AttachMoneyOutlinedIcon />}
+                onClick={() => history.push("/homescreen/discounts")}
               >
                 Discounts
               </Button>
