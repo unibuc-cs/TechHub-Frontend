@@ -225,15 +225,18 @@ function* awardTrophy(
     const data = {
       hasTrophy: true,
     };
-    yield fetch(`http://127.0.0.1:8080/post/${action.payload.postId}`, {
-      method: "PUT",
-      headers: {
-        Authorization: action.payload.accessToken,
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(data),
-    });
+    yield fetch(
+      `http://127.0.0.1:8080/post/${action.payload.postId}/awardTrophy`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: action.payload.accessToken,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify(data),
+      }
+    );
   } catch (e) {
     console.warn(e);
   }
