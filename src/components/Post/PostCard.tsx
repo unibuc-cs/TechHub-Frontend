@@ -46,6 +46,7 @@ const TopRightContainer = styled.div`
 
 const PostBodyText = styled.p`
   font-size: 1.1em;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const UpArrowContainer = styled.div`
@@ -170,6 +171,7 @@ const PostCard: React.FC<{
 
   const onUpvoteClicked = () => {
     if (!postInfo.upvotes.includes(currentEmail)) {
+      // Not upvoted
       setUpvoteArrowColor("primary");
       setDownvoteArrowColor("inherit");
       onRemoveDownvote(postInfo);
