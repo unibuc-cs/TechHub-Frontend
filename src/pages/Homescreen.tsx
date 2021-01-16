@@ -15,6 +15,7 @@ import {
   currentEmailSelector,
 } from "../store/user/user.selector";
 import { getUserDetailsByEmail } from "../store/userDetails/userDetails.actions";
+import { getPurchasedDiscountsByUser } from "../store/purchasedDiscounts/purchasedDiscounts.actions";
 import { useDispatch, useSelector } from "react-redux";
 
 const Container = styled.div`
@@ -47,6 +48,7 @@ const Homescreen = () => {
 
   useEffect(() => {
     dispatch(getUserDetailsByEmail(accessToken, currentEmail));
+    dispatch(getPurchasedDiscountsByUser(accessToken, currentEmail));
   }, []);
 
   return (

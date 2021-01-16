@@ -9,6 +9,7 @@ import {
   addDiscount,
   deleteDiscount,
 } from "../store/discounts/discounts.actions";
+import { addPurchasedDiscount } from "../store/purchasedDiscounts/purchasedDiscounts.actions";
 import { discountsSelector } from "../store/discounts/discounts.selectors";
 import { accessTokenSelector } from "../store/user/user.selector";
 import { useDispatch, useSelector } from "react-redux";
@@ -84,6 +85,18 @@ const Discounts = () => {
     dispatch(deleteDiscount(accessToken, id));
   };
 
+  const onUnlockDiscount = (pointsSpent: number, discountId: string) => {
+    dispatch(
+      addPurchasedDiscount(
+        accessToken,
+        userDetails.email,
+        pointsSpent,
+        discountId,
+        new Date().toString()
+      )
+    );
+  };
+
   return (
     <Container>
       <Title>Discounts</Title>
@@ -113,6 +126,8 @@ const Discounts = () => {
           currentEmail={userDetails.email}
           userType={userDetails.type}
           onDeleteDiscount={onDeleteDiscount}
+          onUnlockDiscount={onUnlockDiscount}
+          currentPoints={userDetails.currentPoints}
         />
       ) : (
         <h1>No discounts available</h1>

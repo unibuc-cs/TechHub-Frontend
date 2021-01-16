@@ -26,7 +26,16 @@ const DiscountsList: React.FC<{
   currentEmail: string;
   userType: string;
   onDeleteDiscount: (id: string) => void;
-}> = ({ discounts, currentEmail, userType, onDeleteDiscount }) => {
+  onUnlockDiscount: (pointsSpent: number, discountId: string) => void;
+  currentPoints: number;
+}> = ({
+  discounts,
+  currentEmail,
+  userType,
+  onDeleteDiscount,
+  onUnlockDiscount,
+  currentPoints,
+}) => {
   return (
     <Container>
       {discounts.map((discount: Discount) => (
@@ -36,6 +45,8 @@ const DiscountsList: React.FC<{
           currentEmail={currentEmail}
           userType={userType}
           onDeleteDiscount={onDeleteDiscount}
+          onUnlockDiscount={onUnlockDiscount}
+          currentPoints={currentPoints}
         />
       ))}
     </Container>

@@ -8,6 +8,7 @@ import DeleteIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button/Button";
 import Tooltip from "@material-ui/core/Tooltip";
 import DeleteDiscountConfirmDialog from "../UI/DeleteDiscountConfirmDialog";
+import UnlockDiscountDialog from "../UI/UnlockDiscountDialog";
 
 const Container = styled.div`
   width: 100%;
@@ -16,7 +17,7 @@ const Container = styled.div`
   margin: 8px 0;
   box-shadow: 4px 4px 4px #231f20;
   display: flex;
-  margin-bottom: 8px;
+  margin-bottom: 16px;
 `;
 
 const LeftSideContainer = styled.div`
@@ -101,11 +102,24 @@ const DiscountCard: React.FC<{
   currentEmail: string;
   userType: string;
   onDeleteDiscount: (id: string) => void;
-}> = ({ discount, currentEmail, userType, onDeleteDiscount }) => {
+  onUnlockDiscount: (pointsSpent: number, discountId: string) => void;
+  currentPoints: number;
+}> = ({
+  discount,
+  currentEmail,
+  userType,
+  onDeleteDiscount,
+  onUnlockDiscount,
+  currentPoints,
+}) => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [
     deleteDiscountDialogIsVisible,
     setDeleteDiscountDialogIsVisible,
+  ] = useState<boolean>(false);
+  const [
+    unlockDiscountDialogIsVisible,
+    setUnlockDiscountIsVisible,
   ] = useState<boolean>(false);
 
   const increaseImageIndex = () => {
@@ -119,6 +133,11 @@ const DiscountCard: React.FC<{
       setCurrentImageIndex((prevIndex) => prevIndex - 1);
     }
   };
+
+  let unlockButtonColor = "#228B22";
+  if (currentPoints < discount.pointsCost) {
+    unlockButtonColor = "salmon";
+  }
 
   return (
     <Container>
@@ -176,13 +195,16 @@ const DiscountCard: React.FC<{
               size="small"
               variant="contained"
               style={{
-                backgroundColor: "#228B22",
+                backgroundColor: unlockButtonColor,
                 color: "white",
                 marginBottom: "8px",
               }}
-              onClick={() => {}}
+              onClick={() => setUnlockDiscountIsVisible(true)}
+              disabled={currentPoints < discount.pointsCost}
             >
-              Unlock for {discount.pointsCost} points
+              {currentPoints >= discount.pointsCost
+                ? `Unlock for ${discount.pointsCost} points`
+                : "You don't have enough points"}
             </Button>
           )}
         </LowerRightContainer>
@@ -192,6 +214,14 @@ const DiscountCard: React.FC<{
         onClose={() => setDeleteDiscountDialogIsVisible(false)}
         discountId={discount.id}
         onDeleteDiscount={onDeleteDiscount}
+      />
+      <UnlockDiscountDialog
+        open={unlockDiscountDialogIsVisible}
+        onClose={() => setUnlockDiscountIsVisible(false)}
+        currentPoints={currentPoints}
+        discountId={discount.id}
+        onUnlockDiscount={onUnlockDiscount}
+        pointsSpent={discount.pointsCost}
       />
     </Container>
   );

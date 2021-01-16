@@ -65,7 +65,6 @@ function* addPurchasedDiscountSaga(
       purchaserEmail: action.payload.purchaserEmail,
       pointsSpent: action.payload.pointsSpent,
       discountId: action.payload.discountId,
-      datePurchased: action.payload.datePurchased,
     };
 
     const newInitialPurchasedDiscount: any = yield fetch(
@@ -80,8 +79,10 @@ function* addPurchasedDiscountSaga(
       }
     ).then((res) => res.json());
 
+    console.log(newInitialPurchasedDiscount.purchasedDiscountModelId);
+
     const discount: Discount = yield fetch(
-      `http://127.0.0.1:8080/discount/${newInitialPurchasedDiscount.discountId}`,
+      `http://127.0.0.1:8080/discount/${action.payload.discountId}`,
       {
         method: "GET",
         headers: {
@@ -93,7 +94,7 @@ function* addPurchasedDiscountSaga(
     const newPurchasedDiscount: PurchasedDiscount = {
       datePurchased: newInitialPurchasedDiscount.datePurchased,
       discount,
-      id: newInitialPurchasedDiscount.id,
+      id: newInitialPurchasedDiscount.purchasedDiscountModelId,
       pointsSpent: newInitialPurchasedDiscount.pointsSpent,
       purchaserEmail: newInitialPurchasedDiscount.purchaserEmail,
     };
