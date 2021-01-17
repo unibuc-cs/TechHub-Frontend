@@ -9,6 +9,7 @@ import HomescreenContent from "../components/Homescreen/HomescreenContent";
 import PostsList from "./PostsList";
 import Leaderboard from "./Leaderboard";
 import Discounts from "./Discounts";
+import OwnedDiscounts from "./OwnedDiscounts";
 
 import {
   accessTokenSelector,
@@ -62,6 +63,9 @@ const Homescreen = () => {
         </Route>
         <Route exact path={`${path}/discounts`}>
           <Discounts />
+        </Route>
+        <Route exact path={`${path}/owned-discounts`}>
+          <OwnedDiscounts />
         </Route>
         <Route exact path={path}>
           <HomescreenContent type="categories" />

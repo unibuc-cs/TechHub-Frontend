@@ -20,7 +20,7 @@ const purchasedDiscountsReducer = (
     case SET_PURCHASED_DISCOUNTS:
       return {
         ...state,
-        discounts: [
+        purchasedDiscounts: [
           ...(action as ActionWithPayload<{ discounts: PurchasedDiscount[] }>)
             .payload.discounts,
         ],
@@ -28,7 +28,7 @@ const purchasedDiscountsReducer = (
     case SET_NEW_PURCHASED_DISCOUNT:
       return {
         ...state,
-        discounts: [
+        purchasedDiscounts: [
           ...state.purchasedDiscounts,
           (action as ActionWithPayload<{
             newPurchasedDiscount: PurchasedDiscount;

@@ -97,13 +97,34 @@ const DiscountOwner = styled.p`
   font-style: italic;
 `;
 
+const DateAquired = styled.p`
+  font-size: 1.1em;
+  font-weight: bold;
+`;
+
+const months = [
+  "Jan",
+  "Feb",
+  "Mar",
+  "Apr",
+  "May",
+  "Jun",
+  "Jul",
+  "Aug",
+  "Sep",
+  "Oct",
+  "Nov",
+  "Dec",
+];
+
 const DiscountCard: React.FC<{
   discount: Discount;
   currentEmail: string;
   userType: string;
-  onDeleteDiscount: (id: string) => void;
-  onUnlockDiscount: (pointsSpent: number, discountId: string) => void;
+  onDeleteDiscount?: (id: string) => void;
+  onUnlockDiscount?: (pointsSpent: number, discountId: string) => void;
   currentPoints: number;
+  purchasedDate?: string;
 }> = ({
   discount,
   currentEmail,
@@ -111,6 +132,7 @@ const DiscountCard: React.FC<{
   onDeleteDiscount,
   onUnlockDiscount,
   currentPoints,
+  purchasedDate,
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [
@@ -137,6 +159,47 @@ const DiscountCard: React.FC<{
   let unlockButtonColor = "#228B22";
   if (currentPoints < discount.pointsCost) {
     unlockButtonColor = "salmon";
+  }
+
+  let lowerRightActions = null;
+
+  if (userType === "MERCHANT") {
+    if (currentEmail === discount.sellerEmail) {
+      lowerRightActions = (
+        <Tooltip arrow title="Delete your discount">
+          <IconButton onClick={() => setDeleteDiscountDialogIsVisible(true)}>
+            <DeleteIcon color="secondary" />
+          </IconButton>
+        </Tooltip>
+      );
+    }
+  } else if (userType === "REGULAR_USER") {
+    if (purchasedDate) {
+      // user owns this discount
+      lowerRightActions = (
+        <DateAquired>{`Purchased on ${new Date(purchasedDate).getDate()} ${
+          months[new Date(purchasedDate).getMonth()]
+        }`}</DateAquired>
+      );
+    } else {
+      lowerRightActions = (
+        <Button
+          size="small"
+          variant="contained"
+          style={{
+            backgroundColor: unlockButtonColor,
+            color: "white",
+            marginBottom: "8px",
+          }}
+          onClick={() => setUnlockDiscountIsVisible(true)}
+          disabled={currentPoints < discount.pointsCost}
+        >
+          {currentPoints >= discount.pointsCost
+            ? `Unlock for ${discount.pointsCost} points`
+            : `You don't have enough points (${discount.pointsCost})`}
+        </Button>
+      );
+    }
   }
 
   return (
@@ -180,47 +243,21 @@ const DiscountCard: React.FC<{
           <DiscountOwner>
             Added by <b>{discount.sellerEmail}</b>
           </DiscountOwner>
-          {userType === "MERCHANT" ? (
-            currentEmail === discount.sellerEmail ? (
-              <Tooltip arrow title="Delete your discount">
-                <IconButton
-                  onClick={() => setDeleteDiscountDialogIsVisible(true)}
-                >
-                  <DeleteIcon color="secondary" />
-                </IconButton>
-              </Tooltip>
-            ) : null
-          ) : (
-            <Button
-              size="small"
-              variant="contained"
-              style={{
-                backgroundColor: unlockButtonColor,
-                color: "white",
-                marginBottom: "8px",
-              }}
-              onClick={() => setUnlockDiscountIsVisible(true)}
-              disabled={currentPoints < discount.pointsCost}
-            >
-              {currentPoints >= discount.pointsCost
-                ? `Unlock for ${discount.pointsCost} points`
-                : "You don't have enough points"}
-            </Button>
-          )}
+          {lowerRightActions}
         </LowerRightContainer>
       </RightSideContainer>
       <DeleteDiscountConfirmDialog
         open={deleteDiscountDialogIsVisible}
         onClose={() => setDeleteDiscountDialogIsVisible(false)}
         discountId={discount.id}
-        onDeleteDiscount={onDeleteDiscount}
+        onDeleteDiscount={onDeleteDiscount!}
       />
       <UnlockDiscountDialog
         open={unlockDiscountDialogIsVisible}
         onClose={() => setUnlockDiscountIsVisible(false)}
         currentPoints={currentPoints}
         discountId={discount.id}
-        onUnlockDiscount={onUnlockDiscount}
+        onUnlockDiscount={onUnlockDiscount!}
         pointsSpent={discount.pointsCost}
       />
     </Container>

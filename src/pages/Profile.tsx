@@ -15,6 +15,7 @@ import {
   accessTokenSelector,
   currentEmailSelector,
 } from "../store/user/user.selector";
+import { useHistory } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   input: {
@@ -78,12 +79,13 @@ const AchievementArea = styled.div`
   align-items: center;
 `;
 
-const Profile = () => {
+const Profile: React.FC<{ onClose: () => void }> = ({ onClose }) => {
   const classes = useStyles();
   const [profilePicture, setProfilePicture] = useState<string>("");
   const [profileWasChanged, setProfileWasChanged] = useState<boolean>(false);
 
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const currentUserDetails: UserDetails = useSelector(userDetailsSelector);
   const accessToken = useSelector(accessTokenSelector);
@@ -188,6 +190,10 @@ const Profile = () => {
           variant="contained"
           color="primary"
           style={{ marginTop: "8px" }}
+          onClick={() => {
+            history.push("/homescreen/owned-discounts");
+            onClose();
+          }}
         >
           Discounts History
         </Button>
