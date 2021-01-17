@@ -34,7 +34,9 @@ const useStyles = makeStyles({
   },
 });
 
-const Container = styled.div``;
+const Container = styled.div`
+  margin-bottom: 8px;
+`;
 
 const LeaderboardTable: React.FC<{ data: UserDetails[] }> = ({ data }) => {
   const classes = useStyles();

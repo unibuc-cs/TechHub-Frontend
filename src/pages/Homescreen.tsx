@@ -9,12 +9,14 @@ import HomescreenContent from "../components/Homescreen/HomescreenContent";
 import PostsList from "./PostsList";
 import Leaderboard from "./Leaderboard";
 import Discounts from "./Discounts";
+import OwnedDiscounts from "./OwnedDiscounts";
 
 import {
   accessTokenSelector,
   currentEmailSelector,
 } from "../store/user/user.selector";
 import { getUserDetailsByEmail } from "../store/userDetails/userDetails.actions";
+import { getPurchasedDiscountsByUser } from "../store/purchasedDiscounts/purchasedDiscounts.actions";
 import { useDispatch, useSelector } from "react-redux";
 
 const Container = styled.div`
@@ -47,6 +49,7 @@ const Homescreen = () => {
 
   useEffect(() => {
     dispatch(getUserDetailsByEmail(accessToken, currentEmail));
+    dispatch(getPurchasedDiscountsByUser(accessToken, currentEmail));
   }, []);
 
   return (
@@ -60,6 +63,9 @@ const Homescreen = () => {
         </Route>
         <Route exact path={`${path}/discounts`}>
           <Discounts />
+        </Route>
+        <Route exact path={`${path}/owned-discounts`}>
+          <OwnedDiscounts />
         </Route>
         <Route exact path={path}>
           <HomescreenContent type="categories" />

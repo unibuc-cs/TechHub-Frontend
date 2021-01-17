@@ -9,12 +9,15 @@ import {
   addDiscount,
   deleteDiscount,
 } from "../store/discounts/discounts.actions";
+import { addPurchasedDiscount } from "../store/purchasedDiscounts/purchasedDiscounts.actions";
 import { discountsSelector } from "../store/discounts/discounts.selectors";
 import { accessTokenSelector } from "../store/user/user.selector";
+import { purchasedDiscountsSelector } from "../store/purchasedDiscounts/purchasedDiscounts.selectors";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "@material-ui/core/Button";
 import AddDiscountDialog from "../components/UI/AddDiscountDialog";
 import DiscountsList from "../components/Discounts/DiscountsList";
+import { Discount, PurchasedDiscount } from "../store/store";
 
 const Container = styled.div`
   width: 100%;
@@ -52,15 +55,31 @@ const Discounts = () => {
   const accessToken = useSelector(accessTokenSelector);
   const userDetails = useSelector(userDetailsSelector);
   const discounts = useSelector(discountsSelector);
+  const purchasedDiscounts = useSelector(purchasedDiscountsSelector);
 
   const [
     addDiscountDialogIsVisible,
     setAddDiscountDialogIsVisible,
   ] = useState<boolean>(false);
 
+  const [displayedDiscounts, setDisplayedDiscounts] = useState<Discount[]>([]);
+
   useEffect(() => {
     dispatch(getAllDiscounts(accessToken));
   }, []);
+
+  useEffect(() => {
+    if (userDetails.type === "REGULAR_USER") {
+      const unownedDiscounts = discounts.filter(
+        (discount: Discount) =>
+          purchasedDiscounts.findIndex(
+            (purchasedDiscount: PurchasedDiscount) =>
+              purchasedDiscount.discount.id === discount.id
+          ) === -1
+      );
+      setDisplayedDiscounts(unownedDiscounts);
+    }
+  }, [discounts, purchasedDiscounts]);
 
   const onAddDiscount = (
     title: string,
@@ -82,6 +101,18 @@ const Discounts = () => {
 
   const onDeleteDiscount = (id: string) => {
     dispatch(deleteDiscount(accessToken, id));
+  };
+
+  const onUnlockDiscount = (pointsSpent: number, discountId: string) => {
+    dispatch(
+      addPurchasedDiscount(
+        accessToken,
+        userDetails.email,
+        pointsSpent,
+        discountId,
+        new Date().toString()
+      )
+    );
   };
 
   return (
@@ -109,10 +140,14 @@ const Discounts = () => {
       )}
       {discounts.length > 0 ? (
         <DiscountsList
-          discounts={discounts}
+          discounts={
+            userDetails.type === "REGULAR_USER" ? displayedDiscounts : discounts
+          }
           currentEmail={userDetails.email}
           userType={userDetails.type}
           onDeleteDiscount={onDeleteDiscount}
+          onUnlockDiscount={onUnlockDiscount}
+          currentPoints={userDetails.currentPoints}
         />
       ) : (
         <h1>No discounts available</h1>
