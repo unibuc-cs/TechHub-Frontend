@@ -14,7 +14,7 @@ const ProfileModal: React.FC<{ open: boolean; onClose: () => void }> = ({
     <Dialog open={open} onClose={onClose} maxWidth="xs" fullWidth>
       <DialogTitle>Display Profile</DialogTitle>
       <DialogContent>
-        <Profile />
+        <Profile onClose={onClose} />
       </DialogContent>
       <DialogActions>
         <Button onClick={onClose} color="secondary">
