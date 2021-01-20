@@ -40,13 +40,14 @@ const AddThreadDialog: React.FC<{
       text: threadText,
       title: threadTitle,
       hasTrophy: false,
+      vipStatus: false,
     };
     onAddThread(newThread);
     onClose();
   };
 
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>Add New Thread</DialogTitle>
       <DialogContent>
         <TextfieldContainer>
@@ -65,6 +66,7 @@ const AddThreadDialog: React.FC<{
             placeholder="Add Thread Text"
             onChange={onThreadTextChangedHandler}
             multiline
+            rows={2}
             fullWidth
           />
         </TextfieldContainer>

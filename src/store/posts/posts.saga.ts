@@ -1,5 +1,9 @@
 import { takeEvery, put } from "redux-saga/effects";
-import { ActionWithPayload, PostInformation } from "../store";
+import {
+  ActionWithPayload,
+  PostInformation,
+  ThreadInformation,
+} from "../store";
 import {
   GET_POSTS_BY_THREAD,
   CREATE_POST,
@@ -11,7 +15,7 @@ import {
   DELETE_POST,
   AWARD_TROPHY,
 } from "./posts.constants";
-import { setPosts, addPost } from "./posts.actions";
+import { setPosts, addPost, setCurrentThreadHasTrophy } from "./posts.actions";
 
 function* getPostsByThread(
   action: ActionWithPayload<{ accessToken: string; threadId: string }>
@@ -26,8 +30,19 @@ function* getPostsByThread(
         },
       }
     ).then((res) => res.json());
-    console.log(posts);
+
+    const thread: ThreadInformation = yield fetch(
+      `http://127.0.0.1:8080/thread/${action.payload.threadId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: action.payload.accessToken,
+        },
+      }
+    ).then((res) => res.json());
+
     yield put(setPosts(posts));
+    yield put(setCurrentThreadHasTrophy(thread.hasTrophy));
   } catch (e) {
     console.warn(e);
   }
@@ -82,23 +97,18 @@ function* addUpvote(
   }>
 ) {
   try {
-    const newUpvotes = [
-      ...action.payload.post.upvotes,
-      action.payload.currentEmail,
-    ];
-    const data = {
-      upvotes: newUpvotes,
-    };
-    yield console.log(JSON.stringify(data));
-    yield fetch(`http://127.0.0.1:8080/post/${action.payload.post.id}`, {
-      method: "PUT",
-      headers: {
-        Authorization: action.payload.accessToken,
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(data),
-    });
+    console.log(`http://127.0.0.1:8080/post/${action.payload.post.id}/upvote/`);
+    yield fetch(
+      `http://127.0.0.1:8080/post/${action.payload.post.id}/upvote/`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: action.payload.accessToken,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
+    );
   } catch (e) {
     console.warn(e);
   }
@@ -112,22 +122,17 @@ function* removeUpvote(
   }>
 ) {
   try {
-    const newUpvotes = action.payload.post.upvotes.filter(
-      (email: string) => email !== action.payload.currentEmail
+    yield fetch(
+      `http://127.0.0.1:8080/post/${action.payload.post.id}/removeUpvote/`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: action.payload.accessToken,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
     );
-    const data = {
-      upvotes: newUpvotes,
-    };
-    yield console.log(JSON.stringify(data));
-    yield fetch(`http://127.0.0.1:8080/post/${action.payload.post.id}`, {
-      method: "PUT",
-      headers: {
-        Authorization: action.payload.accessToken,
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(data),
-    });
   } catch (e) {
     console.warn(e);
   }
@@ -141,23 +146,17 @@ function* addDownvote(
   }>
 ) {
   try {
-    const newDownvotes = [
-      ...action.payload.post.downvotes,
-      action.payload.currentEmail,
-    ];
-    const data = {
-      downvotes: newDownvotes,
-    };
-    yield console.log(JSON.stringify(data));
-    yield fetch(`http://127.0.0.1:8080/post/${action.payload.post.id}`, {
-      method: "PUT",
-      headers: {
-        Authorization: action.payload.accessToken,
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(data),
-    });
+    yield fetch(
+      `http://127.0.0.1:8080/post/${action.payload.post.id}/downvote`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: action.payload.accessToken,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
+    );
   } catch (e) {
     console.warn(e);
   }
@@ -171,22 +170,17 @@ function* removeDownvote(
   }>
 ) {
   try {
-    const newDownvotes = action.payload.post.downvotes.filter(
-      (email: string) => email !== action.payload.currentEmail
+    yield fetch(
+      `http://127.0.0.1:8080/post/${action.payload.post.id}/removeDownvote`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: action.payload.accessToken,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+      }
     );
-    const data = {
-      downvotes: newDownvotes,
-    };
-    yield console.log(JSON.stringify(data));
-    yield fetch(`http://127.0.0.1:8080/post/${action.payload.post.id}`, {
-      method: "PUT",
-      headers: {
-        Authorization: action.payload.accessToken,
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(data),
-    });
   } catch (e) {
     console.warn(e);
   }
@@ -247,15 +241,19 @@ function* awardTrophy(
     const data = {
       hasTrophy: true,
     };
-    yield fetch(`http://127.0.0.1:8080/post/${action.payload.postId}`, {
-      method: "PUT",
-      headers: {
-        Authorization: action.payload.accessToken,
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
-      body: JSON.stringify(data),
-    });
+    yield fetch(
+      `http://127.0.0.1:8080/post/${action.payload.postId}/awardTrophy`,
+      {
+        method: "PUT",
+        headers: {
+          Authorization: action.payload.accessToken,
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Origin": "*",
+        },
+        body: JSON.stringify(data),
+      }
+    );
+    yield put(setCurrentThreadHasTrophy(true));
   } catch (e) {
     console.warn(e);
   }

@@ -7,3 +7,8 @@ export const postsSelector = createSelector(
   postsInformationSelector,
   (postsInfo) => postsInfo.posts
 );
+
+export const threadHasTrophySelector = createSelector(
+  postsInformationSelector,
+  (postsInfo) => postsInfo.currentThreadHasTrophy
+);

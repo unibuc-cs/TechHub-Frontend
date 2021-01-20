@@ -37,6 +37,8 @@ function* addNewThread(
       title: action.payload.newThread.title,
       category: action.payload.newThread.category,
       text: action.payload.newThread.text,
+      hasTrophy: false,
+      vipStatus: false,
     };
     yield fetch("http://127.0.0.1:8080/thread", {
       method: "POST",

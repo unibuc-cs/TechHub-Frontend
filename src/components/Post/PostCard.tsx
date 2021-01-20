@@ -170,9 +170,14 @@ const PostCard: React.FC<{
 
   const onUpvoteClicked = () => {
     if (!postInfo.upvotes.includes(currentEmail)) {
+      // Not upvoted
       setUpvoteArrowColor("primary");
       setDownvoteArrowColor("inherit");
-      onRemoveDownvote(postInfo);
+
+      if (postInfo.downvotes.includes(currentEmail)) {
+        //if we upvote and the post is downvoted, remove the downvote
+        onRemoveDownvote(postInfo);
+      }
       onAddUpvote(postInfo);
     } else {
       setUpvoteArrowColor("inherit");
@@ -182,9 +187,14 @@ const PostCard: React.FC<{
 
   const onDownvoteClicked = () => {
     if (!postInfo.downvotes.includes(currentEmail)) {
+      // Not downvoted
       setDownvoteArrowColor("secondary");
       setUpvoteArrowColor("inherit");
-      onRemoveUpvote(postInfo);
+
+      if (postInfo.upvotes.includes(currentEmail)) {
+        //if we downvote and the post is upvoted, remove the upvote
+        onRemoveUpvote(postInfo);
+      }
       onAddDownvote(postInfo);
     } else {
       setDownvoteArrowColor("inherit");
