@@ -1,5 +1,9 @@
 import { takeEvery, put } from "redux-saga/effects";
-import { ActionWithPayload, PostInformation } from "../store";
+import {
+  ActionWithPayload,
+  PostInformation,
+  ThreadInformation,
+} from "../store";
 import {
   GET_POSTS_BY_THREAD,
   CREATE_POST,
@@ -11,7 +15,7 @@ import {
   DELETE_POST,
   AWARD_TROPHY,
 } from "./posts.constants";
-import { setPosts, addPost } from "./posts.actions";
+import { setPosts, addPost, setCurrentThreadHasTrophy } from "./posts.actions";
 
 function* getPostsByThread(
   action: ActionWithPayload<{ accessToken: string; threadId: string }>
@@ -26,8 +30,19 @@ function* getPostsByThread(
         },
       }
     ).then((res) => res.json());
-    console.log(posts);
+
+    const thread: ThreadInformation = yield fetch(
+      `http://127.0.0.1:8080/thread/${action.payload.threadId}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: action.payload.accessToken,
+        },
+      }
+    ).then((res) => res.json());
+
     yield put(setPosts(posts));
+    yield put(setCurrentThreadHasTrophy(thread.hasTrophy));
   } catch (e) {
     console.warn(e);
   }
@@ -82,8 +97,9 @@ function* addUpvote(
   }>
 ) {
   try {
+    console.log(`http://127.0.0.1:8080/post/${action.payload.post.id}/upvote/`);
     yield fetch(
-      `http://127.0.0.1:8080/post/${action.payload.post.id}/upvote/${action.payload.currentEmail}`,
+      `http://127.0.0.1:8080/post/${action.payload.post.id}/upvote/`,
       {
         method: "PUT",
         headers: {
@@ -107,7 +123,7 @@ function* removeUpvote(
 ) {
   try {
     yield fetch(
-      `http://127.0.0.1:8080/post/${action.payload.post.id}/removeUpvote/${action.payload.currentEmail}`,
+      `http://127.0.0.1:8080/post/${action.payload.post.id}/removeUpvote/`,
       {
         method: "PUT",
         headers: {
@@ -131,7 +147,7 @@ function* addDownvote(
 ) {
   try {
     yield fetch(
-      `http://127.0.0.1:8080/post/${action.payload.post.id}/downvote/${action.payload.currentEmail}`,
+      `http://127.0.0.1:8080/post/${action.payload.post.id}/downvote`,
       {
         method: "PUT",
         headers: {
@@ -155,7 +171,7 @@ function* removeDownvote(
 ) {
   try {
     yield fetch(
-      `http://127.0.0.1:8080/post/${action.payload.post.id}/downvote/${action.payload.currentEmail}`,
+      `http://127.0.0.1:8080/post/${action.payload.post.id}/removeDownvote`,
       {
         method: "PUT",
         headers: {
@@ -237,6 +253,7 @@ function* awardTrophy(
         body: JSON.stringify(data),
       }
     );
+    yield put(setCurrentThreadHasTrophy(true));
   } catch (e) {
     console.warn(e);
   }

@@ -9,3 +9,4 @@ export const REMOVE_DOWNVOTE = "posts/remove-downvote";
 export const EDIT_POST = "posts/edit-post";
 export const DELETE_POST = "posts/delete-post";
 export const AWARD_TROPHY = "posts/award-trophy";
+export const SET_CURRENT_THREAD_HAS_TROPHY = "posts/current-thread-has-trophy";

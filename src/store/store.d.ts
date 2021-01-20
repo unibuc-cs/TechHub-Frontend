@@ -21,6 +21,7 @@ export interface ThreadInformation {
   text: string;
   dateCreated: string;
   hasTrophy: boolean;
+  vipStatus: boolean;
 }
 
 export interface PostInformation {
@@ -58,6 +59,7 @@ export interface ThreadStateInformation {
 
 export interface PostStateInformation {
   posts: PostInformation[];
+  currentThreadHasTrophy: boolean;
 }
 
 export interface LeaderboardStateInformation {

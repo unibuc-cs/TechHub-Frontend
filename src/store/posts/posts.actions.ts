@@ -10,6 +10,7 @@ import {
   EDIT_POST,
   DELETE_POST,
   AWARD_TROPHY,
+  SET_CURRENT_THREAD_HAS_TROPHY,
 } from "./posts.constants";
 import { ActionWithPayload, PostInformation } from "../store";
 
@@ -166,5 +167,14 @@ export const awardTrophy = (
   payload: {
     accessToken,
     postId,
+  },
+});
+
+export const setCurrentThreadHasTrophy = (
+  hasTrophy: boolean
+): ActionWithPayload<{ hasTrophy: boolean }> => ({
+  type: SET_CURRENT_THREAD_HAS_TROPHY,
+  payload: {
+    hasTrophy,
   },
 });

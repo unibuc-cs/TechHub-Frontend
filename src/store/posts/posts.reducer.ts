@@ -13,10 +13,12 @@ import {
   EDIT_POST,
   DELETE_POST,
   AWARD_TROPHY,
+  SET_CURRENT_THREAD_HAS_TROPHY,
 } from "./posts.constants";
 
 const initialState: PostStateInformation = {
   posts: [],
+  currentThreadHasTrophy: false,
 };
 
 const postsReducer = (
@@ -211,6 +213,13 @@ const postsReducer = (
             return post;
           }
         }),
+      };
+    case SET_CURRENT_THREAD_HAS_TROPHY:
+      return {
+        ...state,
+        currentThreadHasTrophy: (action as ActionWithPayload<{
+          hasTrophy: boolean;
+        }>).payload.hasTrophy,
       };
     default:
       return state;

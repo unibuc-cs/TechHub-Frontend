@@ -13,7 +13,10 @@ import {
   deletePost,
   awardTrophy,
 } from "../store/posts/posts.actions";
-import { postsSelector } from "../store/posts/posts.selector";
+import {
+  postsSelector,
+  threadHasTrophySelector,
+} from "../store/posts/posts.selector";
 import styled from "styled-components";
 import {
   accessTokenSelector,
@@ -110,6 +113,7 @@ const PostsList = () => {
   const currentEmail = useSelector(currentEmailSelector);
   const accessToken = useSelector(accessTokenSelector);
   const posts = useSelector(postsSelector);
+  const threadHasTrophy = useSelector(threadHasTrophySelector);
 
   const [newPostText, setNewPostText] = useState<string>("");
 
@@ -218,9 +222,7 @@ const PostsList = () => {
               onRemoveDownvote={onRemoveDownvote}
               onEditPost={onEditPost}
               onDeletePost={onDeletePost}
-              threadHasTrophy={
-                (location.state as any).threadInformation.hasTrophy
-              }
+              threadHasTrophy={threadHasTrophy}
               threadOwnerEmail={
                 (location.state as any).threadInformation.ownerEmail
               }
