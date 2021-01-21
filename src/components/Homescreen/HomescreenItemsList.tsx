@@ -34,7 +34,7 @@ const HomescreenItemsList: React.FC<{
     list = items.map((item: ThreadInformation) => (
       <HomescreenItemCard
         title={item.title}
-        key={item.title}
+        key={item.id}
         type={type}
         threadInformation={item}
       />

@@ -5,8 +5,11 @@ import {
   GET_ALL_THREADS,
   GET_THREADS_BY_CATEGORY,
   SEARCH_THREADS,
+  GET_VIP_THREADS_BY_CATEGORY,
+  ADD_VIP_THREAD,
+  SEARCH_VIP_THREADS,
 } from "./threads.constants";
-import { setThreads } from "./threads.actions";
+import { setThreads, setNewThread } from "./threads.actions";
 
 function* getAllThreads(action: ActionWithPayload<{ accessToken: string }>) {
   try {
@@ -38,16 +41,19 @@ function* addNewThread(
       category: action.payload.newThread.category,
       text: action.payload.newThread.text,
       hasTrophy: false,
-      vipStatus: false,
     };
-    yield fetch("http://127.0.0.1:8080/thread", {
+    const threadIdRes = yield fetch("http://127.0.0.1:8080/thread", {
       method: "POST",
       headers: {
         Authorization: action.payload.accessToken,
         "Content-Type": "application/json",
       },
       body: JSON.stringify(data),
-    });
+    }).then((res) => res.json());
+
+    yield put(
+      setNewThread({ ...action.payload.newThread, id: threadIdRes.threadId })
+    );
   } catch (e) {
     console.warn(e);
   }
@@ -81,7 +87,87 @@ function* searchThreads(
 ) {
   try {
     const threads: ThreadInformation[] = yield fetch(
-      `http://127.0.0.1:8080/thread/title/${action.payload.searchInput}`,
+      `http://127.0.0.1:8080/thread/title/${action.payload.searchInput.trim()}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: action.payload.accessToken,
+        },
+      }
+    ).then((res) => res.json());
+    const filteredThreads = threads.filter(
+      (thread: ThreadInformation) => thread.category === action.payload.category
+    );
+    yield put(setThreads(filteredThreads));
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+function* getVipThreadsByCategory(
+  action: ActionWithPayload<{ accessToken: string; category: string }>
+) {
+  try {
+    const threads: ThreadInformation[] = yield fetch(
+      `http://127.0.0.1:8080/thread/vip/categories/${action.payload.category}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: action.payload.accessToken,
+        },
+      }
+    ).then((res) => res.json());
+    yield put(setThreads(threads));
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+function* addNewVipThread(
+  action: ActionWithPayload<{
+    accessToken: string;
+    newThread: ThreadInformation;
+  }>
+) {
+  try {
+    const data = {
+      ownerEmail: action.payload.newThread.ownerEmail,
+      title: action.payload.newThread.title,
+      category: action.payload.newThread.category,
+      text: action.payload.newThread.text,
+      hasTrophy: false,
+    };
+    const threadIdRes = yield fetch("http://127.0.0.1:8080/thread/vip", {
+      method: "POST",
+      headers: {
+        Authorization: action.payload.accessToken,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }).then((res) => res.json());
+
+    yield put(
+      setNewThread({
+        ...action.payload.newThread,
+        id: threadIdRes.threadId,
+        vipStatus: true,
+      })
+    );
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
+function* searchVipThreads(
+  action: ActionWithPayload<{
+    accessToken: string;
+    searchInput: string;
+    category: string;
+  }>
+) {
+  try {
+    const threads: ThreadInformation[] = yield fetch(
+      `http://127.0.0.1:8080/thread/vip/title/${action.payload.searchInput.trim()}`,
       {
         method: "GET",
         headers: {
@@ -103,4 +189,7 @@ export default function* threadsSaga() {
   yield takeEvery(GET_THREADS_BY_CATEGORY, getThreadsByCategory);
   yield takeEvery(ADD_THREAD, addNewThread);
   yield takeEvery(SEARCH_THREADS, searchThreads);
+  yield takeEvery(GET_VIP_THREADS_BY_CATEGORY, getVipThreadsByCategory);
+  yield takeEvery(ADD_VIP_THREAD, addNewVipThread);
+  yield takeEvery(SEARCH_VIP_THREADS, searchVipThreads);
 }

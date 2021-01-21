@@ -8,13 +8,24 @@ import AttachMoneyOutlinedIcon from "@material-ui/icons/AttachMoneyOutlined";
 import EqualizerIcon from "@material-ui/icons/Equalizer";
 import Button from "@material-ui/core/Button";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
+import StarIcon from "@material-ui/icons/Star";
 import ProfileModal from "../UI/ProfileModal";
+import { UserDetails } from "../../store/store";
 
 import { logoutUser } from "../../store/user/user.actions";
 
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
+
+const animated = keyframes`
+from {
+  transform:scale(1);
+}
+to {
+  transform:scale(1.25);
+}
+`;
 
 const Image = styled.img`
   width: 100px;
@@ -37,6 +48,10 @@ const RightSideContainer = styled.div`
   display: flex;
   justify-content: space-around;
   align-items: center;
+`;
+
+const AnimatedButtonContainer = styled.div`
+  animation: ${animated} 1.5s linear infinite;
 `;
 
 const useStyles = makeStyles((theme) => ({
@@ -98,7 +113,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Menu = () => {
+const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -122,6 +137,19 @@ const Menu = () => {
               onClick={() => history.push("/homescreen")}
             />
             <RightSideContainer>
+              {userDetails.vipStatus ? (
+                <AnimatedButtonContainer>
+                  <Button
+                    variant="contained"
+                    style={{ backgroundColor: "#228B22" }}
+                    className={classes.button}
+                    startIcon={<StarIcon />}
+                    onClick={() => history.push("/homescreen/vip")}
+                  >
+                    VIP
+                  </Button>
+                </AnimatedButtonContainer>
+              ) : null}
               <Button
                 variant="contained"
                 style={{ backgroundColor: "#edf5e1" }}

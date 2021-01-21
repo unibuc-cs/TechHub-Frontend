@@ -18,6 +18,7 @@ import {
 import { getUserDetailsByEmail } from "../store/userDetails/userDetails.actions";
 import { getPurchasedDiscountsByUser } from "../store/purchasedDiscounts/purchasedDiscounts.actions";
 import { useDispatch, useSelector } from "react-redux";
+import { userDetailsSelector } from "../store/userDetails/userDetails.selector";
 
 const Container = styled.div`
   width: 100vw;
@@ -46,6 +47,7 @@ const Homescreen = () => {
 
   const accessToken = useSelector(accessTokenSelector);
   const currentEmail = useSelector(currentEmailSelector);
+  const userDetails = useSelector(userDetailsSelector);
 
   useEffect(() => {
     dispatch(getUserDetailsByEmail(accessToken, currentEmail));
@@ -55,7 +57,7 @@ const Homescreen = () => {
   return (
     <Container>
       <MenuContainer>
-        <Menu />
+        <Menu userDetails={userDetails} />
       </MenuContainer>
       <Switch>
         <Route exact path={`${path}/leaderboard`}>
@@ -67,11 +69,20 @@ const Homescreen = () => {
         <Route exact path={`${path}/owned-discounts`}>
           <OwnedDiscounts />
         </Route>
+        <Route exact path={`${path}/vip`}>
+          <HomescreenContent type="categories" isVip={true} />
+        </Route>
+        <Route exact path={`${path}/vip/:category`}>
+          <HomescreenContent type="threads" isVip={true} />
+        </Route>
         <Route exact path={path}>
-          <HomescreenContent type="categories" />
+          <HomescreenContent type="categories" isVip={false} />
         </Route>
         <Route exact path={`${path}/:category`}>
-          <HomescreenContent type="threads" />
+          <HomescreenContent type="threads" isVip={false} />
+        </Route>
+        <Route exact path={`${path}/vip`}>
+          <HomescreenContent type="categories" isVip={true} />
         </Route>
         <Route exact path={`${path}/thread/:threadId`}>
           <PostsList />
