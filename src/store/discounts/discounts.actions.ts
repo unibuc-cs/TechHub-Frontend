@@ -31,7 +31,8 @@ export const addDiscount = (
   title: string,
   description: string,
   pictures: string[],
-  pointsCost: number
+  pointsCost: number,
+  vipStatus: boolean
 ): ActionWithPayload<{
   accessToken: string;
   sellerEmail: string;
@@ -39,6 +40,7 @@ export const addDiscount = (
   description: string;
   pictures: string[];
   pointsCost: number;
+  vipStatus: boolean;
 }> => ({
   type: ADD_DISCOUNT,
   payload: {
@@ -48,6 +50,7 @@ export const addDiscount = (
     description,
     pictures,
     pointsCost,
+    vipStatus,
   },
 });
 

@@ -6,6 +6,7 @@ import ChevronRightIcon from "@material-ui/icons/ChevronRight";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import Button from "@material-ui/core/Button/Button";
+import StarIcon from "@material-ui/icons/Star";
 import Tooltip from "@material-ui/core/Tooltip";
 import DeleteDiscountConfirmDialog from "../UI/DeleteDiscountConfirmDialog";
 import UnlockDiscountDialog from "../UI/UnlockDiscountDialog";
@@ -125,6 +126,7 @@ const DiscountCard: React.FC<{
   onUnlockDiscount?: (pointsSpent: number, discountId: string) => void;
   currentPoints: number;
   purchasedDate?: string;
+  userVipStatus: boolean;
 }> = ({
   discount,
   currentEmail,
@@ -133,6 +135,7 @@ const DiscountCard: React.FC<{
   onUnlockDiscount,
   currentPoints,
   purchasedDate,
+  userVipStatus,
 }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
   const [
@@ -157,11 +160,22 @@ const DiscountCard: React.FC<{
   };
 
   let unlockButtonColor = "#228B22";
-  if (currentPoints < discount.pointsCost) {
+  if (
+    currentPoints < discount.pointsCost ||
+    (discount.vipStatus && !userVipStatus)
+  ) {
     unlockButtonColor = "salmon";
   }
 
   let lowerRightActions = null;
+
+  let buttonErrorMessage = null;
+
+  if (discount.vipStatus && !userVipStatus) {
+    buttonErrorMessage = "You are not a VIP user";
+  } else if (currentPoints < discount.pointsCost) {
+    buttonErrorMessage = `You don't have enough points (${discount.pointsCost})`;
+  }
 
   if (userType === "MERCHANT") {
     if (currentEmail === discount.sellerEmail) {
@@ -194,9 +208,9 @@ const DiscountCard: React.FC<{
           onClick={() => setUnlockDiscountIsVisible(true)}
           disabled={currentPoints < discount.pointsCost}
         >
-          {currentPoints >= discount.pointsCost
-            ? `Unlock for ${discount.pointsCost} points`
-            : `You don't have enough points (${discount.pointsCost})`}
+          {buttonErrorMessage !== null
+            ? buttonErrorMessage
+            : `Unlock for ${discount.pointsCost} points`}
         </Button>
       );
     }
@@ -235,6 +249,15 @@ const DiscountCard: React.FC<{
       <RightSideContainer>
         <TitleContainer>
           <Title>{discount.title}</Title>
+          {discount.vipStatus ? (
+            <Tooltip
+              arrow
+              title="This is a premium discount"
+              style={{ marginLeft: "4px", marginTop: "4px" }}
+            >
+              <StarIcon />
+            </Tooltip>
+          ) : null}
         </TitleContainer>
         <DescriptionContainer>
           <Description>{discount.description}</Description>

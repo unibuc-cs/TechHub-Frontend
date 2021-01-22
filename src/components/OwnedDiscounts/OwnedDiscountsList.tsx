@@ -35,6 +35,7 @@ const DiscountsList: React.FC<{
           userType={currentUserDetails.type}
           currentPoints={currentUserDetails.currentPoints}
           purchasedDate={pd.datePurchased}
+          userVipStatus={currentUserDetails.vipStatus}
         />
       ))}
     </Container>

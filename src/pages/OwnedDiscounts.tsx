@@ -1,7 +1,10 @@
-import React from "react";
-import { useSelector } from "react-redux";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { purchasedDiscountsSelector } from "../store/purchasedDiscounts/purchasedDiscounts.selectors";
+import { getPurchasedDiscountsByUser } from "../store/purchasedDiscounts/purchasedDiscounts.actions";
 import { userDetailsSelector } from "../store/userDetails/userDetails.selector";
+import { accessTokenSelector } from "../store/user/user.selector";
 import OwnedDiscountsList from "../components/OwnedDiscounts/OwnedDiscountsList";
 import styled from "styled-components";
 
@@ -22,6 +25,13 @@ const Title = styled.p`
 const OwnedDiscounts = () => {
   const purchasedDiscounts = useSelector(purchasedDiscountsSelector);
   const userDetails = useSelector(userDetailsSelector);
+  const accessToken = useSelector(accessTokenSelector);
+
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(getPurchasedDiscountsByUser(accessToken, userDetails.email));
+  }, []);
 
   return (
     <Container>

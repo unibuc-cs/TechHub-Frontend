@@ -19,6 +19,9 @@ import {
   addThread,
   getThreadsByCategory,
   searchThreads,
+  getVipThreadsByCategory,
+  addVipThread,
+  searchVipThreads,
 } from "../../store/threads/threads.actions";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
@@ -71,8 +74,12 @@ const MessageContainer = styled.div`
   align-items: center;
 `;
 
-const HomescreenContent: React.FC<{ type: string }> = ({ type }) => {
+const HomescreenContent: React.FC<{ type: string; isVip: boolean }> = ({
+  type,
+  isVip,
+}) => {
   const dispatch = useDispatch();
+
   const accessToken = useSelector(accessTokenSelector);
   const categories = useSelector(categoriesSelector);
   const threads = useSelector(threadsSelector);
@@ -85,51 +92,96 @@ const HomescreenContent: React.FC<{ type: string }> = ({ type }) => {
   const [searchInput, setSearchInput] = useState<string>("");
 
   useEffect(() => {
-    if (accessToken) {
-      if (type === "categories") {
-        dispatch(getCategories(accessToken));
+    if (type === "categories") {
+      dispatch(getCategories(accessToken));
+    } else {
+      if (isVip) {
+        dispatch(
+          getVipThreadsByCategory(accessToken, (location.state as any).category)
+        );
       } else {
         dispatch(
           getThreadsByCategory(accessToken, (location.state as any).category)
         );
       }
     }
-  }, [accessToken, type]);
+  }, [type, isVip]);
 
   useEffect(() => {
     if (type === "threads") {
       if (searchInput === "") {
-        dispatch(
-          getThreadsByCategory(accessToken, (location.state as any).category)
-        );
-      } else {
-        dispatch(
-          searchThreads(
+        if (isVip) {
+          getVipThreadsByCategory(
             accessToken,
-            searchInput,
             (location.state as any).category
-          )
-        );
+          );
+        } else {
+          dispatch(
+            getThreadsByCategory(accessToken, (location.state as any).category)
+          );
+        }
+      } else {
+        if (isVip) {
+          setTimeout(
+            () =>
+              dispatch(
+                searchVipThreads(
+                  accessToken,
+                  searchInput,
+                  (location.state as any).category
+                )
+              ),
+            1000
+          );
+        } else {
+          setTimeout(
+            () =>
+              dispatch(
+                searchThreads(
+                  accessToken,
+                  searchInput,
+                  (location.state as any).category
+                )
+              ),
+            1000
+          );
+        }
       }
     }
   }, [searchInput]);
 
   const onAddThreadHandler = (newThread: ThreadInformation) => {
-    dispatch(addThread(accessToken, newThread));
+    if (isVip) {
+      dispatch(addVipThread(accessToken, newThread));
+    } else {
+      dispatch(addThread(accessToken, newThread));
+    }
   };
 
   const onSearchInputChangedHandler = (e: any) => {
     setSearchInput(e.target.value);
   };
 
+  let title = null;
+
+  if (type === "categories") {
+    if (isVip) {
+      title = "Categories (VIP)";
+    } else {
+      title = "Categories";
+    }
+  } else {
+    if (isVip) {
+      title = `${(location.state as any).category} (VIP)`;
+    } else {
+      title = `${(location.state as any).category}`;
+    }
+  }
+
   return (
     <Container>
       <TitleContainer>
-        <Title>
-          {type === "categories"
-            ? "Categories"
-            : `${(location.state as any).category}`}
-        </Title>
+        <Title>{title}</Title>
       </TitleContainer>
       <ContentContainer>
         {type === "threads" ? (

@@ -6,6 +6,8 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import FormControlLabel from "@material-ui/core/FormControlLabel";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const TextfieldContainer = styled.div`
   margin: 16px 0;
@@ -18,13 +20,15 @@ const AddDiscountDialog: React.FC<{
     title: string,
     description: string,
     pictures: string[],
-    pointsCost: number
+    pointsCost: number,
+    vipStatus: boolean
   ) => void;
 }> = ({ open, onClose, onAddDiscount }) => {
   const [title, setTitle] = useState<string>("");
   const [description, setDescription] = useState<string>("");
   const [pictures, setPictures] = useState<string[]>([]);
   const [pointsCost, setPointsCost] = useState<number>(0);
+  const [isPremiumDiscount, setIsPremiumDiscount] = useState<boolean>(false);
 
   const onTitleChangedHandler = (e: any) => {
     setTitle(e.target.value);
@@ -53,12 +57,16 @@ const AddDiscountDialog: React.FC<{
   };
 
   const onAddDiscountButtonClicked = () => {
-    onAddDiscount(title, description, pictures, pointsCost);
+    onAddDiscount(title, description, pictures, pointsCost, isPremiumDiscount);
     onClose();
   };
 
+  const onPremiumDiscountCheckboxClicked = (e: any) => {
+    setIsPremiumDiscount(e.target.checked);
+  };
+
   return (
-    <Dialog open={open} onClose={onClose}>
+    <Dialog open={open} onClose={onClose} maxWidth="md" fullWidth>
       <DialogTitle>Add New Discount</DialogTitle>
       <DialogContent>
         <TextfieldContainer>
@@ -109,6 +117,17 @@ const AddDiscountDialog: React.FC<{
               Upload Images
             </Button>
           </label>
+        </TextfieldContainer>
+        <TextfieldContainer>
+          <FormControlLabel
+            control={
+              <Checkbox
+                name="isPremium"
+                onChange={onPremiumDiscountCheckboxClicked}
+              />
+            }
+            label="Premium Discount"
+          />
         </TextfieldContainer>
       </DialogContent>
       <DialogActions>

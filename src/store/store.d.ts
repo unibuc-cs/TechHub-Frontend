@@ -56,6 +56,7 @@ export interface Discount {
   description: string;
   pictures: string[];
   pointsCost: number;
+  vipStatus: boolean;
 }
 
 export interface PurchasedDiscount {
