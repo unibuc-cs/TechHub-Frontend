@@ -123,25 +123,27 @@ const HomescreenContent: React.FC<{ type: string; isVip: boolean }> = ({
       } else {
         if (isVip) {
           setTimeout(
-            dispatch(
-              searchVipThreads(
-                accessToken,
-                searchInput,
-                (location.state as any).category
-              )
-            ),
-            3000
+            () =>
+              dispatch(
+                searchVipThreads(
+                  accessToken,
+                  searchInput,
+                  (location.state as any).category
+                )
+              ),
+            1000
           );
         } else {
           setTimeout(
-            dispatch(
-              searchThreads(
-                accessToken,
-                searchInput,
-                (location.state as any).category
-              )
-            ),
-            3000
+            () =>
+              dispatch(
+                searchThreads(
+                  accessToken,
+                  searchInput,
+                  (location.state as any).category
+                )
+              ),
+            1000
           );
         }
       }

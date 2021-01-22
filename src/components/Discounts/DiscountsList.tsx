@@ -28,6 +28,7 @@ const DiscountsList: React.FC<{
   onDeleteDiscount: (id: string) => void;
   onUnlockDiscount: (pointsSpent: number, discountId: string) => void;
   currentPoints: number;
+  userVipStatus: boolean;
 }> = ({
   discounts,
   currentEmail,
@@ -35,6 +36,7 @@ const DiscountsList: React.FC<{
   onDeleteDiscount,
   onUnlockDiscount,
   currentPoints,
+  userVipStatus,
 }) => {
   return (
     <Container>
@@ -47,6 +49,7 @@ const DiscountsList: React.FC<{
           onDeleteDiscount={onDeleteDiscount}
           onUnlockDiscount={onUnlockDiscount}
           currentPoints={currentPoints}
+          userVipStatus={userVipStatus}
         />
       ))}
     </Container>

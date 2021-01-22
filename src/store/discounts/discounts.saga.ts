@@ -32,6 +32,7 @@ function* addDiscount(
     description: string;
     pictures: string[];
     pointsCost: number;
+    vipStatus: boolean;
   }>
 ) {
   try {
@@ -41,6 +42,7 @@ function* addDiscount(
       description: action.payload.description,
       pictures: [...action.payload.pictures],
       pointsCost: action.payload.pointsCost,
+      vipStatus: action.payload.vipStatus,
     };
 
     const res: any = yield fetch("http://127.0.0.1:8080/discount", {

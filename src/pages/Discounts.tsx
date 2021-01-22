@@ -85,7 +85,8 @@ const Discounts = () => {
     title: string,
     description: string,
     pictures: string[],
-    pointsCost: number
+    pointsCost: number,
+    vipStatus: boolean
   ) => {
     dispatch(
       addDiscount(
@@ -94,7 +95,8 @@ const Discounts = () => {
         title,
         description,
         pictures,
-        pointsCost
+        pointsCost,
+        vipStatus
       )
     );
   };
@@ -148,6 +150,7 @@ const Discounts = () => {
           onDeleteDiscount={onDeleteDiscount}
           onUnlockDiscount={onUnlockDiscount}
           currentPoints={userDetails.currentPoints}
+          userVipStatus={userDetails.vipStatus}
         />
       ) : (
         <h1>No discounts available</h1>

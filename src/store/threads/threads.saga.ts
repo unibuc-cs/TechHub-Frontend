@@ -172,6 +172,7 @@ function* searchVipThreads(
         method: "GET",
         headers: {
           Authorization: action.payload.accessToken,
+          "Access-Control-Allow-Origin": "*",
         },
       }
     ).then((res) => res.json());
