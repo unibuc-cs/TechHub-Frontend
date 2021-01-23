@@ -256,7 +256,7 @@ const PostCard: React.FC<{
             Award Trophy
           </Button>
         ) : null}
-        <PostAuthorText>{`By ${postInfo.userEmail} on ${new Date(
+        <PostAuthorText>{`By ${postInfo.username} on ${new Date(
           postInfo.dateCreated
         ).getDate()} ${
           months[new Date(postInfo.dateCreated).getMonth()]

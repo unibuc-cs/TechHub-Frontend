@@ -27,6 +27,8 @@ export interface ThreadInformation {
 export interface PostInformation {
   id: string;
   userEmail: string;
+  userImage: string;
+  username: string;
   threadId: string;
   postNumber: number;
   text: string;

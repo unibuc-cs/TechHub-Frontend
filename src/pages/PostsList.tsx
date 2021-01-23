@@ -22,6 +22,7 @@ import {
   accessTokenSelector,
   currentEmailSelector,
 } from "../store/user/user.selector";
+import { userDetailsSelector } from "../store/userDetails/userDetails.selector";
 import { PostInformation } from "../store/store";
 import PostCard from "../components/Post/PostCard";
 import TextField from "@material-ui/core/TextField";
@@ -114,6 +115,7 @@ const PostsList = () => {
   const accessToken = useSelector(accessTokenSelector);
   const posts = useSelector(postsSelector);
   const threadHasTrophy = useSelector(threadHasTrophySelector);
+  const currentUserDetails = useSelector(userDetailsSelector);
 
   const [newPostText, setNewPostText] = useState<string>("");
 
@@ -127,7 +129,9 @@ const PostsList = () => {
         accessToken,
         currentEmail,
         (location.state as any).threadInformation.id,
-        newPostText
+        newPostText,
+        currentUserDetails.username,
+        currentUserDetails.profilePicture
       )
     );
     refreshAfterNewPost();

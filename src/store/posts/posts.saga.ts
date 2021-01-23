@@ -3,6 +3,7 @@ import {
   ActionWithPayload,
   PostInformation,
   ThreadInformation,
+  UserDetails,
 } from "../store";
 import {
   GET_POSTS_BY_THREAD,
@@ -21,7 +22,8 @@ function* getPostsByThread(
   action: ActionWithPayload<{ accessToken: string; threadId: string }>
 ) {
   try {
-    const posts: PostInformation[] = yield fetch(
+    const finalPosts: PostInformation[] = [];
+    const initialPosts: PostInformation[] = yield fetch(
       `http://127.0.0.1:8080/thread/${action.payload.threadId}/posts`,
       {
         method: "GET",
@@ -30,6 +32,24 @@ function* getPostsByThread(
         },
       }
     ).then((res) => res.json());
+
+    for (let index = 0; index < initialPosts.length; index++) {
+      const details: UserDetails = yield fetch(
+        `http://127.0.0.1:8080/user/${initialPosts[index].userEmail}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: action.payload.accessToken,
+          },
+        }
+      ).then((res) => res.json());
+
+      finalPosts.push({
+        ...initialPosts[index],
+        userImage: details.profilePicture,
+        username: details.username,
+      });
+    }
 
     const thread: ThreadInformation = yield fetch(
       `http://127.0.0.1:8080/thread/${action.payload.threadId}`,
@@ -41,7 +61,7 @@ function* getPostsByThread(
       }
     ).then((res) => res.json());
 
-    yield put(setPosts(posts));
+    yield put(setPosts(finalPosts));
     yield put(setCurrentThreadHasTrophy(thread.hasTrophy));
   } catch (e) {
     console.warn(e);
@@ -54,6 +74,8 @@ function* addNewPost(
     userEmail: string;
     threadId: string;
     text: string;
+    username: string;
+    userPicture: string;
   }>
 ) {
   try {
@@ -72,6 +94,7 @@ function* addNewPost(
       },
       body: JSON.stringify(data),
     }).then((res) => res.json());
+
     const newPost: PostInformation = {
       dateCreated: new Date().toString(),
       downvotes: [],
@@ -82,6 +105,8 @@ function* addNewPost(
       text: action.payload.text,
       threadId: action.payload.threadId,
       userEmail: action.payload.userEmail,
+      userImage: action.payload.userPicture,
+      username: action.payload.username,
     };
     yield put(addPost(newPost));
   } catch (e) {
