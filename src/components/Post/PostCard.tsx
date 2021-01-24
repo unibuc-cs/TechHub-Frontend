@@ -6,21 +6,77 @@ import NavigationIcon from "@material-ui/icons/Navigation";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import Tooltip from "@material-ui/core/Tooltip";
 import EditPostDialog from "../UI/EditPostDialog";
 import DeletePostConfirmDialog from "../UI/DeletePostConfirmDialog";
 import Button from "@material-ui/core/Button/Button";
 import trophy from "../../assets/trophy.png";
 import AwardTrophyDialog from "../UI/AwardTrophyDialog";
+import Paper from "@material-ui/core/Paper";
 
 const Container = styled.div`
-  width: 90%;
-  border: 1px solid #231f20;
-  box-shadow: 4px 4px 4px #231f20;
+  width: 100%;
+  height: 100%;
   margin: 16px 0;
   display: flex;
-  flex-direction: column;
   align-items: start;
+  border: 1px solid black;
+`;
+
+const LeftContainer = styled.div`
+  width: 12.5%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 4px 0;
+`;
+
+const MiddleContainer = styled.div`
+  width: 80%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  border: 1px solid black;
+`;
+
+const PostTextContainer = styled.div`
+  display: flex;
+  width: 100%;
+  height: 80%;
+  padding: 4px;
+`;
+
+const PostText = styled.p`
+  font-size: 1.1em;
+  font-family: "Montserrat", sans-serif;
+  margin-top: 0;
+`;
+
+const UserProfileImage = styled.img`
+  width: 100px;
+  height: 100px;
+`;
+
+const UsernameText = styled.p`
+  font-size: 1.2em;
+  font-family: "Montserrat", sans-serif;
+  font-weight: bold;
+  margin-top: 4px;
+`;
+
+const DateContainer = styled.div`
+  margin-top: -16px;
+  display: flex;
+  align-items: center;
+`;
+
+const DateText = styled.p`
+  font-size: 1.1em;
+  font-family: "Montserrat", sans-serif;
+  margin-left: 4px;
 `;
 
 const TopContainer = styled.div`
@@ -36,16 +92,13 @@ const TopLeftContainer = styled.div`
   flex-direction: column;
   justify-content: flex-start;
   align-items: center;
+  height: 100%;
 `;
 
 const TopRightContainer = styled.div`
   margin-top: 0;
   width: 95%;
   padding: 0 4px;
-`;
-
-const PostBodyText = styled.p`
-  font-size: 1.1em;
 `;
 
 const UpArrowContainer = styled.div`
@@ -76,6 +129,7 @@ const VotesCountContainer = styled.div`
 const VotesCount = styled.p`
   font-size: 1.5em;
   font-weight: bold;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const BottomContainer = styled.div`
@@ -97,6 +151,7 @@ const PostEditRemoveButtonsContainer = styled.div`
 const PostAuthorText = styled.p`
   font-size: 1.1em;
   font-style: italic;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const TrophyImage = styled.img`
@@ -203,67 +258,86 @@ const PostCard: React.FC<{
   };
 
   return (
-    <Container>
-      <TopContainer>
-        <TopLeftContainer>
-          <UpArrowContainer onClick={onUpvoteClicked}>
-            <NavigationIcon fontSize="large" color={upvoteArrowColor} />
-          </UpArrowContainer>
-          <VotesCountContainer>
-            <VotesCount>
-              {postInfo.upvotes.length - postInfo.downvotes.length}
-            </VotesCount>
-          </VotesCountContainer>
-          <DownArrowContainer onClick={onDownvoteClicked}>
-            <NavigationIcon fontSize="large" color={downvoteArrowColor} />
-          </DownArrowContainer>
-        </TopLeftContainer>
-        <TopRightContainer>
-          <PostBodyText>{postInfo.text}</PostBodyText>
-        </TopRightContainer>
-      </TopContainer>
-      <BottomContainer>
-        {postInfo.hasTrophy ? (
-          <TrophyImage src={trophy} alt="Cannot load image" />
-        ) : null}
-        {postInfo.userEmail === currentEmail ? (
-          <PostEditRemoveButtonsContainer>
-            <Tooltip arrow title="Edit your post">
-              <IconButton onClick={() => setEditModalIsOpen(true)}>
-                <EditIcon />
-              </IconButton>
-            </Tooltip>
-            <Tooltip arrow title="Delete your post">
-              <IconButton onClick={() => setDeleteModalIsOpen(true)}>
-                <DeleteIcon color="secondary" />
-              </IconButton>
-            </Tooltip>
-          </PostEditRemoveButtonsContainer>
-        ) : null}
-        {postInfo.userEmail !== currentEmail &&
-        !threadHasTrophy &&
-        threadOwnerEmail === currentEmail ? (
-          <Button
-            variant="contained"
-            style={{
-              backgroundColor: "#228B22",
-              color: "white",
-              marginRight: "4px",
-            }}
-            onClick={() => setAwardTrophyModalIsOpen(true)}
-            size="small"
-          >
-            Award Trophy
-          </Button>
-        ) : null}
-        <PostAuthorText>{`By ${postInfo.username} on ${new Date(
-          postInfo.dateCreated
-        ).getDate()} ${
-          months[new Date(postInfo.dateCreated).getMonth()]
-        } at ${new Date(postInfo.dateCreated).getHours()}:${new Date(
-          postInfo.dateCreated
-        ).getMinutes()}`}</PostAuthorText>
-      </BottomContainer>
+    <Paper elevation={3} style={{ width: "90%", margin: "16px 0" }}>
+      <Container>
+        <LeftContainer>
+          <UserProfileImage src={postInfo.userImage} alt="Cannot load image" />
+          <UsernameText>{postInfo.username}</UsernameText>
+          <DateContainer>
+            <CalendarTodayIcon />
+            <DateText>{`${new Date(postInfo.dateCreated).getDate()} ${
+              months[new Date(postInfo.dateCreated).getMonth()]
+            } at ${new Date(postInfo.dateCreated).getHours()}:${new Date(
+              postInfo.dateCreated
+            ).getMinutes()}`}</DateText>
+          </DateContainer>
+        </LeftContainer>
+        <MiddleContainer>
+          <PostTextContainer>
+            <PostText>{postInfo.text}</PostText>
+          </PostTextContainer>
+        </MiddleContainer>
+        {/* <TopContainer>
+          <TopLeftContainer>
+            <UpArrowContainer onClick={onUpvoteClicked}>
+              <NavigationIcon fontSize="large" color={upvoteArrowColor} />
+            </UpArrowContainer>
+            <VotesCountContainer>
+              <VotesCount>
+                {postInfo.upvotes.length - postInfo.downvotes.length}
+              </VotesCount>
+            </VotesCountContainer>
+            <DownArrowContainer onClick={onDownvoteClicked}>
+              <NavigationIcon fontSize="large" color={downvoteArrowColor} />
+            </DownArrowContainer>
+          </TopLeftContainer>
+          <TopRightContainer>
+            <PostBodyText>{postInfo.text}</PostBodyText>
+          </TopRightContainer>
+        </TopContainer>
+        <BottomContainer>
+          {postInfo.hasTrophy ? (
+            <TrophyImage src={trophy} alt="Cannot load image" />
+          ) : null}
+          {postInfo.userEmail === currentEmail ? (
+            <PostEditRemoveButtonsContainer>
+              <Tooltip arrow title="Edit your post">
+                <IconButton onClick={() => setEditModalIsOpen(true)}>
+                  <EditIcon />
+                </IconButton>
+              </Tooltip>
+              <Tooltip arrow title="Delete your post">
+                <IconButton onClick={() => setDeleteModalIsOpen(true)}>
+                  <DeleteIcon color="secondary" />
+                </IconButton>
+              </Tooltip>
+            </PostEditRemoveButtonsContainer>
+          ) : null}
+          {postInfo.userEmail !== currentEmail &&
+          !threadHasTrophy &&
+          threadOwnerEmail === currentEmail ? (
+            <Button
+              variant="contained"
+              style={{
+                backgroundColor: "#228B22",
+                color: "white",
+                marginRight: "4px",
+              }}
+              onClick={() => setAwardTrophyModalIsOpen(true)}
+              size="small"
+            >
+              Award Trophy
+            </Button>
+          ) : null}
+          <PostAuthorText>{`By ${postInfo.username} on ${new Date(
+            postInfo.dateCreated
+          ).getDate()} ${
+            months[new Date(postInfo.dateCreated).getMonth()]
+          } at ${new Date(postInfo.dateCreated).getHours()}:${new Date(
+            postInfo.dateCreated
+          ).getMinutes()}`}</PostAuthorText>
+        </BottomContainer> */}
+      </Container>
       <EditPostDialog
         open={editModalIsOpen}
         currentPostText={postInfo.text}
@@ -283,7 +357,7 @@ const PostCard: React.FC<{
         onAwardPost={onAwardTrophy}
         postId={postInfo.id}
       />
-    </Container>
+    </Paper>
   );
 };
 
