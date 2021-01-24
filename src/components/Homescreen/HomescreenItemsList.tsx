@@ -4,6 +4,7 @@ import { CategoryCard, ThreadInformation } from "../../store/store";
 import HomescreenItemCard from "./HomescreenItemCard";
 
 const Container = styled.div`
+  padding: 8px;
   width: 100%;
   height: 49vh;
   overflow-y: scroll;

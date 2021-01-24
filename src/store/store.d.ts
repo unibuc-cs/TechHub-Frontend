@@ -16,6 +16,8 @@ export interface CategoriesInformation {
 export interface ThreadInformation {
   id: string;
   ownerEmail: string;
+  userImage: string;
+  username: string;
   title: string;
   category: string;
   text: string;

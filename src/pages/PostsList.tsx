@@ -27,6 +27,8 @@ import { PostInformation } from "../store/store";
 import PostCard from "../components/Post/PostCard";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
+import { Paper } from "@material-ui/core";
 
 const Container = styled.div`
   width: 100%;
@@ -35,6 +37,47 @@ const Container = styled.div`
   align-items: center;
   justify-content: space-around;
   padding: 8px;
+`;
+
+const LeftContainer = styled.div`
+  width: 12.5%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 8px 0;
+`;
+
+const RightContainer = styled.div`
+  width: 87.5%;
+  height: 100%;
+  display: flex;
+  padding: 8px 0;
+`;
+
+const UserProfileImage = styled.img`
+  width: 100px;
+  height: 100px;
+`;
+
+const UsernameText = styled.p`
+  font-size: 1.2em;
+  font-family: "Montserrat", sans-serif;
+  font-weight: bold;
+  margin-top: 4px;
+`;
+
+const DateContainer = styled.div`
+  margin-top: -16px;
+  display: flex;
+  align-items: center;
+`;
+
+const DateText = styled.p`
+  font-size: 1.1em;
+  font-family: "Montserrat", sans-serif;
+  margin-left: 4px;
 `;
 
 const PostTitleContainer = styled.div`
@@ -47,15 +90,14 @@ const PostTitleContainer = styled.div`
 
 const PostTextFont = styled.p`
   margin-top: 0;
-  font-size: 1.1em;
+  font-size: 1.3em;
+  font-family: "Montserrat", sans-serif;
 `;
 
-const PostTextContainer = styled.div`
+const DescriptionContainer = styled.div`
   width: 100%;
-  box-shadow: 4px 4px 4px #231f20;
-  border: 1px solid #231f20;
   padding: 4px;
-  margin-top: -35px;
+  display: flex;
 `;
 
 const ThreadTitle = styled.p`
@@ -63,12 +105,7 @@ const ThreadTitle = styled.p`
   font-weight: bold;
   margin-top: 0;
   word-wrap: break-word;
-`;
-
-const ThreadSubtitle = styled.p`
-  font-size: 1.7em;
-  font-style: italic;
-  margin-top: 5px;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const PostsListsContainer = styled.div`
@@ -167,12 +204,6 @@ const PostsList = () => {
 
   const refreshAfterNewPost = () => {
     setNewPostText("");
-    dispatch(
-      getPostsByThread(
-        accessToken,
-        (location.state as any).threadInformation.id
-      )
-    );
   };
 
   useEffect(() => {
@@ -190,12 +221,44 @@ const PostsList = () => {
         <ThreadTitle>
           {(location.state as any).threadInformation.title}
         </ThreadTitle>
-        <PostTextContainer>
-          <PostTextFont>
-            {(location.state as any).threadInformation.text}
-          </PostTextFont>
-        </PostTextContainer>
-        <ThreadSubtitle>
+        <Paper elevation={3} style={{ width: "100%", marginTop: "-35px" }}>
+          <DescriptionContainer>
+            <LeftContainer>
+              <UserProfileImage
+                src={(location.state as any).threadInformation.userImage}
+                alt="Cannot load image"
+              />
+              <UsernameText>
+                {currentEmail ===
+                (location.state as any).threadInformation.ownerEmail
+                  ? "You"
+                  : (location.state as any).threadInformation.username}
+              </UsernameText>
+              <DateContainer>
+                <CalendarTodayIcon />
+                <DateText>{`${new Date(
+                  (location.state as any).threadInformation.dateCreated
+                ).getDate()} ${
+                  months[
+                    new Date(
+                      (location.state as any).threadInformation.dateCreated
+                    ).getMonth()
+                  ]
+                } at ${new Date(
+                  (location.state as any).threadInformation.dateCreated
+                ).getHours()}:${new Date(
+                  (location.state as any).threadInformation.dateCreated
+                ).getMinutes()}`}</DateText>
+              </DateContainer>
+            </LeftContainer>
+            <RightContainer>
+              <PostTextFont>
+                {(location.state as any).threadInformation.text}
+              </PostTextFont>
+            </RightContainer>
+          </DescriptionContainer>
+        </Paper>
+        {/* <ThreadSubtitle>
           {`By ${
             (location.state as any).threadInformation.ownerEmail
           } on ${new Date(
@@ -211,7 +274,7 @@ const PostsList = () => {
           ).getHours()}:${new Date(
             (location.state as any).threadInformation.dateCreated
           ).getMinutes()}`}
-        </ThreadSubtitle>
+        </ThreadSubtitle> */}
       </PostTitleContainer>
       <PostsListsContainer>
         {posts.length > 0 ? (
