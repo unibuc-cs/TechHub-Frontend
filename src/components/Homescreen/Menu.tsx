@@ -19,11 +19,14 @@ import { useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
 const animated = keyframes`
-from {
+0% {
   transform:scale(1);
 }
-to {
+50% {
   transform:scale(1.25);
+}
+100% {
+  transform:scale(1);
 }
 `;
 
@@ -152,7 +155,7 @@ const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
               ) : null}
               <Button
                 variant="contained"
-                style={{ backgroundColor: "#edf5e1" }}
+                style={{ backgroundColor: "white" }}
                 className={classes.button}
                 startIcon={<EqualizerIcon />}
                 onClick={() => history.push("/homescreen/leaderboard")}
@@ -161,7 +164,7 @@ const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
               </Button>
               <Button
                 variant="contained"
-                style={{ backgroundColor: "#edf5e1" }}
+                style={{ backgroundColor: "white" }}
                 className={classes.button}
                 startIcon={<AttachMoneyOutlinedIcon />}
                 onClick={() => history.push("/homescreen/discounts")}
@@ -170,7 +173,7 @@ const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
               </Button>
               <Button
                 variant="contained"
-                style={{ backgroundColor: "#edf5e1" }}
+                style={{ backgroundColor: "white" }}
                 className={classes.button}
                 startIcon={<ExitToAppIcon />}
                 onClick={onLogoutButtonClickedHandler}
@@ -181,7 +184,7 @@ const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
                 color="inherit"
                 onClick={() => setProfileModalIsOpen(true)}
               >
-                <AccountCircle />
+                <AccountCircle style={{ color: "white" }} />
               </IconButton>
             </RightSideContainer>
           </ToolbarContainer>

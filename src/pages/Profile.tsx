@@ -58,6 +58,7 @@ const BasicInformationContainer = styled.div`
 
 const Text = styled.p`
   font-size: 1.3em;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const ProfilePicture = styled.img`

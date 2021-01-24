@@ -30,6 +30,7 @@ const Container = styled.div`
 const Title = styled.p`
   font-weight: bold;
   font-size: 2.7em;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const AddDiscountButtonContainer = styled.div`
@@ -47,6 +48,7 @@ const CurrentPointsContainer = styled.div`
 
 const Text = styled.p`
   font-size: 1.2em;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const Discounts = () => {
