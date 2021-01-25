@@ -106,7 +106,8 @@ function* searchThreads(
   }>
 ) {
   try {
-    const threads: ThreadInformation[] = yield fetch(
+    const finalThreads: ThreadInformation[] = [];
+    const initialThreads: ThreadInformation[] = yield fetch(
       `http://127.0.0.1:8080/thread/title/${action.payload.searchInput.trim()}`,
       {
         method: "GET",
@@ -115,10 +116,29 @@ function* searchThreads(
         },
       }
     ).then((res) => res.json());
-    const filteredThreads = threads.filter(
+    const filteredThreads = initialThreads.filter(
       (thread: ThreadInformation) => thread.category === action.payload.category
     );
-    yield put(setThreads(filteredThreads));
+
+    for (let index = 0; index < filteredThreads.length; index++) {
+      const details: UserDetails = yield fetch(
+        `http://127.0.0.1:8080/user/${filteredThreads[index].ownerEmail}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: action.payload.accessToken,
+          },
+        }
+      ).then((res) => res.json());
+
+      finalThreads.push({
+        ...filteredThreads[index],
+        userImage: details.profilePicture,
+        username: details.username,
+      });
+    }
+
+    yield put(setThreads(finalThreads));
   } catch (e) {
     console.warn(e);
   }
@@ -206,20 +226,39 @@ function* searchVipThreads(
   }>
 ) {
   try {
-    const threads: ThreadInformation[] = yield fetch(
+    const finalThreads: ThreadInformation[] = [];
+    const initialThreads: ThreadInformation[] = yield fetch(
       `http://127.0.0.1:8080/thread/vip/title/${action.payload.searchInput.trim()}`,
       {
         method: "GET",
         headers: {
           Authorization: action.payload.accessToken,
-          "Access-Control-Allow-Origin": "*",
         },
       }
     ).then((res) => res.json());
-    const filteredThreads = threads.filter(
+    const filteredThreads = initialThreads.filter(
       (thread: ThreadInformation) => thread.category === action.payload.category
     );
-    yield put(setThreads(filteredThreads));
+
+    for (let index = 0; index < filteredThreads.length; index++) {
+      const details: UserDetails = yield fetch(
+        `http://127.0.0.1:8080/user/${filteredThreads[index].ownerEmail}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: action.payload.accessToken,
+          },
+        }
+      ).then((res) => res.json());
+
+      finalThreads.push({
+        ...filteredThreads[index],
+        userImage: details.profilePicture,
+        username: details.username,
+      });
+    }
+
+    yield put(setThreads(finalThreads));
   } catch (e) {
     console.warn(e);
   }

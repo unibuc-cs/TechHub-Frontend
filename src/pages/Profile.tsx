@@ -136,6 +136,7 @@ const Profile: React.FC<{ onClose: () => void }> = ({ onClose }) => {
                 color="primary"
                 component="span"
                 size="small"
+                style={{ fontFamily: "Montserrat" }}
               >
                 Upload
               </Button>
@@ -146,7 +147,7 @@ const Profile: React.FC<{ onClose: () => void }> = ({ onClose }) => {
               variant="contained"
               color="secondary"
               size="small"
-              style={{ marginTop: "4px" }}
+              style={{ marginTop: "4px", fontFamily: "Montserrat" }}
               onClick={onChangeImageButtonClicked}
             >
               Save Changes
@@ -163,7 +164,10 @@ const Profile: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         </BasicInformationContainer>
       </TopContainer>
       <BottomContainer>
-        <Paper elevation={3} style={{ width: "100%" }}>
+        <Paper
+          elevation={3}
+          style={{ width: "100%", backgroundColor: "#228B22", color: "white" }}
+        >
           <AchievementArea>
             <Text>
               <b>TROPHIES</b>
@@ -171,7 +175,15 @@ const Profile: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <Text>{currentUserDetails.trophies}</Text>
           </AchievementArea>
         </Paper>
-        <Paper elevation={3} style={{ width: "100%", marginTop: "8px" }}>
+        <Paper
+          elevation={3}
+          style={{
+            width: "100%",
+            marginTop: "8px",
+            backgroundColor: "#228B22",
+            color: "white",
+          }}
+        >
           <AchievementArea>
             <Text>
               <b>TOTAL POINTS</b>
@@ -179,7 +191,15 @@ const Profile: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <Text>{currentUserDetails.totalPoints}</Text>
           </AchievementArea>
         </Paper>
-        <Paper elevation={3} style={{ width: "100%", marginTop: "8px" }}>
+        <Paper
+          elevation={3}
+          style={{
+            width: "100%",
+            marginTop: "8px",
+            backgroundColor: "#228B22",
+            color: "white",
+          }}
+        >
           <AchievementArea>
             <Text>
               <b>CURRENT POINTS</b>
@@ -190,7 +210,7 @@ const Profile: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         <Button
           variant="contained"
           color="primary"
-          style={{ marginTop: "8px" }}
+          style={{ marginTop: "8px", fontFamily: "Montserrat" }}
           onClick={() => {
             history.push("/homescreen/owned-discounts");
             onClose();

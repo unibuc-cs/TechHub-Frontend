@@ -144,7 +144,10 @@ const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
                 <AnimatedButtonContainer>
                   <Button
                     variant="contained"
-                    style={{ backgroundColor: "#228B22" }}
+                    style={{
+                      backgroundColor: "#228B22",
+                      fontFamily: "Montserrat",
+                    }}
                     className={classes.button}
                     startIcon={<StarIcon />}
                     onClick={() => history.push("/homescreen/vip")}
@@ -155,7 +158,7 @@ const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
               ) : null}
               <Button
                 variant="contained"
-                style={{ backgroundColor: "white" }}
+                style={{ backgroundColor: "white", fontFamily: "Montserrat" }}
                 className={classes.button}
                 startIcon={<EqualizerIcon />}
                 onClick={() => history.push("/homescreen/leaderboard")}
@@ -164,7 +167,7 @@ const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
               </Button>
               <Button
                 variant="contained"
-                style={{ backgroundColor: "white" }}
+                style={{ backgroundColor: "white", fontFamily: "Montserrat" }}
                 className={classes.button}
                 startIcon={<AttachMoneyOutlinedIcon />}
                 onClick={() => history.push("/homescreen/discounts")}
@@ -173,7 +176,7 @@ const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
               </Button>
               <Button
                 variant="contained"
-                style={{ backgroundColor: "white" }}
+                style={{ backgroundColor: "white", fontFamily: "Montserrat" }}
                 className={classes.button}
                 startIcon={<ExitToAppIcon />}
                 onClick={onLogoutButtonClickedHandler}

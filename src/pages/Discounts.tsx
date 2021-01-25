@@ -133,7 +133,10 @@ const Discounts = () => {
           </Button>
         </AddDiscountButtonContainer>
       ) : (
-        <Paper elevation={3} style={{ width: "15%" }}>
+        <Paper
+          elevation={3}
+          style={{ width: "15%", backgroundColor: "#228B22", color: "white" }}
+        >
           <CurrentPointsContainer>
             <Text>
               <b>Your points</b>
