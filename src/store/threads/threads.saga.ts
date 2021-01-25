@@ -1,5 +1,5 @@
 import { takeEvery, put } from "redux-saga/effects";
-import { ActionWithPayload, ThreadInformation } from "../store";
+import { ActionWithPayload, ThreadInformation, UserDetails } from "../store";
 import {
   ADD_THREAD,
   GET_ALL_THREADS,
@@ -63,7 +63,8 @@ function* getThreadsByCategory(
   action: ActionWithPayload<{ accessToken: string; category: string }>
 ) {
   try {
-    const threads: ThreadInformation[] = yield fetch(
+    const finalThreads: ThreadInformation[] = [];
+    const initialThreads: ThreadInformation[] = yield fetch(
       `http://127.0.0.1:8080/thread/categories/${action.payload.category}`,
       {
         method: "GET",
@@ -72,7 +73,26 @@ function* getThreadsByCategory(
         },
       }
     ).then((res) => res.json());
-    yield put(setThreads(threads));
+
+    for (let index = 0; index < initialThreads.length; index++) {
+      const details: UserDetails = yield fetch(
+        `http://127.0.0.1:8080/user/${initialThreads[index].ownerEmail}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: action.payload.accessToken,
+          },
+        }
+      ).then((res) => res.json());
+
+      finalThreads.push({
+        ...initialThreads[index],
+        userImage: details.profilePicture,
+        username: details.username,
+      });
+    }
+
+    yield put(setThreads(finalThreads));
   } catch (e) {
     console.warn(e);
   }
@@ -86,7 +106,8 @@ function* searchThreads(
   }>
 ) {
   try {
-    const threads: ThreadInformation[] = yield fetch(
+    const finalThreads: ThreadInformation[] = [];
+    const initialThreads: ThreadInformation[] = yield fetch(
       `http://127.0.0.1:8080/thread/title/${action.payload.searchInput.trim()}`,
       {
         method: "GET",
@@ -95,10 +116,29 @@ function* searchThreads(
         },
       }
     ).then((res) => res.json());
-    const filteredThreads = threads.filter(
+    const filteredThreads = initialThreads.filter(
       (thread: ThreadInformation) => thread.category === action.payload.category
     );
-    yield put(setThreads(filteredThreads));
+
+    for (let index = 0; index < filteredThreads.length; index++) {
+      const details: UserDetails = yield fetch(
+        `http://127.0.0.1:8080/user/${filteredThreads[index].ownerEmail}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: action.payload.accessToken,
+          },
+        }
+      ).then((res) => res.json());
+
+      finalThreads.push({
+        ...filteredThreads[index],
+        userImage: details.profilePicture,
+        username: details.username,
+      });
+    }
+
+    yield put(setThreads(finalThreads));
   } catch (e) {
     console.warn(e);
   }
@@ -108,7 +148,8 @@ function* getVipThreadsByCategory(
   action: ActionWithPayload<{ accessToken: string; category: string }>
 ) {
   try {
-    const threads: ThreadInformation[] = yield fetch(
+    const finalThreads: ThreadInformation[] = [];
+    const initialThreads: ThreadInformation[] = yield fetch(
       `http://127.0.0.1:8080/thread/vip/categories/${action.payload.category}`,
       {
         method: "GET",
@@ -117,7 +158,26 @@ function* getVipThreadsByCategory(
         },
       }
     ).then((res) => res.json());
-    yield put(setThreads(threads));
+
+    for (let index = 0; index < initialThreads.length; index++) {
+      const details: UserDetails = yield fetch(
+        `http://127.0.0.1:8080/user/${initialThreads[index].ownerEmail}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: action.payload.accessToken,
+          },
+        }
+      ).then((res) => res.json());
+
+      finalThreads.push({
+        ...initialThreads[index],
+        userImage: details.profilePicture,
+        username: details.username,
+      });
+    }
+
+    yield put(setThreads(finalThreads));
   } catch (e) {
     console.warn(e);
   }
@@ -166,20 +226,39 @@ function* searchVipThreads(
   }>
 ) {
   try {
-    const threads: ThreadInformation[] = yield fetch(
+    const finalThreads: ThreadInformation[] = [];
+    const initialThreads: ThreadInformation[] = yield fetch(
       `http://127.0.0.1:8080/thread/vip/title/${action.payload.searchInput.trim()}`,
       {
         method: "GET",
         headers: {
           Authorization: action.payload.accessToken,
-          "Access-Control-Allow-Origin": "*",
         },
       }
     ).then((res) => res.json());
-    const filteredThreads = threads.filter(
+    const filteredThreads = initialThreads.filter(
       (thread: ThreadInformation) => thread.category === action.payload.category
     );
-    yield put(setThreads(filteredThreads));
+
+    for (let index = 0; index < filteredThreads.length; index++) {
+      const details: UserDetails = yield fetch(
+        `http://127.0.0.1:8080/user/${filteredThreads[index].ownerEmail}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: action.payload.accessToken,
+          },
+        }
+      ).then((res) => res.json());
+
+      finalThreads.push({
+        ...filteredThreads[index],
+        userImage: details.profilePicture,
+        username: details.username,
+      });
+    }
+
+    yield put(setThreads(finalThreads));
   } catch (e) {
     console.warn(e);
   }

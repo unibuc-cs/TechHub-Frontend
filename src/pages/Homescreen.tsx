@@ -23,16 +23,16 @@ import { userDetailsSelector } from "../store/userDetails/userDetails.selector";
 const Container = styled.div`
   width: 100vw;
   height: 100vh;
-  background-color: #edf5e1;
+  background-color: white;
   overflow-y: scroll;
 
   ::-webkit-scrollbar {
     width: 1em;
-    background-color: #edf5e1;
+    background-color: white;
   }
 
   ::-webkit-scrollbar-track {
-    background-color: #edf5e1;
+    background-color: white;
   }
 
   ::-webkit-scrollbar-thumb {

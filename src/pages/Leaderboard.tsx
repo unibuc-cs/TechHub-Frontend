@@ -18,6 +18,7 @@ const Container = styled.div`
 const Title = styled.p`
   font-weight: bold;
   font-size: 2.7em;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const TitleContainer = styled.div`

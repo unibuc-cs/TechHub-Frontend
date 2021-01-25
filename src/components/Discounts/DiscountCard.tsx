@@ -10,15 +10,12 @@ import StarIcon from "@material-ui/icons/Star";
 import Tooltip from "@material-ui/core/Tooltip";
 import DeleteDiscountConfirmDialog from "../UI/DeleteDiscountConfirmDialog";
 import UnlockDiscountDialog from "../UI/UnlockDiscountDialog";
+import Paper from "@material-ui/core/Paper/Paper";
 
 const Container = styled.div`
   width: 100%;
-  border: 1px solid #231f20;
-  height: 150px;
-  margin: 8px 0;
-  box-shadow: 4px 4px 4px #231f20;
+  height: 100%;
   display: flex;
-  margin-bottom: 16px;
 `;
 
 const LeftSideContainer = styled.div`
@@ -66,8 +63,9 @@ const TitleContainer = styled.div`
 
 const Title = styled.p`
   margin-top: 0;
-  font-size: 1.7em;
+  font-size: 1.6em;
   font-weight: bold;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const DescriptionContainer = styled.div`
@@ -80,8 +78,9 @@ const DescriptionContainer = styled.div`
 `;
 
 const Description = styled.p`
-  font-size: 1.1em;
+  font-size: 1em;
   margin-top: 0;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const LowerRightContainer = styled.div`
@@ -94,13 +93,15 @@ const LowerRightContainer = styled.div`
 `;
 
 const DiscountOwner = styled.p`
-  font-size: 1.1em;
+  font-size: 1em;
   font-style: italic;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const DateAquired = styled.p`
   font-size: 1.1em;
   font-weight: bold;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const months = [
@@ -206,7 +207,10 @@ const DiscountCard: React.FC<{
             marginBottom: "8px",
           }}
           onClick={() => setUnlockDiscountIsVisible(true)}
-          disabled={currentPoints < discount.pointsCost}
+          disabled={
+            currentPoints < discount.pointsCost ||
+            (discount.vipStatus && !userVipStatus)
+          }
         >
           {buttonErrorMessage !== null
             ? buttonErrorMessage
@@ -217,73 +221,78 @@ const DiscountCard: React.FC<{
   }
 
   return (
-    <Container>
-      <LeftSideContainer>
-        <ImageArrowContainer>
-          <ChevronLeftIcon
-            fontSize="large"
-            color={currentImageIndex === 0 ? "disabled" : "inherit"}
-            style={{ cursor: "pointer" }}
-            onClick={decreaseImageIndex}
-          />
-        </ImageArrowContainer>
-        <ImageContainer>
-          <Image
-            src={discount.pictures[currentImageIndex]}
-            alt="Cannot load image"
-          />
-        </ImageContainer>
-        <ImageArrowContainer>
-          <ChevronRightIcon
-            fontSize="large"
-            color={
-              currentImageIndex === discount.pictures.length - 1
-                ? "disabled"
-                : "inherit"
-            }
-            style={{ cursor: "pointer" }}
-            onClick={increaseImageIndex}
-          />
-        </ImageArrowContainer>
-      </LeftSideContainer>
-      <RightSideContainer>
-        <TitleContainer>
-          <Title>{discount.title}</Title>
-          {discount.vipStatus ? (
-            <Tooltip
-              arrow
-              title="This is a premium discount"
-              style={{ marginLeft: "4px", marginTop: "4px" }}
-            >
-              <StarIcon />
-            </Tooltip>
-          ) : null}
-        </TitleContainer>
-        <DescriptionContainer>
-          <Description>{discount.description}</Description>
-        </DescriptionContainer>
-        <LowerRightContainer>
-          <DiscountOwner>
-            Added by <b>{discount.sellerEmail}</b>
-          </DiscountOwner>
-          {lowerRightActions}
-        </LowerRightContainer>
-      </RightSideContainer>
-      <DeleteDiscountConfirmDialog
-        open={deleteDiscountDialogIsVisible}
-        onClose={() => setDeleteDiscountDialogIsVisible(false)}
-        discountId={discount.id}
-        onDeleteDiscount={onDeleteDiscount!}
-      />
-      <UnlockDiscountDialog
-        open={unlockDiscountDialogIsVisible}
-        onClose={() => setUnlockDiscountIsVisible(false)}
-        currentPoints={currentPoints}
-        discountId={discount.id}
-        onUnlockDiscount={onUnlockDiscount!}
-        pointsSpent={discount.pointsCost}
-      />
-    </Container>
+    <Paper
+      elevation={3}
+      style={{ width: "100%", height: "160px", margin: "12px 0" }}
+    >
+      <Container>
+        <LeftSideContainer>
+          <ImageArrowContainer>
+            <ChevronLeftIcon
+              fontSize="large"
+              color={currentImageIndex === 0 ? "disabled" : "inherit"}
+              style={{ cursor: "pointer" }}
+              onClick={decreaseImageIndex}
+            />
+          </ImageArrowContainer>
+          <ImageContainer>
+            <Image
+              src={discount.pictures[currentImageIndex]}
+              alt="Cannot load image"
+            />
+          </ImageContainer>
+          <ImageArrowContainer>
+            <ChevronRightIcon
+              fontSize="large"
+              color={
+                currentImageIndex === discount.pictures.length - 1
+                  ? "disabled"
+                  : "inherit"
+              }
+              style={{ cursor: "pointer" }}
+              onClick={increaseImageIndex}
+            />
+          </ImageArrowContainer>
+        </LeftSideContainer>
+        <RightSideContainer>
+          <TitleContainer>
+            <Title>{discount.title}</Title>
+            {discount.vipStatus ? (
+              <Tooltip
+                arrow
+                title="This is a premium discount"
+                style={{ marginLeft: "4px", marginTop: "4px" }}
+              >
+                <StarIcon />
+              </Tooltip>
+            ) : null}
+          </TitleContainer>
+          <DescriptionContainer>
+            <Description>{discount.description}</Description>
+          </DescriptionContainer>
+          <LowerRightContainer>
+            <DiscountOwner>
+              Added by <b>{discount.sellerEmail}</b>
+            </DiscountOwner>
+            {lowerRightActions}
+          </LowerRightContainer>
+        </RightSideContainer>
+        <DeleteDiscountConfirmDialog
+          open={deleteDiscountDialogIsVisible}
+          onClose={() => setDeleteDiscountDialogIsVisible(false)}
+          discountId={discount.id}
+          onDeleteDiscount={onDeleteDiscount!}
+        />
+        <UnlockDiscountDialog
+          open={unlockDiscountDialogIsVisible}
+          onClose={() => setUnlockDiscountIsVisible(false)}
+          currentPoints={currentPoints}
+          discountId={discount.id}
+          onUnlockDiscount={onUnlockDiscount!}
+          pointsSpent={discount.pointsCost}
+        />
+      </Container>
+    </Paper>
   );
 };
 

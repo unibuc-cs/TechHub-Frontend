@@ -3,17 +3,14 @@ import styled from "styled-components";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import { ThreadInformation } from "../../store/store";
 import trophy from "../../assets/trophy.png";
+import Paper from "@material-ui/core/Paper";
 
 const Container = styled.div`
   width: 100%;
-  border: 1px solid #231f20;
-  height: 65px;
-  margin: 8px 0;
-  box-shadow: 4px 4px 4px #231f20;
+  height: 100%;
 
   :hover {
     cursor: pointer;
-    background-color: rgba(0, 0, 0, 0.1);
   }
 `;
 
@@ -22,6 +19,7 @@ const CardTitle = styled.p<{ topMargin?: boolean }>`
   font-weight: bold;
   color: #231f20;
   ${({ topMargin }) => (topMargin ? "margin-top: 0px;" : null)}
+  font-family: 'Montserrat', sans-serif;
 `;
 
 const CardContent = styled.div`
@@ -46,12 +44,13 @@ const ThreadRightSideContainer = styled.div`
 
 const OwnerTitle = styled.p`
   font-size: 0.8em;
-  font-style: italic;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const DateTitle = styled.p`
   font-size: 1em;
   font-weight: bold;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const TrophyImage = styled.img`
@@ -98,34 +97,43 @@ const HomescreenItemCard: React.FC<{
   };
 
   return (
-    <Container onClick={() => onCardClickedHandler(type)}>
-      <CardContent>
-        {type === "categories" ? (
-          <CardTitle>{title}</CardTitle>
-        ) : (
-          <>
-            <ThreadLeftSideContainer>
-              <CardTitle topMargin>{title}</CardTitle>
-              <OwnerTitle>{`By ${threadInformation?.ownerEmail}`}</OwnerTitle>
-            </ThreadLeftSideContainer>
-            <ThreadRightSideContainer>
-              {threadInformation?.hasTrophy ? (
-                <TrophyImage src={trophy} alt="Cannot load image" />
-              ) : null}
-              <DateTitle>
-                {threadInformation?.dateCreated
-                  ? `On ${new Date(threadInformation?.dateCreated).getDate()} ${
-                      months[
-                        new Date(threadInformation?.dateCreated).getMonth()
-                      ]
-                    }`
-                  : null}
-              </DateTitle>
-            </ThreadRightSideContainer>
-          </>
-        )}
-      </CardContent>
-    </Container>
+    <Paper
+      elevation={3}
+      style={{ width: "100%", height: "65px", margin: "8px 0" }}
+    >
+      <Container onClick={() => onCardClickedHandler(type)}>
+        <CardContent>
+          {type === "categories" ? (
+            <CardTitle>{title}</CardTitle>
+          ) : (
+            <>
+              <ThreadLeftSideContainer>
+                <CardTitle topMargin>{title}</CardTitle>
+                <OwnerTitle>
+                  By <b>{threadInformation?.username}</b>
+                </OwnerTitle>
+              </ThreadLeftSideContainer>
+              <ThreadRightSideContainer>
+                {threadInformation?.hasTrophy ? (
+                  <TrophyImage src={trophy} alt="Cannot load image" />
+                ) : null}
+                <DateTitle>
+                  {threadInformation?.dateCreated
+                    ? `On ${new Date(
+                        threadInformation?.dateCreated
+                      ).getDate()} ${
+                        months[
+                          new Date(threadInformation?.dateCreated).getMonth()
+                        ]
+                      }`
+                    : null}
+                </DateTitle>
+              </ThreadRightSideContainer>
+            </>
+          )}
+        </CardContent>
+      </Container>
+    </Paper>
   );
 };
 

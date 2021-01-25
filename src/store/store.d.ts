@@ -16,6 +16,8 @@ export interface CategoriesInformation {
 export interface ThreadInformation {
   id: string;
   ownerEmail: string;
+  userImage: string;
+  username: string;
   title: string;
   category: string;
   text: string;
@@ -27,6 +29,8 @@ export interface ThreadInformation {
 export interface PostInformation {
   id: string;
   userEmail: string;
+  userImage: string;
+  username: string;
   threadId: string;
   postNumber: number;
   text: string;

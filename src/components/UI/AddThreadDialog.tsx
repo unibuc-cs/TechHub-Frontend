@@ -6,7 +6,7 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import { ThreadInformation } from "../../store/store";
+import { ThreadInformation, UserDetails } from "../../store/store";
 
 const TextfieldContainer = styled.div`
   margin: 16px 0;
@@ -19,7 +19,16 @@ const AddThreadDialog: React.FC<{
   currentEmail: string;
   onAddThread: (newThread: ThreadInformation) => void;
   accessToken: string;
-}> = ({ open, onClose, category, currentEmail, onAddThread, accessToken }) => {
+  currentUserDetails: UserDetails;
+}> = ({
+  open,
+  onClose,
+  category,
+  currentEmail,
+  onAddThread,
+  accessToken,
+  currentUserDetails,
+}) => {
   const [threadTitle, setThreadTitle] = useState<string>("");
   const [threadText, setThreadText] = useState<string>("");
 
@@ -41,6 +50,8 @@ const AddThreadDialog: React.FC<{
       title: threadTitle,
       hasTrophy: false,
       vipStatus: false,
+      userImage: currentUserDetails.profilePicture,
+      username: currentUserDetails.username,
     };
     onAddThread(newThread);
     onClose();

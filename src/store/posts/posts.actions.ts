@@ -38,12 +38,16 @@ export const createNewPost = (
   accessToken: string,
   userEmail: string,
   threadId: string,
-  text: string
+  text: string,
+  username: string,
+  userPicture: string
 ): ActionWithPayload<{
   accessToken: string;
   userEmail: string;
   threadId: string;
   text: string;
+  username: string;
+  userPicture: string;
 }> => ({
   type: CREATE_POST,
   payload: {
@@ -51,6 +55,8 @@ export const createNewPost = (
     userEmail,
     threadId,
     text,
+    userPicture,
+    username,
   },
 });
 

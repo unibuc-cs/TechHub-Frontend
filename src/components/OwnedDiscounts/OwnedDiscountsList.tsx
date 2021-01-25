@@ -6,14 +6,15 @@ import DiscountCard from "../Discounts/DiscountCard";
 const Container = styled.div`
   width: 50%;
   height: 49vh;
+  padding: 8px;
   overflow-y: scroll;
   ::-webkit-scrollbar {
     width: 1em;
-    background-color: #edf5e1;
+    background-color: white;
   }
 
   ::-webkit-scrollbar-track {
-    background-color: #edf5e1;
+    background-color: white;
   }
 
   ::-webkit-scrollbar-thumb {

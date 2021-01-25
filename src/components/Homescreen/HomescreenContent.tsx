@@ -23,6 +23,7 @@ import {
   addVipThread,
   searchVipThreads,
 } from "../../store/threads/threads.actions";
+import { userDetailsSelector } from "../../store/userDetails/userDetails.selector";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
 import { threadsSelector } from "../../store/threads/threads.selector";
@@ -56,6 +57,7 @@ const ContentContainer = styled.div`
 const Title = styled.p`
   font-weight: bold;
   font-size: 2.7em;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const ButtonContainer = styled.div`
@@ -84,6 +86,7 @@ const HomescreenContent: React.FC<{ type: string; isVip: boolean }> = ({
   const categories = useSelector(categoriesSelector);
   const threads = useSelector(threadsSelector);
   const currentEmail = useSelector(currentEmailSelector);
+  const currentUserDetails = useSelector(userDetailsSelector);
   const location = useLocation();
 
   const [addThreadDialogIsOpen, setAddThreadDialogIsOpen] = useState<boolean>(
@@ -235,6 +238,7 @@ const HomescreenContent: React.FC<{ type: string; isVip: boolean }> = ({
           currentEmail={currentEmail}
           onAddThread={onAddThreadHandler}
           accessToken={accessToken}
+          currentUserDetails={currentUserDetails}
         />
       ) : null}
     </Container>
