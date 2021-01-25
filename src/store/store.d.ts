@@ -71,6 +71,31 @@ export interface PurchasedDiscount {
   datePurchased: string;
 }
 
+export enum ReportType {
+  MISLEADING = "Misleading",
+  INAPPROPIATE = "Inappropiate",
+  SPAM = "Spam",
+  SCAM = "Scam",
+  OTHERS = "Others",
+}
+
+export interface Report {
+  id: string;
+  reporterId: string;
+  reportedItemId: string;
+  description: string;
+  reportType: ReportType;
+  dateReported: string;
+  isResolved: boolean;
+  isPostReport: boolean;
+  threadInformation: ThreadInformation;
+}
+
+export interface ReportsStateInformation {
+  reports: Report[];
+  reportTypes: string[];
+}
+
 export interface PurchasedDiscountsStateInformation {
   purchasedDiscounts: PurchasedDiscount[];
 }
@@ -105,6 +130,7 @@ export interface Store {
   leaderboard: LeaderboardStateInformation;
   discounts: DiscountsStateInformation;
   purchasedDiscounts: PurchasedDiscountsStateInformation;
+  reports: ReportsStateInformation;
 }
 
 export interface CategoryCard {

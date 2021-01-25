@@ -1,32 +1,27 @@
-import React, { useState } from "react";
+/* eslint-disable react-hooks/exhaustive-deps */
+import React, { useState, useEffect } from "react";
 import Dialog from "@material-ui/core/Dialog";
 import DialogActions from "@material-ui/core/DialogActions";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import Button from "@material-ui/core/Button/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormGroup from "@material-ui/core/FormGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
 import TextField from "@material-ui/core/TextField";
+import Radio from "@material-ui/core/Radio";
+import RadioGroup from "@material-ui/core/RadioGroup";
 
 const ReportDialog: React.FC<{
   open: boolean;
   onClose: () => void;
   type: "thread" | "post";
-}> = ({ open, onClose, type }) => {
-  const [selectedOptions, setSelectedOptions] = useState({
-    misinformation: false,
-    inappropiate: false,
-    spam: false,
-  });
+  reportTypes: string[];
+}> = ({ open, onClose, type, reportTypes }) => {
+  const [selectedOption, setSelectedOption] = useState<string>(reportTypes[0]);
   const [reportDescription, setReportDescription] = useState<string>("");
 
   const onReportOptionSelected = (e: any) => {
-    setSelectedOptions({
-      ...selectedOptions,
-      [e.target.name]: e.target.checked,
-    });
+    setSelectedOption(e.target.value);
   };
 
   const onReportDescriptionChanged = (e: any) => {
@@ -40,38 +35,16 @@ const ReportDialog: React.FC<{
         <DialogContentText>
           Why are you reporting this {type === "post" ? "post" : "thread"}?
         </DialogContentText>
-        <FormGroup>
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={selectedOptions.misinformation}
-                onChange={onReportOptionSelected}
-                name="misinformation"
-              />
-            }
-            label="Misinformation"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={selectedOptions.inappropiate}
-                onChange={onReportOptionSelected}
-                name="inappropiate"
-              />
-            }
-            label="Inappropiate"
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={selectedOptions.spam}
-                onChange={onReportOptionSelected}
-                name="spam"
-              />
-            }
-            label="Spam"
-          />
-        </FormGroup>
+        <RadioGroup value={selectedOption} onChange={onReportOptionSelected}>
+          {reportTypes.map((type: string) => (
+            <FormControlLabel
+              key={type}
+              value={type}
+              label={type}
+              control={<Radio />}
+            />
+          ))}
+        </RadioGroup>
         <DialogContentText>Add a description for the report</DialogContentText>
         <TextField
           label="Description"

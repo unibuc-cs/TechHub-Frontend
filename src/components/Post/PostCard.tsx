@@ -173,6 +173,7 @@ const PostCard: React.FC<{
   threadHasTrophy: boolean;
   threadOwnerEmail: string;
   currentUserType: string;
+  reportTypes: string[];
 }> = ({
   postInfo,
   onAddUpvote,
@@ -186,6 +187,7 @@ const PostCard: React.FC<{
   threadHasTrophy,
   threadOwnerEmail,
   currentUserType,
+  reportTypes,
 }) => {
   const [upvoteArrowColor, setUpvoteArrowColor] = useState<
     "inherit" | "primary"
@@ -377,6 +379,7 @@ const PostCard: React.FC<{
         open={reportPostModalIsOpen}
         onClose={() => setReportPostModalIsOpen(false)}
         type="post"
+        reportTypes={reportTypes}
       />
     </Paper>
   );

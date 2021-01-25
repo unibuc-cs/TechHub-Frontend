@@ -31,10 +31,12 @@ import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import { Paper } from "@material-ui/core";
 import ReportIcon from "@material-ui/icons/Report";
 import LockIcon from "@material-ui/icons/Lock";
+import DeleteIcon from "@material-ui/icons/Delete";
 import BlockIcon from "@material-ui/icons/Block";
 import ReportDialog from "../components/UI/ReportDialog";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
+import { reportTypesSelector } from "../store/reports/reports.selectors";
 
 const Container = styled.div`
   width: 100%;
@@ -180,6 +182,7 @@ const PostsList = () => {
   const posts = useSelector(postsSelector);
   const threadHasTrophy = useSelector(threadHasTrophySelector);
   const currentUserDetails = useSelector(userDetailsSelector);
+  const reportTypes = useSelector(reportTypesSelector);
 
   const [newPostText, setNewPostText] = useState<string>("");
   const [reportPostModalIsOpen, setReportPostModalIsOpen] = useState<boolean>(
@@ -268,6 +271,11 @@ const PostsList = () => {
               <LockIcon />
             </IconButton>
           </Tooltip>
+          <Tooltip arrow title="Delete this thread">
+            <IconButton onClick={() => {}}>
+              <DeleteIcon color="secondary" />
+            </IconButton>
+          </Tooltip>
           <Tooltip arrow title="Ban this user">
             <IconButton onClick={() => {}}>
               <BlockIcon color="secondary" />
@@ -346,6 +354,7 @@ const PostsList = () => {
               }
               onAwardTrophy={onAwardTrophy}
               currentUserType={currentUserDetails.type}
+              reportTypes={reportTypes}
             />
           ))
         ) : (
@@ -376,6 +385,7 @@ const PostsList = () => {
         open={reportPostModalIsOpen}
         onClose={() => setReportPostModalIsOpen(false)}
         type="thread"
+        reportTypes={reportTypes}
       />
     </Container>
   );
