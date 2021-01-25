@@ -163,7 +163,7 @@ const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
                   style={{ backgroundColor: "white", fontFamily: "Montserrat" }}
                   className={classes.button}
                   startIcon={<ReportIcon />}
-                  onClick={() => {}}
+                  onClick={() => history.push("/homescreen/reports")}
                 >
                   Reports
                 </Button>

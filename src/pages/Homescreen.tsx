@@ -10,6 +10,7 @@ import PostsList from "./PostsList";
 import Leaderboard from "./Leaderboard";
 import Discounts from "./Discounts";
 import OwnedDiscounts from "./OwnedDiscounts";
+import Reports from "./Reports";
 
 import {
   accessTokenSelector,
@@ -62,6 +63,9 @@ const Homescreen = () => {
         <Menu userDetails={userDetails} />
       </MenuContainer>
       <Switch>
+        <Route exact path={`${path}/reports`}>
+          <Reports />
+        </Route>
         <Route exact path={`${path}/leaderboard`}>
           <Leaderboard />
         </Route>
