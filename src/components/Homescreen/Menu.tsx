@@ -9,6 +9,7 @@ import EqualizerIcon from "@material-ui/icons/Equalizer";
 import Button from "@material-ui/core/Button";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import StarIcon from "@material-ui/icons/Star";
+import ReportIcon from "@material-ui/icons/Report";
 import ProfileModal from "../UI/ProfileModal";
 import { UserDetails } from "../../store/store";
 
@@ -140,7 +141,7 @@ const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
               onClick={() => history.push("/homescreen")}
             />
             <RightSideContainer>
-              {userDetails.vipStatus ? (
+              {userDetails.vipStatus || userDetails.type === "MODERATOR" ? (
                 <AnimatedButtonContainer>
                   <Button
                     variant="contained"
@@ -155,6 +156,17 @@ const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
                     VIP
                   </Button>
                 </AnimatedButtonContainer>
+              ) : null}
+              {userDetails.type === "MODERATOR" ? (
+                <Button
+                  variant="contained"
+                  style={{ backgroundColor: "white", fontFamily: "Montserrat" }}
+                  className={classes.button}
+                  startIcon={<ReportIcon />}
+                  onClick={() => {}}
+                >
+                  Reports
+                </Button>
               ) : null}
               <Button
                 variant="contained"

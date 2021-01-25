@@ -29,6 +29,12 @@ import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import { Paper } from "@material-ui/core";
+import ReportIcon from "@material-ui/icons/Report";
+import LockIcon from "@material-ui/icons/Lock";
+import BlockIcon from "@material-ui/icons/Block";
+import ReportDialog from "../components/UI/ReportDialog";
+import Tooltip from "@material-ui/core/Tooltip";
+import IconButton from "@material-ui/core/IconButton";
 
 const Container = styled.div`
   width: 100%;
@@ -54,6 +60,20 @@ const RightContainer = styled.div`
   height: 100%;
   display: flex;
   padding: 8px 0;
+  display: flex;
+  flex-direction: column;
+`;
+
+const DescriptionTextContainer = styled.div`
+  display: flex;
+  width: 100%;
+  min-height: 17vh;
+`;
+
+const DescriptionBottomContainer = styled.div`
+  display: flex;
+  align-items: center;
+  min-height: 7.5vh;
 `;
 
 const UserProfileImage = styled.img`
@@ -128,6 +148,13 @@ const ButtonContainer = styled.div`
   margin-left: 16px;
 `;
 
+const ThreadActionButtonsContainer = styled.div`
+  height: 100%;
+  display: flex;
+  align-items: center;
+  margin-right: 0px;
+`;
+
 const months = [
   "Jan",
   "Feb",
@@ -155,6 +182,9 @@ const PostsList = () => {
   const currentUserDetails = useSelector(userDetailsSelector);
 
   const [newPostText, setNewPostText] = useState<string>("");
+  const [reportPostModalIsOpen, setReportPostModalIsOpen] = useState<boolean>(
+    false
+  );
 
   const onNewPostTextChangedHandler = (e: any) => {
     setNewPostText(e.target.value);
@@ -215,6 +245,39 @@ const PostsList = () => {
     );
   }, []);
 
+  let threadActions = null;
+
+  if ((location.state as any).threadInformation.ownerEmail !== currentEmail) {
+    if (currentUserDetails.type !== "MODERATOR") {
+      threadActions = (
+        <Tooltip
+          arrow
+          title="Report this thread"
+          style={{ marginLeft: "-8px" }}
+        >
+          <IconButton onClick={() => setReportPostModalIsOpen(true)}>
+            <ReportIcon />
+          </IconButton>
+        </Tooltip>
+      );
+    } else {
+      threadActions = (
+        <ThreadActionButtonsContainer>
+          <Tooltip arrow title="Lock this thread">
+            <IconButton onClick={() => {}}>
+              <LockIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip arrow title="Ban this user">
+            <IconButton onClick={() => {}}>
+              <BlockIcon color="secondary" />
+            </IconButton>
+          </Tooltip>
+        </ThreadActionButtonsContainer>
+      );
+    }
+  }
+
   return (
     <Container>
       <PostTitleContainer>
@@ -252,29 +315,17 @@ const PostsList = () => {
               </DateContainer>
             </LeftContainer>
             <RightContainer>
-              <PostTextFont>
-                {(location.state as any).threadInformation.text}
-              </PostTextFont>
+              <DescriptionTextContainer>
+                <PostTextFont>
+                  {(location.state as any).threadInformation.text}
+                </PostTextFont>
+              </DescriptionTextContainer>
+              <DescriptionBottomContainer>
+                {threadActions}
+              </DescriptionBottomContainer>
             </RightContainer>
           </DescriptionContainer>
         </Paper>
-        {/* <ThreadSubtitle>
-          {`By ${
-            (location.state as any).threadInformation.ownerEmail
-          } on ${new Date(
-            (location.state as any).threadInformation.dateCreated
-          ).getDate()} ${
-            months[
-              new Date(
-                (location.state as any).threadInformation.dateCreated
-              ).getMonth()
-            ]
-          } at ${new Date(
-            (location.state as any).threadInformation.dateCreated
-          ).getHours()}:${new Date(
-            (location.state as any).threadInformation.dateCreated
-          ).getMinutes()}`}
-        </ThreadSubtitle> */}
       </PostTitleContainer>
       <PostsListsContainer>
         {posts.length > 0 ? (
@@ -294,6 +345,7 @@ const PostsList = () => {
                 (location.state as any).threadInformation.ownerEmail
               }
               onAwardTrophy={onAwardTrophy}
+              currentUserType={currentUserDetails.type}
             />
           ))
         ) : (
@@ -320,6 +372,11 @@ const PostsList = () => {
           </Button>
         </ButtonContainer>
       </CreatePostContainer>
+      <ReportDialog
+        open={reportPostModalIsOpen}
+        onClose={() => setReportPostModalIsOpen(false)}
+        type="thread"
+      />
     </Container>
   );
 };

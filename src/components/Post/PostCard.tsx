@@ -6,6 +6,8 @@ import NavigationIcon from "@material-ui/icons/Navigation";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import ReportIcon from "@material-ui/icons/Report";
+import BlockIcon from "@material-ui/icons/Block";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import Tooltip from "@material-ui/core/Tooltip";
 import EditPostDialog from "../UI/EditPostDialog";
@@ -14,6 +16,7 @@ import Button from "@material-ui/core/Button/Button";
 import trophy from "../../assets/trophy.png";
 import AwardTrophyDialog from "../UI/AwardTrophyDialog";
 import Paper from "@material-ui/core/Paper";
+import ReportDialog from "../UI/ReportDialog";
 
 const Container = styled.div`
   width: 100%;
@@ -58,7 +61,7 @@ const PostBottomContainer = styled.div`
   width: 100%;
   height: 7.5vh;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   padding: 4px;
 `;
@@ -169,6 +172,7 @@ const PostCard: React.FC<{
   currentEmail: string;
   threadHasTrophy: boolean;
   threadOwnerEmail: string;
+  currentUserType: string;
 }> = ({
   postInfo,
   onAddUpvote,
@@ -181,6 +185,7 @@ const PostCard: React.FC<{
   onAwardTrophy,
   threadHasTrophy,
   threadOwnerEmail,
+  currentUserType,
 }) => {
   const [upvoteArrowColor, setUpvoteArrowColor] = useState<
     "inherit" | "primary"
@@ -193,6 +198,9 @@ const PostCard: React.FC<{
   const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
   const [awardTrophyModalIsOpen, setAwardTrophyModalIsOpen] = useState<boolean>(
+    false
+  );
+  const [reportPostModalIsOpen, setReportPostModalIsOpen] = useState<boolean>(
     false
   );
 
@@ -239,6 +247,50 @@ const PostCard: React.FC<{
     }
   };
 
+  let postActions = null;
+
+  if (currentEmail === postInfo.userEmail) {
+    postActions = (
+      <PostEditRemoveButtonsContainer>
+        <Tooltip arrow title="Edit your post">
+          <IconButton onClick={() => setEditModalIsOpen(true)}>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip arrow title="Delete your post">
+          <IconButton onClick={() => setDeleteModalIsOpen(true)}>
+            <DeleteIcon color="secondary" />
+          </IconButton>
+        </Tooltip>
+      </PostEditRemoveButtonsContainer>
+    );
+  } else {
+    if (currentUserType === "MODERATOR") {
+      postActions = (
+        <PostEditRemoveButtonsContainer>
+          <Tooltip arrow title="Delete this post">
+            <IconButton onClick={() => setDeleteModalIsOpen(true)}>
+              <DeleteIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip arrow title="Ban this user">
+            <IconButton onClick={() => {}}>
+              <BlockIcon color="secondary" />
+            </IconButton>
+          </Tooltip>
+        </PostEditRemoveButtonsContainer>
+      );
+    } else {
+      postActions = (
+        <Tooltip arrow title="Report this post">
+          <IconButton onClick={() => setReportPostModalIsOpen(true)}>
+            <ReportIcon />
+          </IconButton>
+        </Tooltip>
+      );
+    }
+  }
+
   return (
     <Paper
       elevation={3}
@@ -267,20 +319,7 @@ const PostCard: React.FC<{
             {postInfo.hasTrophy ? (
               <TrophyImage src={trophy} alt="Cannot load image" />
             ) : null}
-            {postInfo.userEmail === currentEmail ? (
-              <PostEditRemoveButtonsContainer>
-                <Tooltip arrow title="Edit your post">
-                  <IconButton onClick={() => setEditModalIsOpen(true)}>
-                    <EditIcon />
-                  </IconButton>
-                </Tooltip>
-                <Tooltip arrow title="Delete your post">
-                  <IconButton onClick={() => setDeleteModalIsOpen(true)}>
-                    <DeleteIcon color="secondary" />
-                  </IconButton>
-                </Tooltip>
-              </PostEditRemoveButtonsContainer>
-            ) : null}
+            {postActions}
             {postInfo.userEmail !== currentEmail &&
             !threadHasTrophy &&
             threadOwnerEmail === currentEmail ? (
@@ -333,6 +372,11 @@ const PostCard: React.FC<{
         onClose={() => setAwardTrophyModalIsOpen(false)}
         onAwardPost={onAwardTrophy}
         postId={postInfo.id}
+      />
+      <ReportDialog
+        open={reportPostModalIsOpen}
+        onClose={() => setReportPostModalIsOpen(false)}
+        type="post"
       />
     </Paper>
   );
