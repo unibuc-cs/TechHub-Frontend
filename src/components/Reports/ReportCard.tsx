@@ -78,7 +78,8 @@ const months = [
 const ReportCard: React.FC<{
   report: Report;
   onDeleteReport: (reportId: string) => void;
-}> = ({ report, onDeleteReport }) => {
+  hasGoToThreadButton: boolean;
+}> = ({ report, onDeleteReport, hasGoToThreadButton }) => {
   const history = useHistory();
 
   return (
@@ -94,24 +95,26 @@ const ReportCard: React.FC<{
               <HourglassEmptyIcon />
             </Tooltip>
           </TitleContainer>
-          <Button
-            variant="contained"
-            style={{
-              backgroundColor: "#231f20",
-              color: "white",
-              fontFamily: "Montserrat",
-            }}
-            startIcon={<DirectionsIcon />}
-            onClick={() =>
-              history.push({
-                pathname: `/homescreen/thread/${report.threadInformation.id}`,
-                state: { threadInformation: report.threadInformation },
-              })
-            }
-            size="small"
-          >
-            Go to thread
-          </Button>
+          {hasGoToThreadButton ? (
+            <Button
+              variant="contained"
+              style={{
+                backgroundColor: "#231f20",
+                color: "white",
+                fontFamily: "Montserrat",
+              }}
+              startIcon={<DirectionsIcon />}
+              onClick={() =>
+                history.push({
+                  pathname: `/homescreen/thread/${report.threadInformation.id}`,
+                  state: { threadInformation: report.threadInformation },
+                })
+              }
+              size="small"
+            >
+              Go to thread
+            </Button>
+          ) : null}
         </HeaderContainer>
         <Divider />
         <ContentContainer>
@@ -153,7 +156,7 @@ const ReportCard: React.FC<{
               onClick={() => onDeleteReport(report.id)}
               size="small"
             >
-              Mark as solved
+              Solve & Close
             </Button>
           </RightContainer>
         </ContentContainer>

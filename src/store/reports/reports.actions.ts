@@ -7,6 +7,7 @@ import {
   ADD_REPORT,
   SET_NEW_REPORT,
   DELETE_REPORT,
+  GET_REPORTS_BY_ITEMS,
 } from "./reports.constants";
 
 export const getReports = (
@@ -97,5 +98,16 @@ export const deleteReport = (
   payload: {
     accessToken,
     reportId,
+  },
+});
+
+export const getReportsByItem = (
+  accessToken: string,
+  reportedItemId: string
+): ActionWithPayload<{ accessToken: string; reportedItemId: string }> => ({
+  type: GET_REPORTS_BY_ITEMS,
+  payload: {
+    accessToken,
+    reportedItemId,
   },
 });

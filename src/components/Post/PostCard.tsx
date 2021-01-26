@@ -17,6 +17,9 @@ import trophy from "../../assets/trophy.png";
 import AwardTrophyDialog from "../UI/AwardTrophyDialog";
 import Paper from "@material-ui/core/Paper";
 import ReportDialog from "../UI/ReportDialog";
+import ItemReportsDialog from "../UI/ItemReportsDialog";
+import BanUserConfirmDialog from "../UI/BanUserConfirmDialog";
+import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 
 const Container = styled.div`
   width: 100%;
@@ -98,11 +101,16 @@ const UserProfileImage = styled.img`
   height: 100px;
 `;
 
+const UsernameContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const UsernameText = styled.p`
   font-size: 1.2em;
   font-family: "Montserrat", sans-serif;
   font-weight: bold;
-  margin-top: 4px;
 `;
 
 const DateContainer = styled.div`
@@ -201,6 +209,7 @@ const PostCard: React.FC<{
     description: string,
     postId?: string
   ) => void;
+  onBanUser: (email: string) => void;
 }> = ({
   postInfo,
   onAddUpvote,
@@ -216,6 +225,7 @@ const PostCard: React.FC<{
   currentUserType,
   reportTypes,
   onSubmitReportHandler,
+  onBanUser,
 }) => {
   const [upvoteArrowColor, setUpvoteArrowColor] = useState<
     "inherit" | "primary"
@@ -231,6 +241,13 @@ const PostCard: React.FC<{
     false
   );
   const [reportPostModalIsOpen, setReportPostModalIsOpen] = useState<boolean>(
+    false
+  );
+  const [
+    itemReportsDialogIsOpen,
+    setItemReportsDialogIsOpen,
+  ] = useState<boolean>(false);
+  const [banUserDialogIsVisible, setBanUserDialogIsVisible] = useState<boolean>(
     false
   );
 
@@ -303,11 +320,13 @@ const PostCard: React.FC<{
               <DeleteIcon color="secondary" />
             </IconButton>
           </Tooltip>
-          <Tooltip arrow title="Ban this user">
-            <IconButton onClick={() => {}}>
-              <BlockIcon color="secondary" />
-            </IconButton>
-          </Tooltip>
+          {postInfo.accountStatus !== "banned" ? (
+            <Tooltip arrow title="Ban this user">
+              <IconButton onClick={() => setBanUserDialogIsVisible(true)}>
+                <BlockIcon color="secondary" />
+              </IconButton>
+            </Tooltip>
+          ) : null}
         </PostEditRemoveButtonsContainer>
       );
     } else {
@@ -333,9 +352,18 @@ const PostCard: React.FC<{
               src={postInfo.userImage}
               alt="Cannot load image"
             />
-            <UsernameText>
-              {currentEmail === postInfo.userEmail ? "You" : postInfo.username}
-            </UsernameText>
+            <UsernameContainer>
+              <UsernameText>
+                {currentEmail === postInfo.userEmail
+                  ? "You"
+                  : postInfo.username}
+              </UsernameText>
+              {postInfo.accountStatus === "banned" ? (
+                <Tooltip arrow title="This user has been banned">
+                  <RemoveCircleIcon fontSize="small" />
+                </Tooltip>
+              ) : null}
+            </UsernameContainer>
             <DateContainer>
               <CalendarTodayIcon />
               <DateText>{`${new Date(postInfo.dateCreated).getDate()} ${
@@ -398,7 +426,7 @@ const PostCard: React.FC<{
                 color: "salmon",
                 marginLeft: "4px",
               }}
-              onClick={() => {}}
+              onClick={() => setItemReportsDialogIsOpen(true)}
               size="small"
             >
               View Reports
@@ -432,6 +460,19 @@ const PostCard: React.FC<{
         reportTypes={reportTypes}
         onSubmitReportHandler={onSubmitReportHandler}
         postId={postInfo.id}
+      />
+      <ItemReportsDialog
+        open={itemReportsDialogIsOpen}
+        onClose={() => setItemReportsDialogIsOpen(false)}
+        isThread={false}
+        reportedItemId={postInfo.id}
+      />
+      <BanUserConfirmDialog
+        open={banUserDialogIsVisible}
+        onClose={() => setBanUserDialogIsVisible(false)}
+        email={postInfo.userEmail}
+        onBanUser={onBanUser}
+        username={postInfo.username}
       />
     </Paper>
   );

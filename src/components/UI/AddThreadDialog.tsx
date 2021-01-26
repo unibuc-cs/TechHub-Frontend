@@ -53,6 +53,7 @@ const AddThreadDialog: React.FC<{
       userImage: currentUserDetails.profilePicture,
       username: currentUserDetails.username,
       isReported: false,
+      accountStatus: "",
     };
     onAddThread(newThread);
     onClose();

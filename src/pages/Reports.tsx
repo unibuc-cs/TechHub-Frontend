@@ -54,6 +54,7 @@ const Reports = () => {
               key={report.id}
               report={report}
               onDeleteReport={onDeleteReport}
+              hasGoToThreadButton={true}
             />
           ))}
         </ReportsContainer>

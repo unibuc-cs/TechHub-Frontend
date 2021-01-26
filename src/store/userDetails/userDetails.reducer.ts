@@ -6,6 +6,7 @@ import {
 import {
   SET_USER_DETAILS,
   CHANGE_PROFILE_PICTURE,
+  BAN_USER,
 } from "./userDetails.constants";
 
 const initialState: UserDetailsStateInformation = {
@@ -44,6 +45,14 @@ const userDetailsReducer = (
             email: string;
             newImage: string;
           }>).payload.newImage,
+        },
+      };
+    case BAN_USER:
+      return {
+        ...state,
+        details: {
+          ...state.details,
+          accountStatus: "banned",
         },
       };
     default:

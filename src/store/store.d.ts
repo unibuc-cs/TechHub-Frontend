@@ -25,6 +25,7 @@ export interface ThreadInformation {
   hasTrophy: boolean;
   vipStatus: boolean;
   isReported: boolean;
+  accountStatus: string;
 }
 
 export interface PostInformation {
@@ -40,6 +41,7 @@ export interface PostInformation {
   upvotes: string[];
   downvotes: string[];
   isReported: boolean;
+  accountStatus: string;
 }
 
 export interface UserDetails {

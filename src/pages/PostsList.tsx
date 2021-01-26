@@ -23,6 +23,7 @@ import {
   currentEmailSelector,
 } from "../store/user/user.selector";
 import { addReport } from "../store/reports/reports.actions";
+import { banUser } from "../store/userDetails/userDetails.actions";
 import { userDetailsSelector } from "../store/userDetails/userDetails.selector";
 import { PostInformation } from "../store/store";
 import PostCard from "../components/Post/PostCard";
@@ -38,6 +39,9 @@ import ReportDialog from "../components/UI/ReportDialog";
 import Tooltip from "@material-ui/core/Tooltip";
 import IconButton from "@material-ui/core/IconButton";
 import { reportTypesSelector } from "../store/reports/reports.selectors";
+import ItemReportsDialog from "../components/UI/ItemReportsDialog";
+import BanUserConfirmDialog from "../components/UI/BanUserConfirmDialog";
+import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 
 const Container = styled.div`
   width: 100%;
@@ -84,11 +88,16 @@ const UserProfileImage = styled.img`
   height: 100px;
 `;
 
+const UsernameContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 const UsernameText = styled.p`
   font-size: 1.2em;
   font-family: "Montserrat", sans-serif;
   font-weight: bold;
-  margin-top: 4px;
 `;
 
 const DateContainer = styled.div`
@@ -210,6 +219,13 @@ const PostsList = () => {
   const [reportPostModalIsOpen, setReportPostModalIsOpen] = useState<boolean>(
     false
   );
+  const [
+    itemReportsDialogIsOpen,
+    setItemReportsDialogIsOpen,
+  ] = useState<boolean>(false);
+  const [banUserDialogIsVisible, setBanUserDialogIsVisible] = useState<boolean>(
+    false
+  );
 
   const onNewPostTextChangedHandler = (e: any) => {
     setNewPostText(e.target.value);
@@ -255,6 +271,10 @@ const PostsList = () => {
 
   const onAwardTrophy = (postId: string) => {
     dispatch(awardTrophy(accessToken, postId));
+  };
+
+  const onBanUser = (email: string) => {
+    dispatch(banUser(accessToken, email));
   };
 
   const onSubmitReportClickedHandler = (
@@ -335,11 +355,14 @@ const PostsList = () => {
               <DeleteIcon color="secondary" />
             </IconButton>
           </Tooltip>
-          <Tooltip arrow title="Ban this user">
-            <IconButton onClick={() => {}}>
-              <BlockIcon color="secondary" />
-            </IconButton>
-          </Tooltip>
+          {(location.state as any).threadInformation.accountStatus !==
+          "banned" ? (
+            <Tooltip arrow title="Ban this user">
+              <IconButton onClick={() => setBanUserDialogIsVisible(true)}>
+                <BlockIcon color="secondary" />
+              </IconButton>
+            </Tooltip>
+          ) : null}
         </ThreadActionButtonsContainer>
       );
     }
@@ -359,12 +382,20 @@ const PostsList = () => {
                   src={(location.state as any).threadInformation.userImage}
                   alt="Cannot load image"
                 />
-                <UsernameText>
-                  {currentEmail ===
-                  (location.state as any).threadInformation.ownerEmail
-                    ? "You"
-                    : (location.state as any).threadInformation.username}
-                </UsernameText>
+                <UsernameContainer>
+                  <UsernameText>
+                    {currentEmail ===
+                    (location.state as any).threadInformation.ownerEmail
+                      ? "You"
+                      : (location.state as any).threadInformation.username}
+                  </UsernameText>
+                  {(location.state as any).threadInformation.accountStatus ===
+                  "banned" ? (
+                    <Tooltip arrow title="This user has been banned">
+                      <RemoveCircleIcon fontSize="small" />
+                    </Tooltip>
+                  ) : null}
+                </UsernameContainer>
                 <DateContainer>
                   <CalendarTodayIcon />
                   <DateText>{`${new Date(
@@ -404,7 +435,7 @@ const PostsList = () => {
                     color: "salmon",
                     marginLeft: "4px",
                   }}
-                  onClick={() => {}}
+                  onClick={() => setItemReportsDialogIsOpen(true)}
                   size="small"
                 >
                   View Reports
@@ -435,6 +466,7 @@ const PostsList = () => {
               currentUserType={currentUserDetails.type}
               reportTypes={reportTypes}
               onSubmitReportHandler={onSubmitReportClickedHandler}
+              onBanUser={onBanUser}
             />
           ))
         ) : (
@@ -467,6 +499,19 @@ const PostsList = () => {
         type="thread"
         reportTypes={reportTypes}
         onSubmitReportHandler={onSubmitReportClickedHandler}
+      />
+      <ItemReportsDialog
+        open={itemReportsDialogIsOpen}
+        onClose={() => setItemReportsDialogIsOpen(false)}
+        isThread={true}
+        reportedItemId={(location.state as any).threadInformation.id}
+      />
+      <BanUserConfirmDialog
+        open={banUserDialogIsVisible}
+        onClose={() => setBanUserDialogIsVisible(false)}
+        email={(location.state as any).threadInformation.ownerEmail}
+        onBanUser={onBanUser}
+        username={(location.state as any).threadInformation.username}
       />
     </Container>
   );

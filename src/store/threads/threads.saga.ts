@@ -89,6 +89,7 @@ function* getThreadsByCategory(
         ...initialThreads[index],
         userImage: details.profilePicture,
         username: details.username,
+        accountStatus: details.accountStatus,
       });
     }
 
@@ -135,6 +136,7 @@ function* searchThreads(
         ...filteredThreads[index],
         userImage: details.profilePicture,
         username: details.username,
+        accountStatus: details.accountStatus,
       });
     }
 
@@ -174,6 +176,7 @@ function* getVipThreadsByCategory(
         ...initialThreads[index],
         userImage: details.profilePicture,
         username: details.username,
+        accountStatus: details.accountStatus,
       });
     }
 
@@ -255,6 +258,7 @@ function* searchVipThreads(
         ...filteredThreads[index],
         userImage: details.profilePicture,
         username: details.username,
+        accountStatus: details.accountStatus,
       });
     }
 

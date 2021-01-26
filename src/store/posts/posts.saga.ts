@@ -48,6 +48,7 @@ function* getPostsByThread(
         ...initialPosts[index],
         userImage: details.profilePicture,
         username: details.username,
+        accountStatus: details.accountStatus,
       });
     }
 
@@ -108,6 +109,7 @@ function* addNewPost(
       userImage: action.payload.userPicture,
       username: action.payload.username,
       isReported: false,
+      accountStatus: "",
     };
     yield put(addPost(newPost));
   } catch (e) {
