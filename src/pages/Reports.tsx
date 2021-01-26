@@ -3,7 +3,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { accessTokenSelector } from "../store/user/user.selector";
-import { getReports } from "../store/reports/reports.actions";
+import { getReports, deleteReport } from "../store/reports/reports.actions";
 import { reportsSelector } from "../store/reports/reports.selectors";
 import ReportCard from "../components/Reports/ReportCard";
 import { Report } from "../store/store";
@@ -40,13 +40,21 @@ const Reports = () => {
     dispatch(getReports(accessToken));
   }, []);
 
+  const onDeleteReport = (reportId: string) => {
+    dispatch(deleteReport(accessToken, reportId));
+  };
+
   return (
     <Container>
       <Title>Reports</Title>
       {reports.length > 0 ? (
         <ReportsContainer>
           {reports.map((report: Report) => (
-            <ReportCard key={report.id} report={report} />
+            <ReportCard
+              key={report.id}
+              report={report}
+              onDeleteReport={onDeleteReport}
+            />
           ))}
         </ReportsContainer>
       ) : (

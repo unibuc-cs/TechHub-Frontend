@@ -107,6 +107,7 @@ function* addNewPost(
       userEmail: action.payload.userEmail,
       userImage: action.payload.userPicture,
       username: action.payload.username,
+      isReported: false,
     };
     yield put(addPost(newPost));
   } catch (e) {

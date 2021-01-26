@@ -22,7 +22,28 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
+`;
+
+const ContentContainer = styled.div`
+  width: 100%;
+  display: flex;
   align-items: start;
+`;
+
+const ReportContainer = styled.div`
+  width: 100%;
+  height: 5vh;
+  background-color: salmon;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+`;
+
+const ReportText = styled.p`
+  color: white;
+  font-size: 1.1em;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const LeftContainer = styled.div`
@@ -174,6 +195,12 @@ const PostCard: React.FC<{
   threadOwnerEmail: string;
   currentUserType: string;
   reportTypes: string[];
+  onSubmitReportHandler: (
+    isThread: boolean,
+    reportType: string,
+    description: string,
+    postId?: string
+  ) => void;
 }> = ({
   postInfo,
   onAddUpvote,
@@ -188,6 +215,7 @@ const PostCard: React.FC<{
   threadOwnerEmail,
   currentUserType,
   reportTypes,
+  onSubmitReportHandler,
 }) => {
   const [upvoteArrowColor, setUpvoteArrowColor] = useState<
     "inherit" | "primary"
@@ -272,7 +300,7 @@ const PostCard: React.FC<{
         <PostEditRemoveButtonsContainer>
           <Tooltip arrow title="Delete this post">
             <IconButton onClick={() => setDeleteModalIsOpen(true)}>
-              <DeleteIcon />
+              <DeleteIcon color="secondary" />
             </IconButton>
           </Tooltip>
           <Tooltip arrow title="Ban this user">
@@ -299,62 +327,84 @@ const PostCard: React.FC<{
       style={{ width: "90%", margin: "16px 0", height: "auto" }}
     >
       <Container>
-        <LeftContainer>
-          <UserProfileImage src={postInfo.userImage} alt="Cannot load image" />
-          <UsernameText>
-            {currentEmail === postInfo.userEmail ? "You" : postInfo.username}
-          </UsernameText>
-          <DateContainer>
-            <CalendarTodayIcon />
-            <DateText>{`${new Date(postInfo.dateCreated).getDate()} ${
-              months[new Date(postInfo.dateCreated).getMonth()]
-            } at ${new Date(postInfo.dateCreated).getHours()}:${new Date(
-              postInfo.dateCreated
-            ).getMinutes()}`}</DateText>
-          </DateContainer>
-        </LeftContainer>
-        <MiddleContainer>
-          <PostTextContainer>
-            <PostText>{postInfo.text}</PostText>
-          </PostTextContainer>
-          <PostBottomContainer>
-            {postInfo.hasTrophy ? (
-              <TrophyImage src={trophy} alt="Cannot load image" />
-            ) : null}
-            {postActions}
-            {postInfo.userEmail !== currentEmail &&
-            !threadHasTrophy &&
-            threadOwnerEmail === currentEmail ? (
-              <Button
-                variant="contained"
-                style={{
-                  backgroundColor: "#228B22",
-                  color: "white",
-                  marginRight: "4px",
-                }}
-                onClick={() => setAwardTrophyModalIsOpen(true)}
-                size="small"
-              >
-                Award Trophy
-              </Button>
-            ) : null}
-          </PostBottomContainer>
-        </MiddleContainer>
-        <RightContainer>
-          <VotingContainer>
-            <UpArrowContainer onClick={onUpvoteClicked}>
-              <NavigationIcon fontSize="large" color={upvoteArrowColor} />
-            </UpArrowContainer>
-            <VotesCountContainer>
-              <VotesCount>
-                {postInfo.upvotes.length - postInfo.downvotes.length}
-              </VotesCount>
-            </VotesCountContainer>
-            <DownArrowContainer onClick={onDownvoteClicked}>
-              <NavigationIcon fontSize="large" color={downvoteArrowColor} />
-            </DownArrowContainer>
-          </VotingContainer>
-        </RightContainer>
+        <ContentContainer>
+          <LeftContainer>
+            <UserProfileImage
+              src={postInfo.userImage}
+              alt="Cannot load image"
+            />
+            <UsernameText>
+              {currentEmail === postInfo.userEmail ? "You" : postInfo.username}
+            </UsernameText>
+            <DateContainer>
+              <CalendarTodayIcon />
+              <DateText>{`${new Date(postInfo.dateCreated).getDate()} ${
+                months[new Date(postInfo.dateCreated).getMonth()]
+              } at ${new Date(postInfo.dateCreated).getHours()}:${new Date(
+                postInfo.dateCreated
+              ).getMinutes()}`}</DateText>
+            </DateContainer>
+          </LeftContainer>
+          <MiddleContainer>
+            <PostTextContainer>
+              <PostText>{postInfo.text}</PostText>
+            </PostTextContainer>
+            <PostBottomContainer>
+              {postInfo.hasTrophy ? (
+                <TrophyImage src={trophy} alt="Cannot load image" />
+              ) : null}
+              {postActions}
+              {postInfo.userEmail !== currentEmail &&
+              !threadHasTrophy &&
+              threadOwnerEmail === currentEmail ? (
+                <Button
+                  variant="contained"
+                  style={{
+                    backgroundColor: "#228B22",
+                    color: "white",
+                    marginRight: "4px",
+                  }}
+                  onClick={() => setAwardTrophyModalIsOpen(true)}
+                  size="small"
+                >
+                  Award Trophy
+                </Button>
+              ) : null}
+            </PostBottomContainer>
+          </MiddleContainer>
+          <RightContainer>
+            <VotingContainer>
+              <UpArrowContainer onClick={onUpvoteClicked}>
+                <NavigationIcon fontSize="large" color={upvoteArrowColor} />
+              </UpArrowContainer>
+              <VotesCountContainer>
+                <VotesCount>
+                  {postInfo.upvotes.length - postInfo.downvotes.length}
+                </VotesCount>
+              </VotesCountContainer>
+              <DownArrowContainer onClick={onDownvoteClicked}>
+                <NavigationIcon fontSize="large" color={downvoteArrowColor} />
+              </DownArrowContainer>
+            </VotingContainer>
+          </RightContainer>
+        </ContentContainer>
+        {postInfo.isReported && currentUserType === "MODERATOR" ? (
+          <ReportContainer>
+            <ReportText>This post has been reported.</ReportText>
+            <Button
+              variant="contained"
+              style={{
+                backgroundColor: "white",
+                color: "salmon",
+                marginLeft: "4px",
+              }}
+              onClick={() => {}}
+              size="small"
+            >
+              View Reports
+            </Button>
+          </ReportContainer>
+        ) : null}
       </Container>
       <EditPostDialog
         open={editModalIsOpen}
@@ -380,6 +430,8 @@ const PostCard: React.FC<{
         onClose={() => setReportPostModalIsOpen(false)}
         type="post"
         reportTypes={reportTypes}
+        onSubmitReportHandler={onSubmitReportHandler}
+        postId={postInfo.id}
       />
     </Paper>
   );

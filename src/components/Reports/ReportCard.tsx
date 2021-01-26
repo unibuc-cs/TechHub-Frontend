@@ -75,7 +75,10 @@ const months = [
   "Dec",
 ];
 
-const ReportCard: React.FC<{ report: Report }> = ({ report }) => {
+const ReportCard: React.FC<{
+  report: Report;
+  onDeleteReport: (reportId: string) => void;
+}> = ({ report, onDeleteReport }) => {
   const history = useHistory();
 
   return (
@@ -147,7 +150,7 @@ const ReportCard: React.FC<{ report: Report }> = ({ report }) => {
                 color: "white",
               }}
               startIcon={<DoneIcon />}
-              onClick={() => {}}
+              onClick={() => onDeleteReport(report.id)}
               size="small"
             >
               Mark as solved

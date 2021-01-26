@@ -16,7 +16,14 @@ const ReportDialog: React.FC<{
   onClose: () => void;
   type: "thread" | "post";
   reportTypes: string[];
-}> = ({ open, onClose, type, reportTypes }) => {
+  postId?: string;
+  onSubmitReportHandler: (
+    isThread: boolean,
+    reportType: string,
+    description: string,
+    postId?: string
+  ) => void;
+}> = ({ open, onClose, type, reportTypes, postId, onSubmitReportHandler }) => {
   const [selectedOption, setSelectedOption] = useState<string>(reportTypes[0]);
   const [reportDescription, setReportDescription] = useState<string>("");
 
@@ -26,6 +33,15 @@ const ReportDialog: React.FC<{
 
   const onReportDescriptionChanged = (e: any) => {
     setReportDescription(e.target.value);
+  };
+
+  const submitReport = () => {
+    if (type === "thread") {
+      onSubmitReportHandler(true, selectedOption, reportDescription);
+    } else {
+      onSubmitReportHandler(false, selectedOption, reportDescription, postId!);
+    }
+    onClose();
   };
 
   return (
@@ -60,7 +76,7 @@ const ReportDialog: React.FC<{
           Cancel
         </Button>
         <Button
-          onClick={() => {}}
+          onClick={submitReport}
           color="secondary"
           disabled={reportDescription === ""}
         >

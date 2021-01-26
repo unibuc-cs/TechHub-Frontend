@@ -1,9 +1,12 @@
-import { ActionWithPayload, Report } from "../store";
+import { ActionWithPayload, Report, ThreadInformation } from "../store";
 import {
   GET_REPORTS,
   SET_REPORTS,
   GET_REPORT_TYPES,
   SET_REPORT_TYPES,
+  ADD_REPORT,
+  SET_NEW_REPORT,
+  DELETE_REPORT,
 } from "./reports.constants";
 
 export const getReports = (
@@ -39,5 +42,60 @@ export const setReportTypes = (
   type: SET_REPORT_TYPES,
   payload: {
     reportTypes,
+  },
+});
+
+export const addReport = (
+  accessToken: string,
+  reporterId: string,
+  reportedItemId: string,
+  reportType: string,
+  description: string,
+  dateReported: string,
+  isResolved: boolean,
+  isPostReport: boolean,
+  threadInformation: ThreadInformation
+): ActionWithPayload<{
+  accessToken: string;
+  reporterId: string;
+  reportedItemId: string;
+  reportType: string;
+  description: string;
+  dateReported: string;
+  isResolved: boolean;
+  isPostReport: boolean;
+  threadInformation: ThreadInformation;
+}> => ({
+  type: ADD_REPORT,
+  payload: {
+    accessToken,
+    reporterId,
+    reportedItemId,
+    reportType,
+    description,
+    dateReported,
+    isResolved,
+    isPostReport,
+    threadInformation,
+  },
+});
+
+export const setNewReport = (
+  newReport: Report
+): ActionWithPayload<{ newReport: Report }> => ({
+  type: SET_NEW_REPORT,
+  payload: {
+    newReport,
+  },
+});
+
+export const deleteReport = (
+  accessToken: string,
+  reportId: string
+): ActionWithPayload<{ accessToken: string; reportId: string }> => ({
+  type: DELETE_REPORT,
+  payload: {
+    accessToken,
+    reportId,
   },
 });

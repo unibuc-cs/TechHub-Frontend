@@ -22,6 +22,7 @@ import {
   accessTokenSelector,
   currentEmailSelector,
 } from "../store/user/user.selector";
+import { addReport } from "../store/reports/reports.actions";
 import { userDetailsSelector } from "../store/userDetails/userDetails.selector";
 import { PostInformation } from "../store/store";
 import PostCard from "../components/Post/PostCard";
@@ -118,8 +119,14 @@ const PostTextFont = styled.p`
 
 const DescriptionContainer = styled.div`
   width: 100%;
-  padding: 4px;
   display: flex;
+  flex-direction: column;
+`;
+
+const ContentContainer = styled.div`
+  width: 100%;
+  display: flex;
+  padding: 4px;
 `;
 
 const ThreadTitle = styled.p`
@@ -155,6 +162,21 @@ const ThreadActionButtonsContainer = styled.div`
   display: flex;
   align-items: center;
   margin-right: 0px;
+`;
+
+const ReportContainer = styled.div`
+  width: 100%;
+  height: 5vh;
+  background-color: salmon;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+`;
+
+const ReportText = styled.p`
+  color: white;
+  font-size: 1.1em;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const months = [
@@ -235,6 +257,43 @@ const PostsList = () => {
     dispatch(awardTrophy(accessToken, postId));
   };
 
+  const onSubmitReportClickedHandler = (
+    isThread: boolean,
+    reportType: string,
+    description: string,
+    postId?: string
+  ) => {
+    if (isThread) {
+      dispatch(
+        addReport(
+          accessToken,
+          currentUserDetails.email,
+          (location.state as any).threadInformation.id,
+          reportType,
+          description,
+          new Date().toString(),
+          false,
+          false,
+          (location.state as any).threadInformation
+        )
+      );
+    } else {
+      dispatch(
+        addReport(
+          accessToken,
+          currentUserDetails.email,
+          postId!,
+          reportType,
+          description,
+          new Date().toString(),
+          false,
+          true,
+          (location.state as any).threadInformation
+        )
+      );
+    }
+  };
+
   const refreshAfterNewPost = () => {
     setNewPostText("");
   };
@@ -268,7 +327,7 @@ const PostsList = () => {
         <ThreadActionButtonsContainer>
           <Tooltip arrow title="Lock this thread">
             <IconButton onClick={() => {}}>
-              <LockIcon />
+              <LockIcon color="secondary" />
             </IconButton>
           </Tooltip>
           <Tooltip arrow title="Delete this thread">
@@ -294,44 +353,64 @@ const PostsList = () => {
         </ThreadTitle>
         <Paper elevation={3} style={{ width: "100%", marginTop: "-35px" }}>
           <DescriptionContainer>
-            <LeftContainer>
-              <UserProfileImage
-                src={(location.state as any).threadInformation.userImage}
-                alt="Cannot load image"
-              />
-              <UsernameText>
-                {currentEmail ===
-                (location.state as any).threadInformation.ownerEmail
-                  ? "You"
-                  : (location.state as any).threadInformation.username}
-              </UsernameText>
-              <DateContainer>
-                <CalendarTodayIcon />
-                <DateText>{`${new Date(
-                  (location.state as any).threadInformation.dateCreated
-                ).getDate()} ${
-                  months[
-                    new Date(
-                      (location.state as any).threadInformation.dateCreated
-                    ).getMonth()
-                  ]
-                } at ${new Date(
-                  (location.state as any).threadInformation.dateCreated
-                ).getHours()}:${new Date(
-                  (location.state as any).threadInformation.dateCreated
-                ).getMinutes()}`}</DateText>
-              </DateContainer>
-            </LeftContainer>
-            <RightContainer>
-              <DescriptionTextContainer>
-                <PostTextFont>
-                  {(location.state as any).threadInformation.text}
-                </PostTextFont>
-              </DescriptionTextContainer>
-              <DescriptionBottomContainer>
-                {threadActions}
-              </DescriptionBottomContainer>
-            </RightContainer>
+            <ContentContainer>
+              <LeftContainer>
+                <UserProfileImage
+                  src={(location.state as any).threadInformation.userImage}
+                  alt="Cannot load image"
+                />
+                <UsernameText>
+                  {currentEmail ===
+                  (location.state as any).threadInformation.ownerEmail
+                    ? "You"
+                    : (location.state as any).threadInformation.username}
+                </UsernameText>
+                <DateContainer>
+                  <CalendarTodayIcon />
+                  <DateText>{`${new Date(
+                    (location.state as any).threadInformation.dateCreated
+                  ).getDate()} ${
+                    months[
+                      new Date(
+                        (location.state as any).threadInformation.dateCreated
+                      ).getMonth()
+                    ]
+                  } at ${new Date(
+                    (location.state as any).threadInformation.dateCreated
+                  ).getHours()}:${new Date(
+                    (location.state as any).threadInformation.dateCreated
+                  ).getMinutes()}`}</DateText>
+                </DateContainer>
+              </LeftContainer>
+              <RightContainer>
+                <DescriptionTextContainer>
+                  <PostTextFont>
+                    {(location.state as any).threadInformation.text}
+                  </PostTextFont>
+                </DescriptionTextContainer>
+                <DescriptionBottomContainer>
+                  {threadActions}
+                </DescriptionBottomContainer>
+              </RightContainer>
+            </ContentContainer>
+            {(location.state as any).threadInformation.isReported &&
+            currentUserDetails.type === "MODERATOR" ? (
+              <ReportContainer>
+                <ReportText>This thread has been reported.</ReportText>
+                <Button
+                  variant="contained"
+                  style={{
+                    backgroundColor: "white",
+                    color: "salmon",
+                    marginLeft: "4px",
+                  }}
+                  onClick={() => {}}
+                  size="small"
+                >
+                  View Reports
+                </Button>
+              </ReportContainer>
+            ) : null}
           </DescriptionContainer>
         </Paper>
       </PostTitleContainer>
@@ -355,6 +434,7 @@ const PostsList = () => {
               onAwardTrophy={onAwardTrophy}
               currentUserType={currentUserDetails.type}
               reportTypes={reportTypes}
+              onSubmitReportHandler={onSubmitReportClickedHandler}
             />
           ))
         ) : (
@@ -386,6 +466,7 @@ const PostsList = () => {
         onClose={() => setReportPostModalIsOpen(false)}
         type="thread"
         reportTypes={reportTypes}
+        onSubmitReportHandler={onSubmitReportClickedHandler}
       />
     </Container>
   );

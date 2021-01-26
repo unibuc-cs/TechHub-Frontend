@@ -24,6 +24,7 @@ export interface ThreadInformation {
   dateCreated: string;
   hasTrophy: boolean;
   vipStatus: boolean;
+  isReported: boolean;
 }
 
 export interface PostInformation {
@@ -38,6 +39,7 @@ export interface PostInformation {
   hasTrophy: boolean;
   upvotes: string[];
   downvotes: string[];
+  isReported: boolean;
 }
 
 export interface UserDetails {
@@ -71,20 +73,12 @@ export interface PurchasedDiscount {
   datePurchased: string;
 }
 
-export enum ReportType {
-  MISLEADING = "Misleading",
-  INAPPROPIATE = "Inappropiate",
-  SPAM = "Spam",
-  SCAM = "Scam",
-  OTHERS = "Others",
-}
-
 export interface Report {
   id: string;
   reporterId: string;
   reportedItemId: string;
   description: string;
-  reportType: ReportType;
+  reportType: string;
   dateReported: string;
   isResolved: boolean;
   isPostReport: boolean;
