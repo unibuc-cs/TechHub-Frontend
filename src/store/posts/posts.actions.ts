@@ -11,6 +11,7 @@ import {
   DELETE_POST,
   AWARD_TROPHY,
   SET_CURRENT_THREAD_HAS_TROPHY,
+  SET_CURRENT_THREAD_IS_LOCKED,
 } from "./posts.constants";
 import { ActionWithPayload, PostInformation } from "../store";
 
@@ -182,5 +183,14 @@ export const setCurrentThreadHasTrophy = (
   type: SET_CURRENT_THREAD_HAS_TROPHY,
   payload: {
     hasTrophy,
+  },
+});
+
+export const setCurrentThreadIsLocked = (
+  isLocked: boolean
+): ActionWithPayload<{ isLocked: boolean }> => ({
+  type: SET_CURRENT_THREAD_IS_LOCKED,
+  payload: {
+    isLocked,
   },
 });

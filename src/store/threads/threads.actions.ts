@@ -9,6 +9,7 @@ import {
   GET_VIP_THREADS_BY_CATEGORY,
   ADD_VIP_THREAD,
   SEARCH_VIP_THREADS,
+  LOCK_THREAD,
 } from "./threads.constants";
 
 export const getAllThreads = (
@@ -117,5 +118,16 @@ export const searchVipThreads = (
     accessToken,
     searchInput,
     category,
+  },
+});
+
+export const lockThread = (
+  accessToken: string,
+  threadId: string
+): ActionWithPayload<{ accessToken: string; threadId: string }> => ({
+  type: LOCK_THREAD,
+  payload: {
+    accessToken,
+    threadId,
   },
 });

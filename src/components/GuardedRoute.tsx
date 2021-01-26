@@ -6,7 +6,6 @@ const GuardedRoute: React.FC<any> = ({
   auth,
   ...rest
 }) => {
-  console.log("auth: ", auth);
   return (
     <Route
       {...rest}

@@ -12,3 +12,8 @@ export const threadHasTrophySelector = createSelector(
   postsInformationSelector,
   (postsInfo) => postsInfo.currentThreadHasTrophy
 );
+
+export const threadIsLockedSelector = createSelector(
+  postsInformationSelector,
+  (postsInfo) => postsInfo.currentThreadIsLocked
+);

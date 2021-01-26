@@ -54,6 +54,7 @@ const AddThreadDialog: React.FC<{
       username: currentUserDetails.username,
       isReported: false,
       accountStatus: "",
+      isLocked: false,
     };
     onAddThread(newThread);
     onClose();

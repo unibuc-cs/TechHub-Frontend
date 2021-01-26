@@ -26,6 +26,7 @@ export interface ThreadInformation {
   vipStatus: boolean;
   isReported: boolean;
   accountStatus: string;
+  isLocked: boolean;
 }
 
 export interface PostInformation {
@@ -111,6 +112,7 @@ export interface ThreadStateInformation {
 export interface PostStateInformation {
   posts: PostInformation[];
   currentThreadHasTrophy: boolean;
+  currentThreadIsLocked: boolean;
 }
 
 export interface LeaderboardStateInformation {

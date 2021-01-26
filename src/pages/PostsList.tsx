@@ -16,6 +16,7 @@ import {
 import {
   postsSelector,
   threadHasTrophySelector,
+  threadIsLockedSelector,
 } from "../store/posts/posts.selector";
 import styled from "styled-components";
 import {
@@ -33,7 +34,6 @@ import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import { Paper } from "@material-ui/core";
 import ReportIcon from "@material-ui/icons/Report";
 import LockIcon from "@material-ui/icons/Lock";
-import DeleteIcon from "@material-ui/icons/Delete";
 import BlockIcon from "@material-ui/icons/Block";
 import ReportDialog from "../components/UI/ReportDialog";
 import Tooltip from "@material-ui/core/Tooltip";
@@ -42,6 +42,9 @@ import { reportTypesSelector } from "../store/reports/reports.selectors";
 import ItemReportsDialog from "../components/UI/ItemReportsDialog";
 import BanUserConfirmDialog from "../components/UI/BanUserConfirmDialog";
 import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
+import { lockThread } from "../store/threads/threads.actions";
+import LockThreadConfirmDialog from "../components/UI/LockThreadConfirmDialog";
+import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
 
 const Container = styled.div`
   width: 100%;
@@ -188,6 +191,21 @@ const ReportText = styled.p`
   font-family: "Montserrat", sans-serif;
 `;
 
+const LockedThreadBar = styled.div`
+  width: 100%;
+  height: 10vh;
+  background-color: salmon;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
+const LockedThreadText = styled.p`
+  font-size: 2em;
+  font-family: "Montserrat", sans-serif;
+  color: white;
+`;
+
 const months = [
   "Jan",
   "Feb",
@@ -214,6 +232,7 @@ const PostsList = () => {
   const threadHasTrophy = useSelector(threadHasTrophySelector);
   const currentUserDetails = useSelector(userDetailsSelector);
   const reportTypes = useSelector(reportTypesSelector);
+  const threadIsLocked = useSelector(threadIsLockedSelector);
 
   const [newPostText, setNewPostText] = useState<string>("");
   const [reportPostModalIsOpen, setReportPostModalIsOpen] = useState<boolean>(
@@ -226,6 +245,10 @@ const PostsList = () => {
   const [banUserDialogIsVisible, setBanUserDialogIsVisible] = useState<boolean>(
     false
   );
+  const [
+    lockThreadDialogIsVisible,
+    setLockThreadDialogIsVisible,
+  ] = useState<boolean>(false);
 
   const onNewPostTextChangedHandler = (e: any) => {
     setNewPostText(e.target.value);
@@ -314,6 +337,12 @@ const PostsList = () => {
     }
   };
 
+  const onThreadLockedHandler = () => {
+    dispatch(
+      lockThread(accessToken, (location.state as any).threadInformation.id)
+    );
+  };
+
   const refreshAfterNewPost = () => {
     setNewPostText("");
   };
@@ -346,13 +375,8 @@ const PostsList = () => {
       threadActions = (
         <ThreadActionButtonsContainer>
           <Tooltip arrow title="Lock this thread">
-            <IconButton onClick={() => {}}>
+            <IconButton onClick={() => setLockThreadDialogIsVisible(true)}>
               <LockIcon color="secondary" />
-            </IconButton>
-          </Tooltip>
-          <Tooltip arrow title="Delete this thread">
-            <IconButton onClick={() => {}}>
-              <DeleteIcon color="secondary" />
             </IconButton>
           </Tooltip>
           {(location.state as any).threadInformation.accountStatus !==
@@ -366,10 +390,29 @@ const PostsList = () => {
         </ThreadActionButtonsContainer>
       );
     }
+  } else {
+    if (currentUserDetails.type !== "MODERATOR") {
+      threadActions = (
+        <Tooltip arrow title="Lock this thread" style={{ marginLeft: "-8px" }}>
+          <IconButton onClick={() => setLockThreadDialogIsVisible(true)}>
+            <LockIcon color="secondary" />
+          </IconButton>
+        </Tooltip>
+      );
+    }
   }
 
   return (
     <Container>
+      {threadIsLocked ? (
+        <LockedThreadBar>
+          <LockOutlinedIcon
+            fontSize="large"
+            style={{ color: "white", marginRight: "8px" }}
+          />
+          <LockedThreadText>This thread has been locked.</LockedThreadText>
+        </LockedThreadBar>
+      ) : null}
       <PostTitleContainer>
         <ThreadTitle>
           {(location.state as any).threadInformation.title}
@@ -473,26 +516,28 @@ const PostsList = () => {
           <h1>There are no posts yet.</h1>
         )}
       </PostsListsContainer>
-      <CreatePostContainer>
-        <TextField
-          placeholder="Say something..."
-          multiline
-          variant="outlined"
-          color="secondary"
-          style={{ width: "50%" }}
-          onChange={onNewPostTextChangedHandler}
-          value={newPostText}
-        />
-        <ButtonContainer>
-          <Button
-            variant="contained"
-            style={{ backgroundColor: "#228B22", color: "white" }}
-            onClick={onAddNewPost}
-          >
-            Post
-          </Button>
-        </ButtonContainer>
-      </CreatePostContainer>
+      {!threadIsLocked ? (
+        <CreatePostContainer>
+          <TextField
+            placeholder="Say something..."
+            multiline
+            variant="outlined"
+            color="secondary"
+            style={{ width: "50%" }}
+            onChange={onNewPostTextChangedHandler}
+            value={newPostText}
+          />
+          <ButtonContainer>
+            <Button
+              variant="contained"
+              style={{ backgroundColor: "#228B22", color: "white" }}
+              onClick={onAddNewPost}
+            >
+              Post
+            </Button>
+          </ButtonContainer>
+        </CreatePostContainer>
+      ) : null}
       <ReportDialog
         open={reportPostModalIsOpen}
         onClose={() => setReportPostModalIsOpen(false)}
@@ -512,6 +557,11 @@ const PostsList = () => {
         email={(location.state as any).threadInformation.ownerEmail}
         onBanUser={onBanUser}
         username={(location.state as any).threadInformation.username}
+      />
+      <LockThreadConfirmDialog
+        open={lockThreadDialogIsVisible}
+        onClose={() => setLockThreadDialogIsVisible(false)}
+        onLockThread={onThreadLockedHandler}
       />
     </Container>
   );
