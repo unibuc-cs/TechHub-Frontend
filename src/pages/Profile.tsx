@@ -39,6 +39,14 @@ const BottomContainer = styled.div`
   margin-top: 8px;
 `;
 
+const BottomContainerRow = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  margin: 8px 0;
+`;
+
 const ProfilePictureContainer = styled.div`
   width: 150px;
   display: flex;
@@ -58,6 +66,11 @@ const BasicInformationContainer = styled.div`
 
 const Text = styled.p`
   font-size: 1.3em;
+  font-family: "Montserrat", sans-serif;
+`;
+
+const AchievementText = styled.p`
+  font-size: 1.2em;
   font-family: "Montserrat", sans-serif;
 `;
 
@@ -164,49 +177,82 @@ const Profile: React.FC<{ onClose: () => void }> = ({ onClose }) => {
         </BasicInformationContainer>
       </TopContainer>
       <BottomContainer>
-        <Paper
-          elevation={3}
-          style={{ width: "100%", backgroundColor: "#228B22", color: "white" }}
-        >
-          <AchievementArea>
-            <Text>
-              <b>TROPHIES</b>
-            </Text>
-            <Text>{currentUserDetails.trophies}</Text>
-          </AchievementArea>
-        </Paper>
-        <Paper
-          elevation={3}
-          style={{
-            width: "100%",
-            marginTop: "8px",
-            backgroundColor: "#228B22",
-            color: "white",
-          }}
-        >
-          <AchievementArea>
-            <Text>
-              <b>TOTAL POINTS</b>
-            </Text>
-            <Text>{currentUserDetails.totalPoints}</Text>
-          </AchievementArea>
-        </Paper>
-        <Paper
-          elevation={3}
-          style={{
-            width: "100%",
-            marginTop: "8px",
-            backgroundColor: "#228B22",
-            color: "white",
-          }}
-        >
-          <AchievementArea>
-            <Text>
-              <b>CURRENT POINTS</b>
-            </Text>
-            <Text>{currentUserDetails.currentPoints}</Text>
-          </AchievementArea>
-        </Paper>
+        <BottomContainerRow>
+          <Paper
+            elevation={3}
+            style={{
+              width: "175px",
+              height: "125px",
+              backgroundColor: "#228B22",
+              color: "white",
+            }}
+          >
+            <AchievementArea>
+              <AchievementText>
+                <b>TOTAL POINTS</b>
+              </AchievementText>
+              <AchievementText>
+                {currentUserDetails.totalPoints}
+              </AchievementText>
+            </AchievementArea>
+          </Paper>
+          <Paper
+            elevation={3}
+            style={{
+              width: "175px",
+              height: "125px",
+              backgroundColor: "#228B22",
+              color: "white",
+            }}
+          >
+            <AchievementArea>
+              <AchievementText>
+                <b>CURRENT POINTS</b>
+              </AchievementText>
+              <AchievementText>
+                {currentUserDetails.currentPoints}
+              </AchievementText>
+            </AchievementArea>
+          </Paper>
+        </BottomContainerRow>
+        <BottomContainerRow>
+          <Paper
+            elevation={3}
+            style={{
+              width: "175px",
+              height: "125px",
+              backgroundColor: "#228B22",
+              color: "white",
+            }}
+          >
+            <AchievementArea>
+              <AchievementText>
+                <b>TROPHIES</b>
+              </AchievementText>
+              <AchievementText>{currentUserDetails.trophies}</AchievementText>
+            </AchievementArea>
+          </Paper>
+          <Paper
+            elevation={3}
+            style={{
+              width: "175px",
+              height: "125px",
+              backgroundColor: "#228B22",
+              color: "white",
+            }}
+          >
+            <AchievementArea>
+              <AchievementText>
+                <b>RAFFLES WON</b>
+              </AchievementText>
+              <AchievementText>
+                {currentUserDetails.rafflesWon !== null
+                  ? currentUserDetails.rafflesWon
+                  : "0"}
+              </AchievementText>
+            </AchievementArea>
+          </Paper>
+        </BottomContainerRow>
         {currentUserDetails.type !== "MODERATOR" ? (
           <Button
             variant="contained"

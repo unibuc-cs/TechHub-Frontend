@@ -11,6 +11,7 @@ import Leaderboard from "./Leaderboard";
 import Discounts from "./Discounts";
 import OwnedDiscounts from "./OwnedDiscounts";
 import Reports from "./Reports";
+import Raffle from "./Raffle";
 
 import {
   accessTokenSelector,
@@ -21,6 +22,10 @@ import { getPurchasedDiscountsByUser } from "../store/purchasedDiscounts/purchas
 import { useDispatch, useSelector } from "react-redux";
 import { userDetailsSelector } from "../store/userDetails/userDetails.selector";
 import { getReportTypes } from "../store/reports/reports.actions";
+import {
+  getActiveRaffle,
+  getPreviousRaffle,
+} from "../store/raffle/raffle.actions";
 
 const Container = styled.div`
   width: 100vw;
@@ -53,6 +58,8 @@ const Homescreen = () => {
 
   useEffect(() => {
     dispatch(getUserDetailsByEmail(accessToken, currentEmail));
+    dispatch(getActiveRaffle(accessToken));
+    dispatch(getPreviousRaffle(accessToken));
     dispatch(getPurchasedDiscountsByUser(accessToken, currentEmail));
     dispatch(getReportTypes(accessToken));
   }, []);
@@ -63,6 +70,9 @@ const Homescreen = () => {
         <Menu userDetails={userDetails} />
       </MenuContainer>
       <Switch>
+        <Route exact path={`${path}/raffle`}>
+          <Raffle />
+        </Route>
         <Route exact path={`${path}/reports`}>
           <Reports />
         </Route>

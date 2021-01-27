@@ -21,6 +21,7 @@ const initialState: UserDetailsStateInformation = {
     username: "",
     vipStatus: false,
     trophies: 0,
+    rafflesWon: 0,
   },
 };
 
