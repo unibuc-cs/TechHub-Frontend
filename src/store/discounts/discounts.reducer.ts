@@ -4,6 +4,7 @@ import {
   DiscountsStateInformation,
 } from "../store";
 import {
+  GET_DISCOUNTS,
   SET_DISCOUNTS,
   SET_NEW_DISCOUNT,
   DELETE_DISCOUNT,
@@ -11,6 +12,7 @@ import {
 
 const initialState: DiscountsStateInformation = {
   discounts: [],
+  loading: false,
 };
 
 const discountsReducer = (
@@ -18,6 +20,11 @@ const discountsReducer = (
   action: ActionWithPayload<unknown>
 ) => {
   switch (action.type) {
+    case GET_DISCOUNTS:
+      return {
+        ...state,
+        loading: true,
+      };
     case SET_DISCOUNTS:
       return {
         ...state,
@@ -25,6 +32,7 @@ const discountsReducer = (
           ...(action as ActionWithPayload<{ discounts: Discount[] }>).payload
             .discounts,
         ],
+        loading: false,
       };
     case SET_NEW_DISCOUNT:
       return {

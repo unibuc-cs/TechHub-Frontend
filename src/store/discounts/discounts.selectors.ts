@@ -7,3 +7,8 @@ export const discountsSelector = createSelector(
   discountsInformationSelector,
   (discountsInfo) => discountsInfo.discounts
 );
+
+export const discountsLoadingSelector = createSelector(
+  discountsInformationSelector,
+  (discountsInfo) => discountsInfo.loading
+);

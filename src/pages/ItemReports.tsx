@@ -8,8 +8,12 @@ import {
   getReportsByItem,
   deleteReport,
 } from "../store/reports/reports.actions";
-import { reportsSelector } from "../store/reports/reports.selectors";
+import {
+  reportsSelector,
+  reportsLoadingSelector,
+} from "../store/reports/reports.selectors";
 import { Report } from "../store/store";
+import Spinner from "../components/UI/Spinner/Spinner";
 
 const Container = styled.div`
   width: 100%;
@@ -26,6 +30,7 @@ const ItemReports: React.FC<{ reportedItemId: string }> = ({
 
   const accessToken = useSelector(accessTokenSelector);
   const reports = useSelector(reportsSelector);
+  const reportsLoading = useSelector(reportsLoadingSelector);
 
   useEffect(() => {
     dispatch(getReportsByItem(accessToken, reportedItemId));
@@ -35,18 +40,27 @@ const ItemReports: React.FC<{ reportedItemId: string }> = ({
     dispatch(deleteReport(accessToken, reportId));
   };
 
-  return (
-    <Container>
-      {reports.map((report: Report) => (
+  let reportsContent = null;
+  if (!reportsLoading) {
+    if (reports.length > 0) {
+      reportsContent = reports.map((report: Report) => (
         <ReportCard
           key={report.id}
           report={report}
           hasGoToThreadButton={false}
           onDeleteReport={onDeleteReport}
         />
-      ))}
-    </Container>
-  );
+      ));
+    } else {
+      reportsContent = (
+        <h1 style={{ fontFamily: "Montserrat" }}>There are no reports.</h1>
+      );
+    }
+  } else {
+    reportsContent = <Spinner />;
+  }
+
+  return <Container>{reportsContent}</Container>;
 };
 
 export default ItemReports;

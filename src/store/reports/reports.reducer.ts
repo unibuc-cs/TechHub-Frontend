@@ -1,5 +1,7 @@
 import { ActionWithPayload, Report, ReportsStateInformation } from "../store";
 import {
+  GET_REPORTS,
+  GET_REPORTS_BY_ITEMS,
   SET_REPORTS,
   SET_REPORT_TYPES,
   SET_NEW_REPORT,
@@ -9,6 +11,7 @@ import {
 const initialState: ReportsStateInformation = {
   reports: [],
   reportTypes: [],
+  loading: false,
 };
 
 const reportsReducer = (
@@ -16,6 +19,16 @@ const reportsReducer = (
   action: ActionWithPayload<unknown>
 ) => {
   switch (action.type) {
+    case GET_REPORTS:
+      return {
+        ...state,
+        loading: true,
+      };
+    case GET_REPORTS_BY_ITEMS:
+      return {
+        ...state,
+        loading: true,
+      };
     case SET_REPORTS:
       return {
         ...state,
@@ -23,6 +36,7 @@ const reportsReducer = (
           ...(action as ActionWithPayload<{ reports: Report[] }>).payload
             .reports,
         ],
+        loading: false,
       };
     case SET_REPORT_TYPES:
       return {

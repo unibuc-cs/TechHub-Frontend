@@ -26,10 +26,14 @@ import {
 import { userDetailsSelector } from "../../store/userDetails/userDetails.selector";
 import { useDispatch, useSelector } from "react-redux";
 import { useLocation } from "react-router-dom";
-import { threadsSelector } from "../../store/threads/threads.selector";
+import {
+  threadsSelector,
+  threadsLoadingSelector,
+} from "../../store/threads/threads.selector";
 import Button from "@material-ui/core/Button";
 import AddThreadDialog from "../UI/AddThreadDialog";
 import { ThreadInformation } from "../../store/store";
+import Spinner from "../UI/Spinner/Spinner";
 
 const Container = styled.div`
   width: 100%;
@@ -85,6 +89,7 @@ const HomescreenContent: React.FC<{ type: string; isVip: boolean }> = ({
   const accessToken = useSelector(accessTokenSelector);
   const categories = useSelector(categoriesSelector);
   const threads = useSelector(threadsSelector);
+  const threadsLoading = useSelector(threadsLoadingSelector);
   const currentEmail = useSelector(currentEmailSelector);
   const currentUserDetails = useSelector(userDetailsSelector);
   const location = useLocation();
@@ -181,6 +186,27 @@ const HomescreenContent: React.FC<{ type: string; isVip: boolean }> = ({
     }
   }
 
+  let content = null;
+  if (type === "threads") {
+    if (!threadsLoading) {
+      if (threads.length > 0) {
+        content = <HomescreenItemsList items={threads} type={type} />;
+      } else {
+        content = (
+          <MessageContainer>
+            <h1 style={{ fontFamily: "Montserrat" }}>
+              There are no threads yet.
+            </h1>
+          </MessageContainer>
+        );
+      }
+    } else {
+      content = <Spinner />;
+    }
+  } else {
+    content = <HomescreenItemsList items={categories} type={type} />;
+  }
+
   return (
     <Container>
       <TitleContainer>
@@ -216,19 +242,7 @@ const HomescreenContent: React.FC<{ type: string; isVip: boolean }> = ({
             </Button>
           </ButtonContainer>
         ) : null}
-        {threads.length > 0 || type !== "threads" ? null : (
-          <MessageContainer>
-            <h1>There are no threads yet.</h1>
-          </MessageContainer>
-        )}
-        {categories.length > 0 ? (
-          <HomescreenItemsList
-            items={type === "categories" ? categories : threads}
-            type={type}
-          />
-        ) : (
-          <h1>Loading...</h1>
-        )}
+        {content}
       </ContentContainer>
       {type === "threads" ? (
         <AddThreadDialog

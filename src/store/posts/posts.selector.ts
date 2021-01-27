@@ -17,3 +17,8 @@ export const threadIsLockedSelector = createSelector(
   postsInformationSelector,
   (postsInfo) => postsInfo.currentThreadIsLocked
 );
+
+export const postsLoadingSelector = createSelector(
+  postsInformationSelector,
+  (postsInfo) => postsInfo.loading
+);
