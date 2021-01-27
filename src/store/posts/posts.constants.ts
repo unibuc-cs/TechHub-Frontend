@@ -10,3 +10,4 @@ export const EDIT_POST = "posts/edit-post";
 export const DELETE_POST = "posts/delete-post";
 export const AWARD_TROPHY = "posts/award-trophy";
 export const SET_CURRENT_THREAD_HAS_TROPHY = "posts/current-thread-has-trophy";
+export const SET_CURRENT_THREAD_IS_LOCKED = "posts/current-thread-is-locked";

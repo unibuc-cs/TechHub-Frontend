@@ -10,6 +10,7 @@ import PostsList from "./PostsList";
 import Leaderboard from "./Leaderboard";
 import Discounts from "./Discounts";
 import OwnedDiscounts from "./OwnedDiscounts";
+import Reports from "./Reports";
 
 import {
   accessTokenSelector,
@@ -19,6 +20,7 @@ import { getUserDetailsByEmail } from "../store/userDetails/userDetails.actions"
 import { getPurchasedDiscountsByUser } from "../store/purchasedDiscounts/purchasedDiscounts.actions";
 import { useDispatch, useSelector } from "react-redux";
 import { userDetailsSelector } from "../store/userDetails/userDetails.selector";
+import { getReportTypes } from "../store/reports/reports.actions";
 
 const Container = styled.div`
   width: 100vw;
@@ -52,6 +54,7 @@ const Homescreen = () => {
   useEffect(() => {
     dispatch(getUserDetailsByEmail(accessToken, currentEmail));
     dispatch(getPurchasedDiscountsByUser(accessToken, currentEmail));
+    dispatch(getReportTypes(accessToken));
   }, []);
 
   return (
@@ -60,6 +63,9 @@ const Homescreen = () => {
         <Menu userDetails={userDetails} />
       </MenuContainer>
       <Switch>
+        <Route exact path={`${path}/reports`}>
+          <Reports />
+        </Route>
         <Route exact path={`${path}/leaderboard`}>
           <Leaderboard />
         </Route>

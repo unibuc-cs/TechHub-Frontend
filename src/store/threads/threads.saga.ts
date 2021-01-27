@@ -8,8 +8,10 @@ import {
   GET_VIP_THREADS_BY_CATEGORY,
   ADD_VIP_THREAD,
   SEARCH_VIP_THREADS,
+  LOCK_THREAD,
 } from "./threads.constants";
 import { setThreads, setNewThread } from "./threads.actions";
+import { setCurrentThreadIsLocked } from "../posts/posts.actions";
 
 function* getAllThreads(action: ActionWithPayload<{ accessToken: string }>) {
   try {
@@ -89,6 +91,7 @@ function* getThreadsByCategory(
         ...initialThreads[index],
         userImage: details.profilePicture,
         username: details.username,
+        accountStatus: details.accountStatus,
       });
     }
 
@@ -135,6 +138,7 @@ function* searchThreads(
         ...filteredThreads[index],
         userImage: details.profilePicture,
         username: details.username,
+        accountStatus: details.accountStatus,
       });
     }
 
@@ -174,6 +178,7 @@ function* getVipThreadsByCategory(
         ...initialThreads[index],
         userImage: details.profilePicture,
         username: details.username,
+        accountStatus: details.accountStatus,
       });
     }
 
@@ -255,12 +260,35 @@ function* searchVipThreads(
         ...filteredThreads[index],
         userImage: details.profilePicture,
         username: details.username,
+        accountStatus: details.accountStatus,
       });
     }
 
     yield put(setThreads(finalThreads));
   } catch (e) {
     console.warn(e);
+  }
+}
+
+function* lockThread(
+  action: ActionWithPayload<{ accessToken: string; threadId: string }>
+) {
+  try {
+    const data = {
+      isLocked: true,
+    };
+    yield fetch(`http://127.0.0.1:8080/thread/${action.payload.threadId}`, {
+      method: "PUT",
+      headers: {
+        Authorization: action.payload.accessToken,
+        "Content-Type": "application/json",
+        "Access-Control-Allow-Origin": "*",
+      },
+      body: JSON.stringify(data),
+    });
+    yield put(setCurrentThreadIsLocked(true));
+  } catch (e) {
+    console.log(e);
   }
 }
 
@@ -272,4 +300,5 @@ export default function* threadsSaga() {
   yield takeEvery(GET_VIP_THREADS_BY_CATEGORY, getVipThreadsByCategory);
   yield takeEvery(ADD_VIP_THREAD, addNewVipThread);
   yield takeEvery(SEARCH_VIP_THREADS, searchVipThreads);
+  yield takeEvery(LOCK_THREAD, lockThread);
 }

@@ -24,6 +24,9 @@ export interface ThreadInformation {
   dateCreated: string;
   hasTrophy: boolean;
   vipStatus: boolean;
+  isReported: boolean;
+  accountStatus: string;
+  isLocked: boolean;
 }
 
 export interface PostInformation {
@@ -38,6 +41,8 @@ export interface PostInformation {
   hasTrophy: boolean;
   upvotes: string[];
   downvotes: string[];
+  isReported: boolean;
+  accountStatus: string;
 }
 
 export interface UserDetails {
@@ -71,6 +76,23 @@ export interface PurchasedDiscount {
   datePurchased: string;
 }
 
+export interface Report {
+  id: string;
+  reporterId: string;
+  reportedItemId: string;
+  description: string;
+  reportType: string;
+  dateReported: string;
+  isResolved: boolean;
+  isPostReport: boolean;
+  threadInformation: ThreadInformation;
+}
+
+export interface ReportsStateInformation {
+  reports: Report[];
+  reportTypes: string[];
+}
+
 export interface PurchasedDiscountsStateInformation {
   purchasedDiscounts: PurchasedDiscount[];
 }
@@ -90,6 +112,7 @@ export interface ThreadStateInformation {
 export interface PostStateInformation {
   posts: PostInformation[];
   currentThreadHasTrophy: boolean;
+  currentThreadIsLocked: boolean;
 }
 
 export interface LeaderboardStateInformation {
@@ -105,6 +128,7 @@ export interface Store {
   leaderboard: LeaderboardStateInformation;
   discounts: DiscountsStateInformation;
   purchasedDiscounts: PurchasedDiscountsStateInformation;
+  reports: ReportsStateInformation;
 }
 
 export interface CategoryCard {

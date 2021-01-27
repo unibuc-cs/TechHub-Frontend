@@ -8,3 +8,4 @@ export const GET_VIP_THREADS_BY_CATEGORY =
   "threads/get-vip-threads-by-category";
 export const ADD_VIP_THREAD = "threads/add-vip-thread";
 export const SEARCH_VIP_THREADS = "threads/search-vip-threads";
+export const LOCK_THREAD = "threads/lock-thread";

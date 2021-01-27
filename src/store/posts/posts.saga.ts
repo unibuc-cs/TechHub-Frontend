@@ -16,7 +16,12 @@ import {
   DELETE_POST,
   AWARD_TROPHY,
 } from "./posts.constants";
-import { setPosts, addPost, setCurrentThreadHasTrophy } from "./posts.actions";
+import {
+  setPosts,
+  addPost,
+  setCurrentThreadHasTrophy,
+  setCurrentThreadIsLocked,
+} from "./posts.actions";
 
 function* getPostsByThread(
   action: ActionWithPayload<{ accessToken: string; threadId: string }>
@@ -48,6 +53,7 @@ function* getPostsByThread(
         ...initialPosts[index],
         userImage: details.profilePicture,
         username: details.username,
+        accountStatus: details.accountStatus,
       });
     }
 
@@ -63,6 +69,7 @@ function* getPostsByThread(
 
     yield put(setPosts(finalPosts));
     yield put(setCurrentThreadHasTrophy(thread.hasTrophy));
+    yield put(setCurrentThreadIsLocked(thread.isLocked));
   } catch (e) {
     console.warn(e);
   }
@@ -107,6 +114,8 @@ function* addNewPost(
       userEmail: action.payload.userEmail,
       userImage: action.payload.userPicture,
       username: action.payload.username,
+      isReported: false,
+      accountStatus: "",
     };
     yield put(addPost(newPost));
   } catch (e) {

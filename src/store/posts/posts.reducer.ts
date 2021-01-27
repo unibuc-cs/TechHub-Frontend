@@ -14,11 +14,13 @@ import {
   DELETE_POST,
   AWARD_TROPHY,
   SET_CURRENT_THREAD_HAS_TROPHY,
+  SET_CURRENT_THREAD_IS_LOCKED,
 } from "./posts.constants";
 
 const initialState: PostStateInformation = {
   posts: [],
   currentThreadHasTrophy: false,
+  currentThreadIsLocked: false,
 };
 
 const postsReducer = (
@@ -220,6 +222,13 @@ const postsReducer = (
         currentThreadHasTrophy: (action as ActionWithPayload<{
           hasTrophy: boolean;
         }>).payload.hasTrophy,
+      };
+    case SET_CURRENT_THREAD_IS_LOCKED:
+      return {
+        ...state,
+        currentThreadIsLocked: (action as ActionWithPayload<{
+          isLocked: boolean;
+        }>).payload.isLocked,
       };
     default:
       return state;

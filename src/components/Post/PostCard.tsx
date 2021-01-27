@@ -6,6 +6,8 @@ import NavigationIcon from "@material-ui/icons/Navigation";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import EditIcon from "@material-ui/icons/Edit";
+import ReportIcon from "@material-ui/icons/Report";
+import BlockIcon from "@material-ui/icons/Block";
 import CalendarTodayIcon from "@material-ui/icons/CalendarToday";
 import Tooltip from "@material-ui/core/Tooltip";
 import EditPostDialog from "../UI/EditPostDialog";
@@ -14,12 +16,37 @@ import Button from "@material-ui/core/Button/Button";
 import trophy from "../../assets/trophy.png";
 import AwardTrophyDialog from "../UI/AwardTrophyDialog";
 import Paper from "@material-ui/core/Paper";
+import ReportDialog from "../UI/ReportDialog";
+import ItemReportsDialog from "../UI/ItemReportsDialog";
+import BanUserConfirmDialog from "../UI/BanUserConfirmDialog";
+import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 
 const Container = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
+  flex-direction: column;
+`;
+
+const ContentContainer = styled.div`
+  width: 100%;
+  display: flex;
   align-items: start;
+`;
+
+const ReportContainer = styled.div`
+  width: 100%;
+  height: 5vh;
+  background-color: salmon;
+  display: flex;
+  align-items: center;
+  padding: 0 8px;
+`;
+
+const ReportText = styled.p`
+  color: white;
+  font-size: 1.1em;
+  font-family: "Montserrat", sans-serif;
 `;
 
 const LeftContainer = styled.div`
@@ -58,7 +85,7 @@ const PostBottomContainer = styled.div`
   width: 100%;
   height: 7.5vh;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-start;
   align-items: center;
   padding: 4px;
 `;
@@ -74,11 +101,16 @@ const UserProfileImage = styled.img`
   height: 100px;
 `;
 
+const UsernameContainer = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`;
+
 const UsernameText = styled.p`
   font-size: 1.2em;
   font-family: "Montserrat", sans-serif;
   font-weight: bold;
-  margin-top: 4px;
 `;
 
 const DateContainer = styled.div`
@@ -169,6 +201,15 @@ const PostCard: React.FC<{
   currentEmail: string;
   threadHasTrophy: boolean;
   threadOwnerEmail: string;
+  currentUserType: string;
+  reportTypes: string[];
+  onSubmitReportHandler: (
+    isThread: boolean,
+    reportType: string,
+    description: string,
+    postId?: string
+  ) => void;
+  onBanUser: (email: string) => void;
 }> = ({
   postInfo,
   onAddUpvote,
@@ -181,6 +222,10 @@ const PostCard: React.FC<{
   onAwardTrophy,
   threadHasTrophy,
   threadOwnerEmail,
+  currentUserType,
+  reportTypes,
+  onSubmitReportHandler,
+  onBanUser,
 }) => {
   const [upvoteArrowColor, setUpvoteArrowColor] = useState<
     "inherit" | "primary"
@@ -193,6 +238,16 @@ const PostCard: React.FC<{
   const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
   const [deleteModalIsOpen, setDeleteModalIsOpen] = useState<boolean>(false);
   const [awardTrophyModalIsOpen, setAwardTrophyModalIsOpen] = useState<boolean>(
+    false
+  );
+  const [reportPostModalIsOpen, setReportPostModalIsOpen] = useState<boolean>(
+    false
+  );
+  const [
+    itemReportsDialogIsOpen,
+    setItemReportsDialogIsOpen,
+  ] = useState<boolean>(false);
+  const [banUserDialogIsVisible, setBanUserDialogIsVisible] = useState<boolean>(
     false
   );
 
@@ -239,81 +294,145 @@ const PostCard: React.FC<{
     }
   };
 
+  let postActions = null;
+
+  if (currentEmail === postInfo.userEmail) {
+    postActions = (
+      <PostEditRemoveButtonsContainer>
+        <Tooltip arrow title="Edit your post">
+          <IconButton onClick={() => setEditModalIsOpen(true)}>
+            <EditIcon />
+          </IconButton>
+        </Tooltip>
+        <Tooltip arrow title="Delete your post">
+          <IconButton onClick={() => setDeleteModalIsOpen(true)}>
+            <DeleteIcon color="secondary" />
+          </IconButton>
+        </Tooltip>
+      </PostEditRemoveButtonsContainer>
+    );
+  } else {
+    if (currentUserType === "MODERATOR") {
+      postActions = (
+        <PostEditRemoveButtonsContainer>
+          <Tooltip arrow title="Delete this post">
+            <IconButton onClick={() => setDeleteModalIsOpen(true)}>
+              <DeleteIcon color="secondary" />
+            </IconButton>
+          </Tooltip>
+          {postInfo.accountStatus !== "banned" ? (
+            <Tooltip arrow title="Ban this user">
+              <IconButton onClick={() => setBanUserDialogIsVisible(true)}>
+                <BlockIcon color="secondary" />
+              </IconButton>
+            </Tooltip>
+          ) : null}
+        </PostEditRemoveButtonsContainer>
+      );
+    } else {
+      postActions = (
+        <Tooltip arrow title="Report this post">
+          <IconButton onClick={() => setReportPostModalIsOpen(true)}>
+            <ReportIcon />
+          </IconButton>
+        </Tooltip>
+      );
+    }
+  }
+
   return (
     <Paper
       elevation={3}
       style={{ width: "90%", margin: "16px 0", height: "auto" }}
     >
       <Container>
-        <LeftContainer>
-          <UserProfileImage src={postInfo.userImage} alt="Cannot load image" />
-          <UsernameText>
-            {currentEmail === postInfo.userEmail ? "You" : postInfo.username}
-          </UsernameText>
-          <DateContainer>
-            <CalendarTodayIcon />
-            <DateText>{`${new Date(postInfo.dateCreated).getDate()} ${
-              months[new Date(postInfo.dateCreated).getMonth()]
-            } at ${new Date(postInfo.dateCreated).getHours()}:${new Date(
-              postInfo.dateCreated
-            ).getMinutes()}`}</DateText>
-          </DateContainer>
-        </LeftContainer>
-        <MiddleContainer>
-          <PostTextContainer>
-            <PostText>{postInfo.text}</PostText>
-          </PostTextContainer>
-          <PostBottomContainer>
-            {postInfo.hasTrophy ? (
-              <TrophyImage src={trophy} alt="Cannot load image" />
-            ) : null}
-            {postInfo.userEmail === currentEmail ? (
-              <PostEditRemoveButtonsContainer>
-                <Tooltip arrow title="Edit your post">
-                  <IconButton onClick={() => setEditModalIsOpen(true)}>
-                    <EditIcon />
-                  </IconButton>
+        <ContentContainer>
+          <LeftContainer>
+            <UserProfileImage
+              src={postInfo.userImage}
+              alt="Cannot load image"
+            />
+            <UsernameContainer>
+              <UsernameText>
+                {currentEmail === postInfo.userEmail
+                  ? "You"
+                  : postInfo.username}
+              </UsernameText>
+              {postInfo.accountStatus === "banned" ? (
+                <Tooltip arrow title="This user has been banned">
+                  <RemoveCircleIcon fontSize="small" />
                 </Tooltip>
-                <Tooltip arrow title="Delete your post">
-                  <IconButton onClick={() => setDeleteModalIsOpen(true)}>
-                    <DeleteIcon color="secondary" />
-                  </IconButton>
-                </Tooltip>
-              </PostEditRemoveButtonsContainer>
-            ) : null}
-            {postInfo.userEmail !== currentEmail &&
-            !threadHasTrophy &&
-            threadOwnerEmail === currentEmail ? (
-              <Button
-                variant="contained"
-                style={{
-                  backgroundColor: "#228B22",
-                  color: "white",
-                  marginRight: "4px",
-                }}
-                onClick={() => setAwardTrophyModalIsOpen(true)}
-                size="small"
-              >
-                Award Trophy
-              </Button>
-            ) : null}
-          </PostBottomContainer>
-        </MiddleContainer>
-        <RightContainer>
-          <VotingContainer>
-            <UpArrowContainer onClick={onUpvoteClicked}>
-              <NavigationIcon fontSize="large" color={upvoteArrowColor} />
-            </UpArrowContainer>
-            <VotesCountContainer>
-              <VotesCount>
-                {postInfo.upvotes.length - postInfo.downvotes.length}
-              </VotesCount>
-            </VotesCountContainer>
-            <DownArrowContainer onClick={onDownvoteClicked}>
-              <NavigationIcon fontSize="large" color={downvoteArrowColor} />
-            </DownArrowContainer>
-          </VotingContainer>
-        </RightContainer>
+              ) : null}
+            </UsernameContainer>
+            <DateContainer>
+              <CalendarTodayIcon />
+              <DateText>{`${new Date(postInfo.dateCreated).getDate()} ${
+                months[new Date(postInfo.dateCreated).getMonth()]
+              } at ${new Date(postInfo.dateCreated).getHours()}:${new Date(
+                postInfo.dateCreated
+              ).getMinutes()}`}</DateText>
+            </DateContainer>
+          </LeftContainer>
+          <MiddleContainer>
+            <PostTextContainer>
+              <PostText>{postInfo.text}</PostText>
+            </PostTextContainer>
+            <PostBottomContainer>
+              {postInfo.hasTrophy ? (
+                <TrophyImage src={trophy} alt="Cannot load image" />
+              ) : null}
+              {postActions}
+              {postInfo.userEmail !== currentEmail &&
+              !threadHasTrophy &&
+              threadOwnerEmail === currentEmail ? (
+                <Button
+                  variant="contained"
+                  style={{
+                    backgroundColor: "#228B22",
+                    color: "white",
+                    marginRight: "4px",
+                  }}
+                  onClick={() => setAwardTrophyModalIsOpen(true)}
+                  size="small"
+                >
+                  Award Trophy
+                </Button>
+              ) : null}
+            </PostBottomContainer>
+          </MiddleContainer>
+          <RightContainer>
+            <VotingContainer>
+              <UpArrowContainer onClick={onUpvoteClicked}>
+                <NavigationIcon fontSize="large" color={upvoteArrowColor} />
+              </UpArrowContainer>
+              <VotesCountContainer>
+                <VotesCount>
+                  {postInfo.upvotes.length - postInfo.downvotes.length}
+                </VotesCount>
+              </VotesCountContainer>
+              <DownArrowContainer onClick={onDownvoteClicked}>
+                <NavigationIcon fontSize="large" color={downvoteArrowColor} />
+              </DownArrowContainer>
+            </VotingContainer>
+          </RightContainer>
+        </ContentContainer>
+        {postInfo.isReported && currentUserType === "MODERATOR" ? (
+          <ReportContainer>
+            <ReportText>This post has been reported.</ReportText>
+            <Button
+              variant="contained"
+              style={{
+                backgroundColor: "white",
+                color: "salmon",
+                marginLeft: "4px",
+              }}
+              onClick={() => setItemReportsDialogIsOpen(true)}
+              size="small"
+            >
+              View Reports
+            </Button>
+          </ReportContainer>
+        ) : null}
       </Container>
       <EditPostDialog
         open={editModalIsOpen}
@@ -333,6 +452,27 @@ const PostCard: React.FC<{
         onClose={() => setAwardTrophyModalIsOpen(false)}
         onAwardPost={onAwardTrophy}
         postId={postInfo.id}
+      />
+      <ReportDialog
+        open={reportPostModalIsOpen}
+        onClose={() => setReportPostModalIsOpen(false)}
+        type="post"
+        reportTypes={reportTypes}
+        onSubmitReportHandler={onSubmitReportHandler}
+        postId={postInfo.id}
+      />
+      <ItemReportsDialog
+        open={itemReportsDialogIsOpen}
+        onClose={() => setItemReportsDialogIsOpen(false)}
+        isThread={false}
+        reportedItemId={postInfo.id}
+      />
+      <BanUserConfirmDialog
+        open={banUserDialogIsVisible}
+        onClose={() => setBanUserDialogIsVisible(false)}
+        email={postInfo.userEmail}
+        onBanUser={onBanUser}
+        username={postInfo.username}
       />
     </Paper>
   );

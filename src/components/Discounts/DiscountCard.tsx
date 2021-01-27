@@ -218,6 +218,14 @@ const DiscountCard: React.FC<{
         </Button>
       );
     }
+  } else if (userType === "MODERATOR") {
+    lowerRightActions = (
+      <Tooltip arrow title="Delete this discount">
+        <IconButton onClick={() => setDeleteDiscountDialogIsVisible(true)}>
+          <DeleteIcon color="secondary" />
+        </IconButton>
+      </Tooltip>
+    );
   }
 
   return (

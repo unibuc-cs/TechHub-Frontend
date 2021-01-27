@@ -4,6 +4,7 @@ import { useHistory, useRouteMatch } from "react-router-dom";
 import { ThreadInformation } from "../../store/store";
 import trophy from "../../assets/trophy.png";
 import Paper from "@material-ui/core/Paper";
+import LockIcon from "@material-ui/icons/Lock";
 
 const Container = styled.div`
   width: 100%;
@@ -51,6 +52,7 @@ const DateTitle = styled.p`
   font-size: 1em;
   font-weight: bold;
   font-family: "Montserrat", sans-serif;
+  margin-left: 8px;
 `;
 
 const TrophyImage = styled.img`
@@ -117,6 +119,7 @@ const HomescreenItemCard: React.FC<{
                 {threadInformation?.hasTrophy ? (
                   <TrophyImage src={trophy} alt="Cannot load image" />
                 ) : null}
+                {threadInformation?.isLocked ? <LockIcon /> : null}
                 <DateTitle>
                   {threadInformation?.dateCreated
                     ? `On ${new Date(

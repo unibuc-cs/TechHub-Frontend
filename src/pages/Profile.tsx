@@ -207,17 +207,19 @@ const Profile: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             <Text>{currentUserDetails.currentPoints}</Text>
           </AchievementArea>
         </Paper>
-        <Button
-          variant="contained"
-          color="primary"
-          style={{ marginTop: "8px", fontFamily: "Montserrat" }}
-          onClick={() => {
-            history.push("/homescreen/owned-discounts");
-            onClose();
-          }}
-        >
-          Discounts History
-        </Button>
+        {currentUserDetails.type !== "MODERATOR" ? (
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ marginTop: "8px", fontFamily: "Montserrat" }}
+            onClick={() => {
+              history.push("/homescreen/owned-discounts");
+              onClose();
+            }}
+          >
+            Discounts History
+          </Button>
+        ) : null}
       </BottomContainer>
     </Container>
   );

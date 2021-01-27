@@ -3,6 +3,7 @@ import {
   GET_USER_DETAILS_BY_EMAIL,
   SET_USER_DETAILS,
   CHANGE_PROFILE_PICTURE,
+  BAN_USER,
 } from "./userDetails.constants";
 
 export const getUserDetailsByEmail = (
@@ -39,5 +40,16 @@ export const changeProfilePicture = (
     accessToken,
     email,
     newImage,
+  },
+});
+
+export const banUser = (
+  accessToken: string,
+  email: string
+): ActionWithPayload<{ accessToken: string; email: string }> => ({
+  type: BAN_USER,
+  payload: {
+    accessToken,
+    email,
   },
 });
