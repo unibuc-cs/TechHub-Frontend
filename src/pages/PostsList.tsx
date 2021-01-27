@@ -17,6 +17,7 @@ import {
   postsSelector,
   threadHasTrophySelector,
   threadIsLockedSelector,
+  postsLoadingSelector,
 } from "../store/posts/posts.selector";
 import styled from "styled-components";
 import {
@@ -45,6 +46,7 @@ import RemoveCircleIcon from "@material-ui/icons/RemoveCircle";
 import { lockThread } from "../store/threads/threads.actions";
 import LockThreadConfirmDialog from "../components/UI/LockThreadConfirmDialog";
 import LockOutlinedIcon from "@material-ui/icons/LockOutlined";
+import Spinner from "../components/UI/Spinner/Spinner";
 
 const Container = styled.div`
   width: 100%;
@@ -229,6 +231,7 @@ const PostsList = () => {
   const currentEmail = useSelector(currentEmailSelector);
   const accessToken = useSelector(accessTokenSelector);
   const posts = useSelector(postsSelector);
+  const postsLoading = useSelector(postsLoadingSelector);
   const threadHasTrophy = useSelector(threadHasTrophySelector);
   const currentUserDetails = useSelector(userDetailsSelector);
   const reportTypes = useSelector(reportTypesSelector);
@@ -402,6 +405,41 @@ const PostsList = () => {
     }
   }
 
+  let postsContent = null;
+
+  if (!postsLoading) {
+    if (posts.length > 0) {
+      postsContent = posts.map((post: PostInformation) => (
+        <PostCard
+          postInfo={post}
+          key={post.id}
+          currentEmail={currentEmail}
+          onAddUpvote={onAddUpvote}
+          onRemoveUpvote={onRemoveUpvote}
+          onAddDownvote={onAddDownvote}
+          onRemoveDownvote={onRemoveDownvote}
+          onEditPost={onEditPost}
+          onDeletePost={onDeletePost}
+          threadHasTrophy={threadHasTrophy}
+          threadOwnerEmail={
+            (location.state as any).threadInformation.ownerEmail
+          }
+          onAwardTrophy={onAwardTrophy}
+          currentUserType={currentUserDetails.type}
+          reportTypes={reportTypes}
+          onSubmitReportHandler={onSubmitReportClickedHandler}
+          onBanUser={onBanUser}
+        />
+      ));
+    } else {
+      postsContent = (
+        <h1 style={{ fontFamily: "Montserrat" }}>There are no posts yet.</h1>
+      );
+    }
+  } else {
+    postsContent = <Spinner />;
+  }
+
   return (
     <Container>
       {threadIsLocked ? (
@@ -488,34 +526,7 @@ const PostsList = () => {
           </DescriptionContainer>
         </Paper>
       </PostTitleContainer>
-      <PostsListsContainer>
-        {posts.length > 0 ? (
-          posts.map((post: PostInformation) => (
-            <PostCard
-              postInfo={post}
-              key={post.id}
-              currentEmail={currentEmail}
-              onAddUpvote={onAddUpvote}
-              onRemoveUpvote={onRemoveUpvote}
-              onAddDownvote={onAddDownvote}
-              onRemoveDownvote={onRemoveDownvote}
-              onEditPost={onEditPost}
-              onDeletePost={onDeletePost}
-              threadHasTrophy={threadHasTrophy}
-              threadOwnerEmail={
-                (location.state as any).threadInformation.ownerEmail
-              }
-              onAwardTrophy={onAwardTrophy}
-              currentUserType={currentUserDetails.type}
-              reportTypes={reportTypes}
-              onSubmitReportHandler={onSubmitReportClickedHandler}
-              onBanUser={onBanUser}
-            />
-          ))
-        ) : (
-          <h1>There are no posts yet.</h1>
-        )}
-      </PostsListsContainer>
+      <PostsListsContainer>{postsContent}</PostsListsContainer>
       {!threadIsLocked ? (
         <CreatePostContainer>
           <TextField

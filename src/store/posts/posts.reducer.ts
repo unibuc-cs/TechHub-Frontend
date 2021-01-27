@@ -4,6 +4,7 @@ import {
   PostInformation,
 } from "../store";
 import {
+  GET_POSTS_BY_THREAD,
   SET_POSTS,
   ADD_POST,
   ADD_UPVOTE,
@@ -21,6 +22,7 @@ const initialState: PostStateInformation = {
   posts: [],
   currentThreadHasTrophy: false,
   currentThreadIsLocked: false,
+  loading: false,
 };
 
 const postsReducer = (
@@ -28,6 +30,11 @@ const postsReducer = (
   action: ActionWithPayload<unknown>
 ) => {
   switch (action.type) {
+    case GET_POSTS_BY_THREAD:
+      return {
+        ...state,
+        loading: true,
+      };
     case SET_POSTS:
       return {
         ...state,
@@ -35,6 +42,7 @@ const postsReducer = (
           ...(action as ActionWithPayload<{ posts: PostInformation[] }>).payload
             .posts,
         ],
+        loading: false,
       };
     case ADD_POST:
       return {

@@ -4,9 +4,13 @@ import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 import { accessTokenSelector } from "../store/user/user.selector";
 import { getReports, deleteReport } from "../store/reports/reports.actions";
-import { reportsSelector } from "../store/reports/reports.selectors";
+import {
+  reportsSelector,
+  reportsLoadingSelector,
+} from "../store/reports/reports.selectors";
 import ReportCard from "../components/Reports/ReportCard";
 import { Report } from "../store/store";
+import Spinner from "../components/UI/Spinner/Spinner";
 
 const Container = styled.div`
   width: 100%;
@@ -35,6 +39,7 @@ const Reports = () => {
 
   const accessToken = useSelector(accessTokenSelector);
   const reports = useSelector(reportsSelector);
+  const reportsLoading = useSelector(reportsLoadingSelector);
 
   useEffect(() => {
     dispatch(getReports(accessToken));
@@ -44,10 +49,10 @@ const Reports = () => {
     dispatch(deleteReport(accessToken, reportId));
   };
 
-  return (
-    <Container>
-      <Title>Reports</Title>
-      {reports.length > 0 ? (
+  let reportsContent = null;
+  if (!reportsLoading) {
+    if (reports.length > 0) {
+      reportsContent = (
         <ReportsContainer>
           {reports.map((report: Report) => (
             <ReportCard
@@ -58,9 +63,20 @@ const Reports = () => {
             />
           ))}
         </ReportsContainer>
-      ) : (
-        <h1>There are no reports.</h1>
-      )}
+      );
+    } else {
+      reportsContent = (
+        <h1 style={{ fontFamily: "Montserrat" }}>There are no reports.</h1>
+      );
+    }
+  } else {
+    reportsContent = <Spinner />;
+  }
+
+  return (
+    <Container>
+      <Title>Reports</Title>
+      {reportsContent}
     </Container>
   );
 };

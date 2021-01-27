@@ -12,3 +12,8 @@ export const reportTypesSelector = createSelector(
   reportsInformationSelector,
   (reportsInfo) => reportsInfo.reportTypes
 );
+
+export const reportsLoadingSelector = createSelector(
+  reportsInformationSelector,
+  (reportsInfo) => reportsInfo.loading
+);

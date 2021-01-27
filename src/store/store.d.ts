@@ -91,14 +91,17 @@ export interface Report {
 export interface ReportsStateInformation {
   reports: Report[];
   reportTypes: string[];
+  loading: boolean;
 }
 
 export interface PurchasedDiscountsStateInformation {
   purchasedDiscounts: PurchasedDiscount[];
+  loading: boolean;
 }
 
 export interface DiscountsStateInformation {
   discounts: Discount[];
+  loading: boolean;
 }
 
 export interface UserDetailsStateInformation {
@@ -107,12 +110,14 @@ export interface UserDetailsStateInformation {
 
 export interface ThreadStateInformation {
   threads: ThreadInformation[];
+  loading: boolean;
 }
 
 export interface PostStateInformation {
   posts: PostInformation[];
   currentThreadHasTrophy: boolean;
   currentThreadIsLocked: boolean;
+  loading: boolean;
 }
 
 export interface LeaderboardStateInformation {

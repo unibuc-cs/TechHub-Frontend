@@ -8,3 +8,8 @@ export const purchasedDiscountsSelector = createSelector(
   purchasedDiscountsInformationSelector,
   (purchasedDiscountsInfo) => purchasedDiscountsInfo.purchasedDiscounts
 );
+
+export const purchasedDiscountsLoadingSelector = createSelector(
+  purchasedDiscountsInformationSelector,
+  (purchasedDiscountsInfo) => purchasedDiscountsInfo.loading
+);

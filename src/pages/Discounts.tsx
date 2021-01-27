@@ -10,7 +10,10 @@ import {
   deleteDiscount,
 } from "../store/discounts/discounts.actions";
 import { addPurchasedDiscount } from "../store/purchasedDiscounts/purchasedDiscounts.actions";
-import { discountsSelector } from "../store/discounts/discounts.selectors";
+import {
+  discountsSelector,
+  discountsLoadingSelector,
+} from "../store/discounts/discounts.selectors";
 import { accessTokenSelector } from "../store/user/user.selector";
 import { purchasedDiscountsSelector } from "../store/purchasedDiscounts/purchasedDiscounts.selectors";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,6 +21,7 @@ import Button from "@material-ui/core/Button";
 import AddDiscountDialog from "../components/UI/AddDiscountDialog";
 import DiscountsList from "../components/Discounts/DiscountsList";
 import { Discount, PurchasedDiscount } from "../store/store";
+import Spinner from "../components/UI/Spinner/Spinner";
 
 const Container = styled.div`
   width: 100%;
@@ -57,6 +61,7 @@ const Discounts = () => {
   const accessToken = useSelector(accessTokenSelector);
   const userDetails = useSelector(userDetailsSelector);
   const discounts = useSelector(discountsSelector);
+  const discountsLoading = useSelector(discountsLoadingSelector);
   const purchasedDiscounts = useSelector(purchasedDiscountsSelector);
 
   const [
@@ -119,6 +124,31 @@ const Discounts = () => {
     );
   };
 
+  let discountsContent = null;
+  if (!discountsLoading) {
+    if (discounts.length > 0) {
+      discountsContent = (
+        <DiscountsList
+          discounts={
+            userDetails.type === "REGULAR_USER" ? displayedDiscounts : discounts
+          }
+          currentEmail={userDetails.email}
+          userType={userDetails.type}
+          onDeleteDiscount={onDeleteDiscount}
+          onUnlockDiscount={onUnlockDiscount}
+          currentPoints={userDetails.currentPoints}
+          userVipStatus={userDetails.vipStatus}
+        />
+      );
+    } else {
+      discountsContent = (
+        <h1 style={{ fontFamily: "Montserrat" }}>No discounts available</h1>
+      );
+    }
+  } else {
+    discountsContent = <Spinner />;
+  }
+
   return (
     <Container>
       <Title>Discounts</Title>
@@ -145,21 +175,7 @@ const Discounts = () => {
           </CurrentPointsContainer>
         </Paper>
       )}
-      {discounts.length > 0 ? (
-        <DiscountsList
-          discounts={
-            userDetails.type === "REGULAR_USER" ? displayedDiscounts : discounts
-          }
-          currentEmail={userDetails.email}
-          userType={userDetails.type}
-          onDeleteDiscount={onDeleteDiscount}
-          onUnlockDiscount={onUnlockDiscount}
-          currentPoints={userDetails.currentPoints}
-          userVipStatus={userDetails.vipStatus}
-        />
-      ) : (
-        <h1>No discounts available</h1>
-      )}
+      {discountsContent}
       <AddDiscountDialog
         open={addDiscountDialogIsVisible}
         onClose={() => setAddDiscountDialogIsVisible(false)}

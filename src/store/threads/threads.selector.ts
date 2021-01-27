@@ -7,3 +7,8 @@ export const threadsSelector = createSelector(
   threadsInformationSelector,
   (threadsInfo) => threadsInfo.threads
 );
+
+export const threadsLoadingSelector = createSelector(
+  threadsInformationSelector,
+  (threadsInfo) => threadsInfo.loading
+);
