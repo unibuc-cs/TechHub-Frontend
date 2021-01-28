@@ -43,6 +43,7 @@ function* addDiscount(
       pictures: [...action.payload.pictures],
       pointsCost: action.payload.pointsCost,
       vipStatus: action.payload.vipStatus,
+      isActive: true,
     };
 
     const res: any = yield fetch("http://127.0.0.1:8080/discount", {
@@ -57,6 +58,7 @@ function* addDiscount(
     const newDiscount: Discount = {
       ...data,
       id: res.discountId,
+      isActive: true,
     };
     yield put(setNewDiscount(newDiscount));
   } catch (e) {

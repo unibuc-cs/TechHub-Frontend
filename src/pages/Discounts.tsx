@@ -149,32 +149,39 @@ const Discounts = () => {
     discountsContent = <Spinner />;
   }
 
+  let topPageContent = null;
+  if (userDetails.type === "REGULAR_USER") {
+    topPageContent = (
+      <Paper
+        elevation={3}
+        style={{ width: "15%", backgroundColor: "#228B22", color: "white" }}
+      >
+        <CurrentPointsContainer>
+          <Text>
+            <b>Your points</b>
+          </Text>
+          <Text>{userDetails.currentPoints}</Text>
+        </CurrentPointsContainer>
+      </Paper>
+    );
+  } else if (userDetails.type === "MERCHANT") {
+    topPageContent = (
+      <AddDiscountButtonContainer>
+        <Button
+          variant="contained"
+          style={{ backgroundColor: "#228B22", color: "white" }}
+          onClick={() => setAddDiscountDialogIsVisible(true)}
+        >
+          Add Discount
+        </Button>
+      </AddDiscountButtonContainer>
+    );
+  }
+
   return (
     <Container>
       <Title>Discounts</Title>
-      {userDetails.type === "MERCHANT" ? (
-        <AddDiscountButtonContainer>
-          <Button
-            variant="contained"
-            style={{ backgroundColor: "#228B22", color: "white" }}
-            onClick={() => setAddDiscountDialogIsVisible(true)}
-          >
-            Add Discount
-          </Button>
-        </AddDiscountButtonContainer>
-      ) : (
-        <Paper
-          elevation={3}
-          style={{ width: "15%", backgroundColor: "#228B22", color: "white" }}
-        >
-          <CurrentPointsContainer>
-            <Text>
-              <b>Your points</b>
-            </Text>
-            <Text>{userDetails.currentPoints}</Text>
-          </CurrentPointsContainer>
-        </Paper>
-      )}
+      {topPageContent}
       {discountsContent}
       <AddDiscountDialog
         open={addDiscountDialogIsVisible}

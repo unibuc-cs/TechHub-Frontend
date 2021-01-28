@@ -42,18 +42,20 @@ const DiscountsList: React.FC<{
 }) => {
   return (
     <Container>
-      {discounts.map((discount: Discount) => (
-        <DiscountCard
-          key={discount.id}
-          discount={discount}
-          currentEmail={currentEmail}
-          userType={userType}
-          onDeleteDiscount={onDeleteDiscount}
-          onUnlockDiscount={onUnlockDiscount}
-          currentPoints={currentPoints}
-          userVipStatus={userVipStatus}
-        />
-      ))}
+      {discounts.map((discount: Discount) =>
+        discount.isActive ? (
+          <DiscountCard
+            key={discount.id}
+            discount={discount}
+            currentEmail={currentEmail}
+            userType={userType}
+            onDeleteDiscount={onDeleteDiscount}
+            onUnlockDiscount={onUnlockDiscount}
+            currentPoints={currentPoints}
+            userVipStatus={userVipStatus}
+          />
+        ) : null
+      )}
     </Container>
   );
 };
