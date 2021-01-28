@@ -276,7 +276,8 @@ const HomescreenContent: React.FC<{ type: string; isVip: boolean }> = ({
 
   return (
     <Container>
-      {!activeRaffle.entries.includes(currentUserDetails.email) &&
+      {currentUserDetails.type === "REGULAR_USER" &&
+      !activeRaffle.entries.includes(currentUserDetails.email) &&
       !notificationIsClosed ? (
         <RaffleContainer>
           <NotificationHeader>

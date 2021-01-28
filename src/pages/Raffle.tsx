@@ -133,7 +133,8 @@ const Raffle = () => {
                 <b>Users registered: </b> {activeRaffle.entries.length}
               </DetailsBodyText>
             </DetailsBodyContainer>
-            {!activeRaffle.entries.includes(currentUserDetails.email) ? (
+            {currentUserDetails.type === "REGULAR_USER" &&
+            !activeRaffle.entries.includes(currentUserDetails.email) ? (
               <Button
                 variant="contained"
                 style={{ backgroundColor: registerButtonColor, color: "white" }}
@@ -146,7 +147,11 @@ const Raffle = () => {
               </Button>
             ) : (
               <DetailsBodyText>
-                <b>You are registered in this raffle.</b>
+                <b>
+                  {currentUserDetails.type !== "REGULAR_USER"
+                    ? "Only regular users cans participate."
+                    : "You are registered in this raffle."}
+                </b>
               </DetailsBodyText>
             )}
           </RaffleDetailsContainer>

@@ -253,7 +253,7 @@ const Profile: React.FC<{ onClose: () => void }> = ({ onClose }) => {
             </AchievementArea>
           </Paper>
         </BottomContainerRow>
-        {currentUserDetails.type !== "MODERATOR" ? (
+        {currentUserDetails.type === "REGULAR_USER" ? (
           <Button
             variant="contained"
             color="primary"
