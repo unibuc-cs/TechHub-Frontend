@@ -7,15 +7,12 @@ import {
 } from "./discounts.constants";
 import { setDiscounts, setNewDiscount } from "./discounts.actions";
 
-function* getAllDiscounts(action: ActionWithPayload<{ accessToken: string }>) {
+function* getAllDiscounts() {
   try {
     const discounts: Discount[] = yield fetch(
       "http://127.0.0.1:8080/discount",
       {
         method: "GET",
-        headers: {
-          Authorization: action.payload.accessToken,
-        },
       }
     ).then((res) => res.json());
     yield put(setDiscounts(discounts));

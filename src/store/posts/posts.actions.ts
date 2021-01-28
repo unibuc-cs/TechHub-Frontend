@@ -16,12 +16,10 @@ import {
 import { ActionWithPayload, PostInformation } from "../store";
 
 export const getPostsByThread = (
-  accessToken: string,
   threadId: string
-): ActionWithPayload<{ accessToken: string; threadId: string }> => ({
+): ActionWithPayload<{ threadId: string }> => ({
   type: GET_POSTS_BY_THREAD,
   payload: {
-    accessToken,
     threadId,
   },
 });

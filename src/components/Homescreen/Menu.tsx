@@ -11,6 +11,7 @@ import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import StarIcon from "@material-ui/icons/Star";
 import ReportIcon from "@material-ui/icons/Report";
 import ConfirmationNumberIcon from "@material-ui/icons/ConfirmationNumber";
+import VpnKeyIcon from "@material-ui/icons/VpnKey";
 import ProfileModal from "../UI/ProfileModal";
 import { UserDetails } from "../../store/store";
 
@@ -118,7 +119,10 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
+const Menu: React.FC<{ userDetails?: UserDetails; isAuth: boolean }> = ({
+  userDetails,
+  isAuth,
+}) => {
   const classes = useStyles();
   const dispatch = useDispatch();
   const history = useHistory();
@@ -132,6 +136,79 @@ const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
     history.push("/");
   };
 
+  let vipButton = null;
+  let reportsButton = null;
+  let logoutButton = null;
+  let profileButton = null;
+  let loginButton = null;
+
+  if (isAuth) {
+    // if vip or mod
+    if (userDetails!.vipStatus || userDetails!.type === "MODERATOR") {
+      vipButton = (
+        <AnimatedButtonContainer>
+          <Button
+            variant="contained"
+            style={{
+              backgroundColor: "lime",
+              fontFamily: "Montserrat",
+            }}
+            className={classes.button}
+            startIcon={<StarIcon />}
+            onClick={() => history.push("/homescreen/vip")}
+          >
+            VIP
+          </Button>
+        </AnimatedButtonContainer>
+      );
+    }
+
+    // if mod
+    if (userDetails!.type === "MODERATOR") {
+      reportsButton = (
+        <Button
+          variant="contained"
+          style={{ backgroundColor: "white", fontFamily: "Montserrat" }}
+          className={classes.button}
+          startIcon={<ReportIcon />}
+          onClick={() => history.push("/homescreen/reports")}
+        >
+          Reports
+        </Button>
+      );
+    }
+
+    logoutButton = (
+      <Button
+        variant="contained"
+        style={{ backgroundColor: "white", fontFamily: "Montserrat" }}
+        className={classes.button}
+        startIcon={<ExitToAppIcon />}
+        onClick={onLogoutButtonClickedHandler}
+      >
+        Logout
+      </Button>
+    );
+
+    profileButton = (
+      <IconButton color="inherit" onClick={() => setProfileModalIsOpen(true)}>
+        <AccountCircle style={{ color: "white" }} />
+      </IconButton>
+    );
+  } else {
+    loginButton = (
+      <Button
+        variant="contained"
+        style={{ backgroundColor: "white", fontFamily: "Montserrat" }}
+        className={classes.button}
+        startIcon={<VpnKeyIcon />}
+        onClick={() => history.push("/")}
+      >
+        Sign In
+      </Button>
+    );
+  }
+
   return (
     <div className={classes.root}>
       <AppBar position="static" style={{ backgroundColor: "#231f20" }}>
@@ -142,33 +219,8 @@ const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
               onClick={() => history.push("/homescreen")}
             />
             <RightSideContainer>
-              {userDetails.vipStatus || userDetails.type === "MODERATOR" ? (
-                <AnimatedButtonContainer>
-                  <Button
-                    variant="contained"
-                    style={{
-                      backgroundColor: "lime",
-                      fontFamily: "Montserrat",
-                    }}
-                    className={classes.button}
-                    startIcon={<StarIcon />}
-                    onClick={() => history.push("/homescreen/vip")}
-                  >
-                    VIP
-                  </Button>
-                </AnimatedButtonContainer>
-              ) : null}
-              {userDetails.type === "MODERATOR" ? (
-                <Button
-                  variant="contained"
-                  style={{ backgroundColor: "white", fontFamily: "Montserrat" }}
-                  className={classes.button}
-                  startIcon={<ReportIcon />}
-                  onClick={() => history.push("/homescreen/reports")}
-                >
-                  Reports
-                </Button>
-              ) : null}
+              {vipButton}
+              {reportsButton}
               <Button
                 variant="contained"
                 style={{ backgroundColor: "white", fontFamily: "Montserrat" }}
@@ -196,21 +248,9 @@ const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
               >
                 Discounts
               </Button>
-              <Button
-                variant="contained"
-                style={{ backgroundColor: "white", fontFamily: "Montserrat" }}
-                className={classes.button}
-                startIcon={<ExitToAppIcon />}
-                onClick={onLogoutButtonClickedHandler}
-              >
-                Logout
-              </Button>
-              <IconButton
-                color="inherit"
-                onClick={() => setProfileModalIsOpen(true)}
-              >
-                <AccountCircle style={{ color: "white" }} />
-              </IconButton>
+              {logoutButton}
+              {profileButton}
+              {loginButton}
             </RightSideContainer>
           </ToolbarContainer>
         </Toolbar>

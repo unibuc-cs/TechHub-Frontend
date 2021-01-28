@@ -164,16 +164,14 @@ const HomescreenContent: React.FC<{ type: string; isVip: boolean }> = ({
 
   useEffect(() => {
     if (type === "categories") {
-      dispatch(getCategories(accessToken));
+      dispatch(getCategories());
     } else {
       if (isVip) {
         dispatch(
           getVipThreadsByCategory(accessToken, (location.state as any).category)
         );
       } else {
-        dispatch(
-          getThreadsByCategory(accessToken, (location.state as any).category)
-        );
+        dispatch(getThreadsByCategory((location.state as any).category));
       }
     }
   }, [type, isVip]);
@@ -187,9 +185,7 @@ const HomescreenContent: React.FC<{ type: string; isVip: boolean }> = ({
             (location.state as any).category
           );
         } else {
-          dispatch(
-            getThreadsByCategory(accessToken, (location.state as any).category)
-          );
+          dispatch(getThreadsByCategory((location.state as any).category));
         }
       } else {
         if (isVip) {
@@ -208,11 +204,7 @@ const HomescreenContent: React.FC<{ type: string; isVip: boolean }> = ({
           setTimeout(
             () =>
               dispatch(
-                searchThreads(
-                  accessToken,
-                  searchInput,
-                  (location.state as any).category
-                )
+                searchThreads(searchInput, (location.state as any).category)
               ),
             1000
           );
@@ -333,7 +325,7 @@ const HomescreenContent: React.FC<{ type: string; isVip: boolean }> = ({
             </FormControl>
           </SearchBarContainer>
         ) : null}
-        {type === "threads" ? (
+        {type === "threads" && accessToken !== "" ? (
           <ButtonContainer>
             <Button
               variant="contained"

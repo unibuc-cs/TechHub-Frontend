@@ -2,7 +2,6 @@ import { takeEvery, put } from "redux-saga/effects";
 import { ActionWithPayload, ThreadInformation, UserDetails } from "../store";
 import {
   ADD_THREAD,
-  GET_ALL_THREADS,
   GET_THREADS_BY_CATEGORY,
   SEARCH_THREADS,
   GET_VIP_THREADS_BY_CATEGORY,
@@ -12,23 +11,6 @@ import {
 } from "./threads.constants";
 import { setThreads, setNewThread } from "./threads.actions";
 import { setCurrentThreadIsLocked } from "../posts/posts.actions";
-
-function* getAllThreads(action: ActionWithPayload<{ accessToken: string }>) {
-  try {
-    const threads: ThreadInformation[] = yield fetch(
-      "http://127.0.0.1:8080/thread",
-      {
-        method: "GET",
-        headers: {
-          Authorization: action.payload.accessToken,
-        },
-      }
-    ).then((res) => res.json());
-    // yield put(setCategories(categoriesInfo));
-  } catch (e) {
-    console.warn(e);
-  }
-}
 
 function* addNewThread(
   action: ActionWithPayload<{
@@ -62,7 +44,7 @@ function* addNewThread(
 }
 
 function* getThreadsByCategory(
-  action: ActionWithPayload<{ accessToken: string; category: string }>
+  action: ActionWithPayload<{ category: string }>
 ) {
   try {
     const finalThreads: ThreadInformation[] = [];
@@ -70,9 +52,6 @@ function* getThreadsByCategory(
       `http://127.0.0.1:8080/thread/categories/${action.payload.category}`,
       {
         method: "GET",
-        headers: {
-          Authorization: action.payload.accessToken,
-        },
       }
     ).then((res) => res.json());
 
@@ -81,9 +60,6 @@ function* getThreadsByCategory(
         `http://127.0.0.1:8080/user/${initialThreads[index].ownerEmail}`,
         {
           method: "GET",
-          headers: {
-            Authorization: action.payload.accessToken,
-          },
         }
       ).then((res) => res.json());
 
@@ -103,7 +79,6 @@ function* getThreadsByCategory(
 
 function* searchThreads(
   action: ActionWithPayload<{
-    accessToken: string;
     searchInput: string;
     category: string;
   }>
@@ -114,9 +89,6 @@ function* searchThreads(
       `http://127.0.0.1:8080/thread/title/${action.payload.searchInput.trim()}`,
       {
         method: "GET",
-        headers: {
-          Authorization: action.payload.accessToken,
-        },
       }
     ).then((res) => res.json());
     const filteredThreads = initialThreads.filter(
@@ -128,9 +100,6 @@ function* searchThreads(
         `http://127.0.0.1:8080/user/${filteredThreads[index].ownerEmail}`,
         {
           method: "GET",
-          headers: {
-            Authorization: action.payload.accessToken,
-          },
         }
       ).then((res) => res.json());
 
@@ -293,7 +262,6 @@ function* lockThread(
 }
 
 export default function* threadsSaga() {
-  yield takeEvery(GET_ALL_THREADS, getAllThreads);
   yield takeEvery(GET_THREADS_BY_CATEGORY, getThreadsByCategory);
   yield takeEvery(ADD_THREAD, addNewThread);
   yield takeEvery(SEARCH_THREADS, searchThreads);

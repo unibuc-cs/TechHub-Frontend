@@ -2,7 +2,6 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
-import { accessTokenSelector } from "../store/user/user.selector";
 import { topUsersSelector } from "../store/leaderboard/leaderboard.selector";
 import { getLeaderboardUsers } from "../store/leaderboard/leaderboard.actions";
 import LeaderboardTable from "../components/Leaderboard/LeaderboardTable";
@@ -30,11 +29,10 @@ const TitleContainer = styled.div`
 
 const Leaderboard = () => {
   const dispatch = useDispatch();
-  const accessToken = useSelector(accessTokenSelector);
   const topUsers = useSelector(topUsersSelector);
 
   useEffect(() => {
-    dispatch(getLeaderboardUsers(accessToken, 10));
+    dispatch(getLeaderboardUsers(10));
   }, []);
 
   return (

@@ -5,12 +5,10 @@ import {
 import { ActionWithPayload, UserDetails } from "../store";
 
 export const getLeaderboardUsers = (
-  accessToken: string,
   numberOfUsers: number
-): ActionWithPayload<{ accessToken: string; numberOfUsers: number }> => ({
+): ActionWithPayload<{ numberOfUsers: number }> => ({
   type: GET_LEADERBOARD_USERS,
   payload: {
-    accessToken,
     numberOfUsers,
   },
 });

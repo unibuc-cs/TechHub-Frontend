@@ -72,7 +72,7 @@ const Discounts = () => {
   const [displayedDiscounts, setDisplayedDiscounts] = useState<Discount[]>([]);
 
   useEffect(() => {
-    dispatch(getAllDiscounts(accessToken));
+    dispatch(getAllDiscounts());
   }, []);
 
   useEffect(() => {

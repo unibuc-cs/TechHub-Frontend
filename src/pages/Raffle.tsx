@@ -79,7 +79,7 @@ const Raffle = () => {
   };
 
   useEffect(() => {
-    dispatch(getActiveRaffle(accessToken));
+    dispatch(getActiveRaffle());
   }, []);
 
   const activeRaffleCreatedDate = moment.unix(activeRaffle.createTime.seconds);
@@ -90,6 +90,19 @@ const Raffle = () => {
     registerButtonColor = "salmon";
   } else {
     registerButtonColor = "#228B22";
+  }
+
+  let message = null;
+  if (accessToken === "") {
+    message = "You must login to participate.";
+  } else {
+    if (activeRaffle.entries.includes(currentUserDetails.email)) {
+      message = "You are registered in this raffle.";
+    } else {
+      if (currentUserDetails.type !== "REGULAR_USER") {
+        message = "Only regular users can participate.";
+      }
+    }
   }
 
   return (
@@ -147,11 +160,7 @@ const Raffle = () => {
               </Button>
             ) : (
               <DetailsBodyText>
-                <b>
-                  {currentUserDetails.type !== "REGULAR_USER"
-                    ? "Only regular users cans participate."
-                    : "You are registered in this raffle."}
-                </b>
+                <b>{message}</b>
               </DetailsBodyText>
             )}
           </RaffleDetailsContainer>

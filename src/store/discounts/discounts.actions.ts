@@ -1,3 +1,4 @@
+import { Action } from "redux";
 import { ActionWithPayload, Discount } from "../store";
 import {
   GET_DISCOUNTS,
@@ -7,13 +8,8 @@ import {
   DELETE_DISCOUNT,
 } from "./discounts.constants";
 
-export const getAllDiscounts = (
-  accessToken: string
-): ActionWithPayload<{ accessToken: string }> => ({
+export const getAllDiscounts = (): Action => ({
   type: GET_DISCOUNTS,
-  payload: {
-    accessToken,
-  },
 });
 
 export const setDiscounts = (

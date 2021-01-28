@@ -4,16 +4,13 @@ import { GET_LEADERBOARD_USERS } from "./leaderboard.constants";
 import { setLeaderboardUsers } from "./leaderboard.actions";
 
 function* getLeaderboardUsers(
-  action: ActionWithPayload<{ accessToken: string; numberOfUsers: number }>
+  action: ActionWithPayload<{ numberOfUsers: number }>
 ) {
   try {
     const threads: UserDetails[] = yield fetch(
       `http://127.0.0.1:8080/user/sortByScore/${action.payload.numberOfUsers}`,
       {
         method: "GET",
-        headers: {
-          Authorization: action.payload.accessToken,
-        },
       }
     ).then((res) => res.json());
     yield put(setLeaderboardUsers(threads));

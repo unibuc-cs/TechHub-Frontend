@@ -9,13 +9,8 @@ import {
 import { ActionWithPayload, Raffle } from "../store";
 import { Action } from "redux";
 
-export const getActiveRaffle = (
-  accessToken: string
-): ActionWithPayload<{ accessToken: string }> => ({
+export const getActiveRaffle = (): Action => ({
   type: GET_ACTIVE_RAFFLE,
-  payload: {
-    accessToken,
-  },
 });
 
 export const setActiveRaffle = (
@@ -27,13 +22,8 @@ export const setActiveRaffle = (
   },
 });
 
-export const getPreviousRaffle = (
-  accessToken: string
-): ActionWithPayload<{ accessToken: string }> => ({
+export const getPreviousRaffle = (): Action => ({
   type: GET_PREVIOUS_RAFFLE,
-  payload: {
-    accessToken,
-  },
 });
 
 export const setPreviousRaffle = (
