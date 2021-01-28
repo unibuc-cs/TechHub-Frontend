@@ -2,12 +2,20 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Paper from "@material-ui/core/Paper";
+import {
+  FormControl,
+  InputLabel,
+  OutlinedInput,
+  InputAdornment,
+} from "@material-ui/core";
+import SearchIcon from "@material-ui/icons/Search";
 
 import { userDetailsSelector } from "../store/userDetails/userDetails.selector";
 import {
   getAllDiscounts,
   addDiscount,
   deleteDiscount,
+  searchDiscounts,
 } from "../store/discounts/discounts.actions";
 import { addPurchasedDiscount } from "../store/purchasedDiscounts/purchasedDiscounts.actions";
 import {
@@ -55,6 +63,11 @@ const Text = styled.p`
   font-family: "Montserrat", sans-serif;
 `;
 
+const SearchBarContainer = styled.div`
+  padding: 8px 0;
+  width: 50%;
+`;
+
 const Discounts = () => {
   const dispatch = useDispatch();
 
@@ -68,8 +81,13 @@ const Discounts = () => {
     addDiscountDialogIsVisible,
     setAddDiscountDialogIsVisible,
   ] = useState<boolean>(false);
+  const [searchInput, setSearchInput] = useState<string>("");
 
   const [displayedDiscounts, setDisplayedDiscounts] = useState<Discount[]>([]);
+
+  const onSearchInputChangedHandler = (e: any) => {
+    setSearchInput(e.target.value);
+  };
 
   useEffect(() => {
     dispatch(getAllDiscounts());
@@ -87,6 +105,17 @@ const Discounts = () => {
       setDisplayedDiscounts(unownedDiscounts);
     }
   }, [discounts, purchasedDiscounts]);
+
+  useEffect(() => {
+    if (searchInput === "") {
+      dispatch(getAllDiscounts());
+    } else {
+      setTimeout(
+        () => dispatch(searchDiscounts(accessToken, searchInput)),
+        1000
+      );
+    }
+  }, [searchInput]);
 
   const onAddDiscount = (
     title: string,
@@ -178,10 +207,33 @@ const Discounts = () => {
     );
   }
 
+  let searchBar = null;
+  if (accessToken !== "") {
+    searchBar = (
+      <SearchBarContainer>
+        <FormControl fullWidth variant="outlined">
+          <InputLabel color="secondary">Search</InputLabel>
+          <OutlinedInput
+            color="secondary"
+            onChange={onSearchInputChangedHandler}
+            startAdornment={
+              <InputAdornment position="start">
+                <SearchIcon />
+              </InputAdornment>
+            }
+            labelWidth={60}
+            placeholder="Search..."
+          />
+        </FormControl>
+      </SearchBarContainer>
+    );
+  }
+
   return (
     <Container>
       <Title>Discounts</Title>
       {topPageContent}
+      {searchBar}
       {discountsContent}
       <AddDiscountDialog
         open={addDiscountDialogIsVisible}

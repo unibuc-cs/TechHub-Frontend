@@ -6,7 +6,7 @@ import DiscountCard from "./DiscountCard";
 const Container = styled.div`
   margin-top: 8px;
   width: 50%;
-  height: 49vh;
+  height: 50vh;
   padding: 8px;
   overflow-y: scroll;
   ::-webkit-scrollbar {

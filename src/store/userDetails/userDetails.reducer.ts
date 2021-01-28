@@ -8,6 +8,7 @@ import {
   CHANGE_PROFILE_PICTURE,
   BAN_USER,
 } from "./userDetails.constants";
+import { USER_LOGOUT } from "../user/user.constants";
 
 const initialState: UserDetailsStateInformation = {
   details: {
@@ -54,6 +55,23 @@ const userDetailsReducer = (
         details: {
           ...state.details,
           accountStatus: "banned",
+        },
+      };
+    case USER_LOGOUT:
+      return {
+        ...state,
+        details: {
+          accountStatus: "",
+          currentPoints: 0,
+          email: "",
+          password: "",
+          profilePicture: "",
+          totalPoints: 0,
+          type: "",
+          username: "",
+          vipStatus: false,
+          trophies: 0,
+          rafflesWon: 0,
         },
       };
     default:

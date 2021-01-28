@@ -8,6 +8,7 @@ import {
   SET_DISCOUNTS,
   SET_NEW_DISCOUNT,
   DELETE_DISCOUNT,
+  SEARCH_DISCOUNTS,
 } from "./discounts.constants";
 
 const initialState: DiscountsStateInformation = {
@@ -21,6 +22,11 @@ const discountsReducer = (
 ) => {
   switch (action.type) {
     case GET_DISCOUNTS:
+      return {
+        ...state,
+        loading: true,
+      };
+    case SEARCH_DISCOUNTS:
       return {
         ...state,
         loading: true,

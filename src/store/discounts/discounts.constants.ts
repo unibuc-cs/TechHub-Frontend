@@ -7,3 +7,4 @@ export const GET_PURCHASED_DISCOUNTS_BY_USER =
   "discounts/get-purchased-discounts-by-user";
 export const SET_PURCHASED_DISCOUNTS = "discounts/set-purchased-discounts";
 export const ADD_PURCHASED_DISCOUNT = "discounts/add-purchased-discount";
+export const SEARCH_DISCOUNTS = "discounts/seach-discounts";
