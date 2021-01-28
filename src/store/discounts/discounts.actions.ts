@@ -6,6 +6,7 @@ import {
   ADD_DISCOUNT,
   SET_NEW_DISCOUNT,
   DELETE_DISCOUNT,
+  SEARCH_DISCOUNTS,
 } from "./discounts.constants";
 
 export const getAllDiscounts = (): Action => ({
@@ -67,5 +68,16 @@ export const deleteDiscount = (
   payload: {
     accessToken,
     id,
+  },
+});
+
+export const searchDiscounts = (
+  accessToken: string,
+  searchInput: string
+): ActionWithPayload<{ accessToken: string; searchInput: string }> => ({
+  type: SEARCH_DISCOUNTS,
+  payload: {
+    accessToken,
+    searchInput,
   },
 });

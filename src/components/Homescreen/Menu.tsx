@@ -150,7 +150,7 @@ const Menu: React.FC<{ userDetails?: UserDetails; isAuth: boolean }> = ({
           <Button
             variant="contained"
             style={{
-              backgroundColor: "lime",
+              backgroundColor: "yellow",
               fontFamily: "Montserrat",
             }}
             className={classes.button}

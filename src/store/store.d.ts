@@ -76,6 +76,7 @@ export interface PurchasedDiscount {
   pointsSpent: number;
   discount: Discount;
   datePurchased: string;
+  code: string;
 }
 
 export interface Report {

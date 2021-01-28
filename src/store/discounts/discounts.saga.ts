@@ -4,6 +4,7 @@ import {
   GET_DISCOUNTS,
   ADD_DISCOUNT,
   DELETE_DISCOUNT,
+  SEARCH_DISCOUNTS,
 } from "./discounts.constants";
 import { setDiscounts, setNewDiscount } from "./discounts.actions";
 
@@ -83,8 +84,29 @@ function* deleteDiscountSaga(
   }
 }
 
+function* searchDiscounts(
+  action: ActionWithPayload<{ accessToken: string; searchInput: string }>
+) {
+  try {
+    const discounts: Discount[] = yield fetch(
+      `http://127.0.0.1:8080/discount/search/${action.payload.searchInput.trim()}`,
+      {
+        method: "GET",
+        headers: {
+          Authorization: action.payload.accessToken,
+          "Content-Type": "application/json",
+        },
+      }
+    ).then((res) => res.json());
+    yield put(setDiscounts(discounts));
+  } catch (e) {
+    console.warn(e);
+  }
+}
+
 export default function* discountsSaga() {
   yield takeEvery(GET_DISCOUNTS, getAllDiscounts);
   yield takeEvery(ADD_DISCOUNT, addDiscount);
   yield takeEvery(DELETE_DISCOUNT, deleteDiscountSaga);
+  yield takeEvery(SEARCH_DISCOUNTS, searchDiscounts);
 }
