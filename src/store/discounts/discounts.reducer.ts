@@ -46,12 +46,20 @@ const discountsReducer = (
     case DELETE_DISCOUNT:
       return {
         ...state,
-        discounts: state.discounts.filter(
-          (discount: Discount) =>
-            discount.id !==
+        discounts: state.discounts.map((discount: Discount) => {
+          if (
+            discount.id ===
             (action as ActionWithPayload<{ accessToken: string; id: string }>)
               .payload.id
-        ),
+          ) {
+            return {
+              ...discount,
+              isActive: false,
+            };
+          } else {
+            return discount;
+          }
+        }),
       };
     default:
       return state;
