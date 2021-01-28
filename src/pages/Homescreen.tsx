@@ -57,17 +57,19 @@ const Homescreen = () => {
   const userDetails = useSelector(userDetailsSelector);
 
   useEffect(() => {
-    dispatch(getUserDetailsByEmail(accessToken, currentEmail));
-    dispatch(getActiveRaffle(accessToken));
-    dispatch(getPreviousRaffle(accessToken));
-    dispatch(getPurchasedDiscountsByUser(accessToken, currentEmail));
-    dispatch(getReportTypes(accessToken));
+    if (accessToken !== "") {
+      dispatch(getUserDetailsByEmail(accessToken, currentEmail));
+      dispatch(getActiveRaffle());
+      dispatch(getPreviousRaffle());
+      dispatch(getPurchasedDiscountsByUser(accessToken, currentEmail));
+      dispatch(getReportTypes(accessToken));
+    }
   }, []);
 
   return (
     <Container>
       <MenuContainer>
-        <Menu userDetails={userDetails} />
+        <Menu isAuth={accessToken !== ""} userDetails={userDetails} />
       </MenuContainer>
       <Switch>
         <Route exact path={`${path}/raffle`}>

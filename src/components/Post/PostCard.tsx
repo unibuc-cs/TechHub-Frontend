@@ -210,6 +210,7 @@ const PostCard: React.FC<{
     postId?: string
   ) => void;
   onBanUser: (email: string) => void;
+  isAuth: boolean;
 }> = ({
   postInfo,
   onAddUpvote,
@@ -226,13 +227,14 @@ const PostCard: React.FC<{
   reportTypes,
   onSubmitReportHandler,
   onBanUser,
+  isAuth,
 }) => {
   const [upvoteArrowColor, setUpvoteArrowColor] = useState<
-    "inherit" | "primary"
+    "inherit" | "primary" | "disabled"
   >("inherit");
 
   const [downvoteArrowColor, setDownvoteArrowColor] = useState<
-    "inherit" | "secondary"
+    "inherit" | "secondary" | "disabled"
   >("inherit");
 
   const [editModalIsOpen, setEditModalIsOpen] = useState<boolean>(false);
@@ -252,91 +254,102 @@ const PostCard: React.FC<{
   );
 
   useEffect(() => {
-    if (postInfo.upvotes.includes(currentEmail)) {
-      setUpvoteArrowColor("primary");
-    }
-    if (postInfo.downvotes.includes(currentEmail)) {
-      setDownvoteArrowColor("secondary");
+    if (isAuth) {
+      if (postInfo.upvotes.includes(currentEmail)) {
+        setUpvoteArrowColor("primary");
+      }
+      if (postInfo.downvotes.includes(currentEmail)) {
+        setDownvoteArrowColor("secondary");
+      }
+    } else {
+      setUpvoteArrowColor("disabled");
+      setDownvoteArrowColor("disabled");
     }
   }, []);
 
   const onUpvoteClicked = () => {
-    if (!postInfo.upvotes.includes(currentEmail)) {
-      // Not upvoted
-      setUpvoteArrowColor("primary");
-      setDownvoteArrowColor("inherit");
+    if (isAuth) {
+      if (!postInfo.upvotes.includes(currentEmail)) {
+        // Not upvoted
+        setUpvoteArrowColor("primary");
+        setDownvoteArrowColor("inherit");
 
-      if (postInfo.downvotes.includes(currentEmail)) {
-        //if we upvote and the post is downvoted, remove the downvote
-        onRemoveDownvote(postInfo);
+        if (postInfo.downvotes.includes(currentEmail)) {
+          //if we upvote and the post is downvoted, remove the downvote
+          onRemoveDownvote(postInfo);
+        }
+        onAddUpvote(postInfo);
+      } else {
+        setUpvoteArrowColor("inherit");
+        onRemoveUpvote(postInfo);
       }
-      onAddUpvote(postInfo);
-    } else {
-      setUpvoteArrowColor("inherit");
-      onRemoveUpvote(postInfo);
     }
   };
 
   const onDownvoteClicked = () => {
-    if (!postInfo.downvotes.includes(currentEmail)) {
-      // Not downvoted
-      setDownvoteArrowColor("secondary");
-      setUpvoteArrowColor("inherit");
+    if (isAuth) {
+      if (!postInfo.downvotes.includes(currentEmail)) {
+        // Not downvoted
+        setDownvoteArrowColor("secondary");
+        setUpvoteArrowColor("inherit");
 
-      if (postInfo.upvotes.includes(currentEmail)) {
-        //if we downvote and the post is upvoted, remove the upvote
-        onRemoveUpvote(postInfo);
+        if (postInfo.upvotes.includes(currentEmail)) {
+          //if we downvote and the post is upvoted, remove the upvote
+          onRemoveUpvote(postInfo);
+        }
+        onAddDownvote(postInfo);
+      } else {
+        setDownvoteArrowColor("inherit");
+        onRemoveDownvote(postInfo);
       }
-      onAddDownvote(postInfo);
-    } else {
-      setDownvoteArrowColor("inherit");
-      onRemoveDownvote(postInfo);
     }
   };
 
   let postActions = null;
 
-  if (currentEmail === postInfo.userEmail) {
-    postActions = (
-      <PostEditRemoveButtonsContainer>
-        <Tooltip arrow title="Edit your post">
-          <IconButton onClick={() => setEditModalIsOpen(true)}>
-            <EditIcon />
-          </IconButton>
-        </Tooltip>
-        <Tooltip arrow title="Delete your post">
-          <IconButton onClick={() => setDeleteModalIsOpen(true)}>
-            <DeleteIcon color="secondary" />
-          </IconButton>
-        </Tooltip>
-      </PostEditRemoveButtonsContainer>
-    );
-  } else {
-    if (currentUserType === "MODERATOR") {
+  if (isAuth) {
+    if (currentEmail === postInfo.userEmail) {
       postActions = (
         <PostEditRemoveButtonsContainer>
-          <Tooltip arrow title="Delete this post">
+          <Tooltip arrow title="Edit your post">
+            <IconButton onClick={() => setEditModalIsOpen(true)}>
+              <EditIcon />
+            </IconButton>
+          </Tooltip>
+          <Tooltip arrow title="Delete your post">
             <IconButton onClick={() => setDeleteModalIsOpen(true)}>
               <DeleteIcon color="secondary" />
             </IconButton>
           </Tooltip>
-          {postInfo.accountStatus !== "banned" ? (
-            <Tooltip arrow title="Ban this user">
-              <IconButton onClick={() => setBanUserDialogIsVisible(true)}>
-                <BlockIcon color="secondary" />
-              </IconButton>
-            </Tooltip>
-          ) : null}
         </PostEditRemoveButtonsContainer>
       );
     } else {
-      postActions = (
-        <Tooltip arrow title="Report this post">
-          <IconButton onClick={() => setReportPostModalIsOpen(true)}>
-            <ReportIcon />
-          </IconButton>
-        </Tooltip>
-      );
+      if (currentUserType === "MODERATOR") {
+        postActions = (
+          <PostEditRemoveButtonsContainer>
+            <Tooltip arrow title="Delete this post">
+              <IconButton onClick={() => setDeleteModalIsOpen(true)}>
+                <DeleteIcon color="secondary" />
+              </IconButton>
+            </Tooltip>
+            {postInfo.accountStatus !== "banned" ? (
+              <Tooltip arrow title="Ban this user">
+                <IconButton onClick={() => setBanUserDialogIsVisible(true)}>
+                  <BlockIcon color="secondary" />
+                </IconButton>
+              </Tooltip>
+            ) : null}
+          </PostEditRemoveButtonsContainer>
+        );
+      } else {
+        postActions = (
+          <Tooltip arrow title="Report this post">
+            <IconButton onClick={() => setReportPostModalIsOpen(true)}>
+              <ReportIcon />
+            </IconButton>
+          </Tooltip>
+        );
+      }
     }
   }
 
@@ -402,17 +415,37 @@ const PostCard: React.FC<{
           </MiddleContainer>
           <RightContainer>
             <VotingContainer>
-              <UpArrowContainer onClick={onUpvoteClicked}>
-                <NavigationIcon fontSize="large" color={upvoteArrowColor} />
-              </UpArrowContainer>
+              <Tooltip
+                arrow
+                placement="top"
+                title={
+                  isAuth
+                    ? "Upvote this post"
+                    : "You need to be logged in to upvote"
+                }
+              >
+                <UpArrowContainer onClick={onUpvoteClicked}>
+                  <NavigationIcon fontSize="large" color={upvoteArrowColor} />
+                </UpArrowContainer>
+              </Tooltip>
               <VotesCountContainer>
                 <VotesCount>
                   {postInfo.upvotes.length - postInfo.downvotes.length}
                 </VotesCount>
               </VotesCountContainer>
-              <DownArrowContainer onClick={onDownvoteClicked}>
-                <NavigationIcon fontSize="large" color={downvoteArrowColor} />
-              </DownArrowContainer>
+              <Tooltip
+                arrow
+                placement="bottom"
+                title={
+                  isAuth
+                    ? "Upvote this post"
+                    : "You need to be logged in to downvote"
+                }
+              >
+                <DownArrowContainer onClick={onDownvoteClicked}>
+                  <NavigationIcon fontSize="large" color={downvoteArrowColor} />
+                </DownArrowContainer>
+              </Tooltip>
             </VotingContainer>
           </RightContainer>
         </ContentContainer>

@@ -1,13 +1,9 @@
+import { Action } from "redux";
 import { ActionWithPayload, CategoryCard } from "../store";
 import { GET_CATEGORIES, SET_CATEGORIES } from "./categories.constants";
 
-export const getCategories = (
-  accessToken: string
-): ActionWithPayload<{ accessToken: string }> => ({
+export const getCategories = (): Action => ({
   type: GET_CATEGORIES,
-  payload: {
-    accessToken,
-  },
 });
 
 export const setCategories = (

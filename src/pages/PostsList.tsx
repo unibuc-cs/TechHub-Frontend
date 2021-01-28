@@ -351,57 +351,58 @@ const PostsList = () => {
   };
 
   useEffect(() => {
-    dispatch(
-      getPostsByThread(
-        accessToken,
-        (location.state as any).threadInformation.id
-      )
-    );
+    dispatch(getPostsByThread((location.state as any).threadInformation.id));
   }, []);
 
   let threadActions = null;
 
-  if ((location.state as any).threadInformation.ownerEmail !== currentEmail) {
-    if (currentUserDetails.type !== "MODERATOR") {
-      threadActions = (
-        <Tooltip
-          arrow
-          title="Report this thread"
-          style={{ marginLeft: "-8px" }}
-        >
-          <IconButton onClick={() => setReportPostModalIsOpen(true)}>
-            <ReportIcon />
-          </IconButton>
-        </Tooltip>
-      );
+  if (accessToken !== "") {
+    if ((location.state as any).threadInformation.ownerEmail !== currentEmail) {
+      if (currentUserDetails.type !== "MODERATOR") {
+        threadActions = (
+          <Tooltip
+            arrow
+            title="Report this thread"
+            style={{ marginLeft: "-8px" }}
+          >
+            <IconButton onClick={() => setReportPostModalIsOpen(true)}>
+              <ReportIcon />
+            </IconButton>
+          </Tooltip>
+        );
+      } else {
+        threadActions = (
+          <ThreadActionButtonsContainer>
+            <Tooltip arrow title="Lock this thread">
+              <IconButton onClick={() => setLockThreadDialogIsVisible(true)}>
+                <LockIcon color="secondary" />
+              </IconButton>
+            </Tooltip>
+            {(location.state as any).threadInformation.accountStatus !==
+            "banned" ? (
+              <Tooltip arrow title="Ban this user">
+                <IconButton onClick={() => setBanUserDialogIsVisible(true)}>
+                  <BlockIcon color="secondary" />
+                </IconButton>
+              </Tooltip>
+            ) : null}
+          </ThreadActionButtonsContainer>
+        );
+      }
     } else {
-      threadActions = (
-        <ThreadActionButtonsContainer>
-          <Tooltip arrow title="Lock this thread">
+      if (currentUserDetails.type !== "MODERATOR") {
+        threadActions = (
+          <Tooltip
+            arrow
+            title="Lock this thread"
+            style={{ marginLeft: "-8px" }}
+          >
             <IconButton onClick={() => setLockThreadDialogIsVisible(true)}>
               <LockIcon color="secondary" />
             </IconButton>
           </Tooltip>
-          {(location.state as any).threadInformation.accountStatus !==
-          "banned" ? (
-            <Tooltip arrow title="Ban this user">
-              <IconButton onClick={() => setBanUserDialogIsVisible(true)}>
-                <BlockIcon color="secondary" />
-              </IconButton>
-            </Tooltip>
-          ) : null}
-        </ThreadActionButtonsContainer>
-      );
-    }
-  } else {
-    if (currentUserDetails.type !== "MODERATOR") {
-      threadActions = (
-        <Tooltip arrow title="Lock this thread" style={{ marginLeft: "-8px" }}>
-          <IconButton onClick={() => setLockThreadDialogIsVisible(true)}>
-            <LockIcon color="secondary" />
-          </IconButton>
-        </Tooltip>
-      );
+        );
+      }
     }
   }
 
@@ -429,6 +430,7 @@ const PostsList = () => {
           reportTypes={reportTypes}
           onSubmitReportHandler={onSubmitReportClickedHandler}
           onBanUser={onBanUser}
+          isAuth={accessToken !== ""}
         />
       ));
     } else {
@@ -527,7 +529,7 @@ const PostsList = () => {
         </Paper>
       </PostTitleContainer>
       <PostsListsContainer>{postsContent}</PostsListsContainer>
-      {!threadIsLocked ? (
+      {accessToken !== "" && !threadIsLocked ? (
         <CreatePostContainer>
           <TextField
             placeholder="Say something..."

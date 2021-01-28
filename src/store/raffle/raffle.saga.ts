@@ -7,13 +7,10 @@ import {
 } from "./raffle.constants";
 import { setActiveRaffle, setPreviousRaffle } from "./raffle.actions";
 
-function* getActiveRaffle(action: ActionWithPayload<{ accessToken: string }>) {
+function* getActiveRaffle() {
   try {
     const raffle: Raffle = yield fetch("http://127.0.0.1:8080/raffle/active", {
       method: "GET",
-      headers: {
-        Authorization: action.payload.accessToken,
-      },
     }).then((res) => res.json());
     yield put(setActiveRaffle(raffle));
   } catch (e) {
@@ -21,17 +18,12 @@ function* getActiveRaffle(action: ActionWithPayload<{ accessToken: string }>) {
   }
 }
 
-function* getPreviousRaffle(
-  action: ActionWithPayload<{ accessToken: string }>
-) {
+function* getPreviousRaffle() {
   try {
     const raffle: Raffle = yield fetch(
       "http://127.0.0.1:8080/raffle/previous",
       {
         method: "GET",
-        headers: {
-          Authorization: action.payload.accessToken,
-        },
       }
     ).then((res) => res.json());
     yield put(setPreviousRaffle(raffle));

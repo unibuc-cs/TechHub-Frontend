@@ -1,6 +1,5 @@
 import { ThreadInformation, ActionWithPayload } from "../store";
 import {
-  GET_ALL_THREADS,
   GET_THREADS_BY_CATEGORY,
   SET_THREADS,
   ADD_THREAD,
@@ -12,22 +11,11 @@ import {
   LOCK_THREAD,
 } from "./threads.constants";
 
-export const getAllThreads = (
-  accessToken: string
-): ActionWithPayload<{ accessToken: string }> => ({
-  type: GET_ALL_THREADS,
-  payload: {
-    accessToken,
-  },
-});
-
 export const getThreadsByCategory = (
-  accessToken: string,
   category: string
-): ActionWithPayload<{ accessToken: string; category: string }> => ({
+): ActionWithPayload<{ category: string }> => ({
   type: GET_THREADS_BY_CATEGORY,
   payload: {
-    accessToken,
     category,
   },
 });
@@ -63,17 +51,14 @@ export const setNewThread = (newThread: ThreadInformation) => ({
 });
 
 export const searchThreads = (
-  accessToken: string,
   searchInput: string,
   category: string
 ): ActionWithPayload<{
-  accessToken: string;
   searchInput: string;
   category: string;
 }> => ({
   type: SEARCH_THREADS,
   payload: {
-    accessToken,
     searchInput,
     category,
   },

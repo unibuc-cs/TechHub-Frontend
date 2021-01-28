@@ -23,18 +23,13 @@ import {
   setCurrentThreadIsLocked,
 } from "./posts.actions";
 
-function* getPostsByThread(
-  action: ActionWithPayload<{ accessToken: string; threadId: string }>
-) {
+function* getPostsByThread(action: ActionWithPayload<{ threadId: string }>) {
   try {
     const finalPosts: PostInformation[] = [];
     const initialPosts: PostInformation[] = yield fetch(
       `http://127.0.0.1:8080/thread/${action.payload.threadId}/posts`,
       {
         method: "GET",
-        headers: {
-          Authorization: action.payload.accessToken,
-        },
       }
     ).then((res) => res.json());
 
@@ -43,9 +38,6 @@ function* getPostsByThread(
         `http://127.0.0.1:8080/user/${initialPosts[index].userEmail}`,
         {
           method: "GET",
-          headers: {
-            Authorization: action.payload.accessToken,
-          },
         }
       ).then((res) => res.json());
 
@@ -61,9 +53,6 @@ function* getPostsByThread(
       `http://127.0.0.1:8080/thread/${action.payload.threadId}`,
       {
         method: "GET",
-        headers: {
-          Authorization: action.payload.accessToken,
-        },
       }
     ).then((res) => res.json());
 
