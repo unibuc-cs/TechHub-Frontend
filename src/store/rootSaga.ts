@@ -8,6 +8,7 @@ import leaderboardSaga from "../store/leaderboard/leaderboard.saga";
 import discountsSaga from "../store/discounts/discounts.saga";
 import purchasedDiscountsSaga from "../store/purchasedDiscounts/purchasedDiscounts.saga";
 import reportsSaga from "../store/reports/reports.saga";
+import raffleSaga from "../store/raffle/raffle.saga";
 
 export default function* rootSaga() {
   yield all([
@@ -20,5 +21,6 @@ export default function* rootSaga() {
     discountsSaga(),
     purchasedDiscountsSaga(),
     reportsSaga(),
+    raffleSaga(),
   ]);
 }

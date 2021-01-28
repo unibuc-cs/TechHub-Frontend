@@ -16,6 +16,7 @@ import leaderboardReducer from "./store/leaderboard/leaderboard.reducer";
 import discountsReducer from "./store/discounts/discounts.reducer";
 import purchasedDiscountsReducer from "./store/purchasedDiscounts/purchasedDiscounts.reducer";
 import reportsReducer from "./store/reports/reports.reducer";
+import raffleReducer from "./store/raffle/raffle.reducer";
 import { composeWithDevTools } from "redux-devtools-extension";
 import createSagaMiddleware from "redux-saga";
 import "regenerator-runtime/runtime";
@@ -31,6 +32,7 @@ const rootReducer = combineReducers({
   discounts: discountsReducer,
   purchasedDiscounts: purchasedDiscountsReducer,
   reports: reportsReducer,
+  raffle: raffleReducer,
 });
 
 const sagaMiddleware = createSagaMiddleware();

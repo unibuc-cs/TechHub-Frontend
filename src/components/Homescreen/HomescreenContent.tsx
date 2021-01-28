@@ -6,8 +6,11 @@ import {
   InputAdornment,
 } from "@material-ui/core";
 import SearchIcon from "@material-ui/icons/Search";
+import ConfirmationNumberIcon from "@material-ui/icons/ConfirmationNumber";
+import IconButton from "@material-ui/core/IconButton/IconButton";
+import CloseIcon from "@material-ui/icons/Close";
 import React, { useEffect, useState } from "react";
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
 import HomescreenItemsList from "./HomescreenItemsList";
 import { categoriesSelector } from "../../store/categories/categories.selector";
 import {
@@ -25,15 +28,34 @@ import {
 } from "../../store/threads/threads.actions";
 import { userDetailsSelector } from "../../store/userDetails/userDetails.selector";
 import { useDispatch, useSelector } from "react-redux";
-import { useLocation } from "react-router-dom";
+import { useHistory, useLocation } from "react-router-dom";
 import {
   threadsSelector,
   threadsLoadingSelector,
 } from "../../store/threads/threads.selector";
+import { closeNotification } from "../../store/raffle/raffle.actions";
+import {
+  activeRaffleSelector,
+  previousRaffleSelector,
+  notificationIsClosedSelector,
+} from "../../store/raffle/raffle.selectors";
 import Button from "@material-ui/core/Button";
 import AddThreadDialog from "../UI/AddThreadDialog";
 import { ThreadInformation } from "../../store/store";
 import Spinner from "../UI/Spinner/Spinner";
+import moment from "moment";
+
+const animated = keyframes`
+0% {
+  transform:scale(1);
+}
+50% {
+  transform:scale(1.1);
+}
+100% {
+  transform:scale(1);
+}
+`;
 
 const Container = styled.div`
   width: 100%;
@@ -45,6 +67,41 @@ const Container = styled.div`
 
 const SearchBarContainer = styled.div`
   padding: 8px 0;
+`;
+
+const RaffleContainer = styled.div`
+  width: 99%;
+  margin: 8px;
+  background-color: #231f20;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+`;
+
+const RaffleText = styled.p`
+  font-size: 1.7em;
+  font-family: "Montserrat", sans-serif;
+  color: white;
+`;
+
+const RaffleRow = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+`;
+
+const RaffleButtonContainer = styled.div`
+  animation: ${animated} 1.5s linear infinite;
+`;
+
+const NotificationHeader = styled.div`
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  height: 30px;
 `;
 
 const TitleContainer = styled.div`
@@ -85,6 +142,7 @@ const HomescreenContent: React.FC<{ type: string; isVip: boolean }> = ({
   isVip,
 }) => {
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const accessToken = useSelector(accessTokenSelector);
   const categories = useSelector(categoriesSelector);
@@ -92,7 +150,12 @@ const HomescreenContent: React.FC<{ type: string; isVip: boolean }> = ({
   const threadsLoading = useSelector(threadsLoadingSelector);
   const currentEmail = useSelector(currentEmailSelector);
   const currentUserDetails = useSelector(userDetailsSelector);
+  const activeRaffle = useSelector(activeRaffleSelector);
+  const previousRaffle = useSelector(previousRaffleSelector);
+  const notificationIsClosed = useSelector(notificationIsClosedSelector);
+
   const location = useLocation();
+  const drawDate = moment.unix(activeRaffle.drawTime.seconds);
 
   const [addThreadDialogIsOpen, setAddThreadDialogIsOpen] = useState<boolean>(
     false
@@ -170,6 +233,10 @@ const HomescreenContent: React.FC<{ type: string; isVip: boolean }> = ({
     setSearchInput(e.target.value);
   };
 
+  const onNotificationClosedHandler = () => {
+    dispatch(closeNotification());
+  };
+
   let title = null;
 
   if (type === "categories") {
@@ -209,6 +276,41 @@ const HomescreenContent: React.FC<{ type: string; isVip: boolean }> = ({
 
   return (
     <Container>
+      {currentUserDetails.type === "REGULAR_USER" &&
+      !activeRaffle.entries.includes(currentUserDetails.email) &&
+      !notificationIsClosed ? (
+        <RaffleContainer>
+          <NotificationHeader>
+            <IconButton onClick={onNotificationClosedHandler}>
+              <CloseIcon style={{ color: "white" }} />
+            </IconButton>
+          </NotificationHeader>
+          <RaffleRow>
+            <RaffleText>
+              Join the raffle and win points! Ends in{" "}
+              {moment(drawDate).toNow(true)}.
+            </RaffleText>
+            <RaffleButtonContainer>
+              <Button
+                size="small"
+                variant="contained"
+                style={{
+                  backgroundColor: "#228B22",
+                  fontFamily: "Montserrat",
+                  marginLeft: "8px",
+                }}
+                startIcon={<ConfirmationNumberIcon />}
+                onClick={() => history.push("/homescreen/raffle")}
+              >
+                Register now
+              </Button>
+            </RaffleButtonContainer>
+          </RaffleRow>
+          <RaffleText style={{ marginTop: 0 }}>
+            Previous winner: <b>{`${previousRaffle.winnerUsername}`}</b>
+          </RaffleText>
+        </RaffleContainer>
+      ) : null}
       <TitleContainer>
         <Title>{title}</Title>
       </TitleContainer>

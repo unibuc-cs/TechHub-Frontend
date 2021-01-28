@@ -56,6 +56,7 @@ export interface UserDetails {
   currentPoints: number;
   vipStatus: boolean;
   trophies: number;
+  rafflesWon: number;
 }
 
 export interface Discount {
@@ -86,6 +87,30 @@ export interface Report {
   isResolved: boolean;
   isPostReport: boolean;
   threadInformation: ThreadInformation;
+}
+
+export interface Raffle {
+  id: string;
+  prize: number;
+  entries: string[];
+  createTime: {
+    seconds: number;
+    nanos: number;
+  };
+  drawTime: {
+    seconds: number;
+    nanos: number;
+  };
+  winner: string;
+  winnerUsername: string;
+  isActive: boolean;
+}
+
+export interface RaffleStateInformation {
+  activeRaffle: Raffle;
+  previousRaffle: Raffle;
+  loading: boolean;
+  notificationClosed: boolean;
 }
 
 export interface ReportsStateInformation {
@@ -134,6 +159,7 @@ export interface Store {
   discounts: DiscountsStateInformation;
   purchasedDiscounts: PurchasedDiscountsStateInformation;
   reports: ReportsStateInformation;
+  raffle: RaffleStateInformation;
 }
 
 export interface CategoryCard {

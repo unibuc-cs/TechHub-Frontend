@@ -10,6 +10,7 @@ import Button from "@material-ui/core/Button";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import StarIcon from "@material-ui/icons/Star";
 import ReportIcon from "@material-ui/icons/Report";
+import ConfirmationNumberIcon from "@material-ui/icons/ConfirmationNumber";
 import ProfileModal from "../UI/ProfileModal";
 import { UserDetails } from "../../store/store";
 
@@ -146,7 +147,7 @@ const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
                   <Button
                     variant="contained"
                     style={{
-                      backgroundColor: "#228B22",
+                      backgroundColor: "lime",
                       fontFamily: "Montserrat",
                     }}
                     className={classes.button}
@@ -176,6 +177,15 @@ const Menu: React.FC<{ userDetails: UserDetails }> = ({ userDetails }) => {
                 onClick={() => history.push("/homescreen/leaderboard")}
               >
                 Leaderboard
+              </Button>
+              <Button
+                variant="contained"
+                style={{ backgroundColor: "white", fontFamily: "Montserrat" }}
+                className={classes.button}
+                startIcon={<ConfirmationNumberIcon />}
+                onClick={() => history.push("/homescreen/raffle")}
+              >
+                Raffle
               </Button>
               <Button
                 variant="contained"
